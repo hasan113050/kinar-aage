@@ -1,0 +1,4007 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="robots"
+    content="noindex, nofollow"
+  >
+
+  <title>Kinar Aage Admin</title>
+
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link
+    rel="stylesheet"
+    href="admin.css"
+  >
+
+</head>
+
+
+<body>
+
+
+<div class="admin-shell">
+
+
+  <!-- =========================
+       SIDEBAR
+  ========================== -->
+
+  <aside
+    class="admin-sidebar"
+    id="adminSidebar"
+  >
+
+
+    <div class="admin-brand">
+
+      <a
+        href="index.html"
+        class="admin-brand-link"
+      >
+
+        <div class="admin-logo-mark">
+          KA
+        </div>
+
+        <div class="admin-brand-copy">
+
+          <strong>Kinar Aage</strong>
+
+          <span>Affiliate Admin</span>
+
+        </div>
+
+      </a>
+
+    </div>
+
+
+    <nav class="admin-nav">
+
+
+      <button
+        class="admin-nav-item active"
+        type="button"
+        data-page="dashboardPage"
+      >
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
+      </button>
+
+
+      <button
+        class="admin-nav-item"
+        type="button"
+        data-page="productsPage"
+      >
+        <i data-lucide="package-search"></i>
+        <span>Products</span>
+      </button>
+
+
+      <button
+        class="admin-nav-item"
+        type="button"
+        data-page="createProductPage"
+      >
+        <i data-lucide="circle-plus"></i>
+        <span>Add Product</span>
+      </button>
+
+
+      <button
+        class="admin-nav-item"
+        type="button"
+        data-page="categoriesPage"
+      >
+        <i data-lucide="layout-grid"></i>
+        <span>Categories</span>
+      </button>
+
+
+      <button
+        class="admin-nav-item"
+        type="button"
+        data-page="homepagePage"
+      >
+        <i data-lucide="home"></i>
+        <span>Homepage</span>
+      </button>
+
+
+      <button
+        class="admin-nav-item"
+        type="button"
+        data-page="bannersPage"
+      >
+        <i data-lucide="images"></i>
+        <span>Banners</span>
+      </button>
+
+
+      <button
+        class="admin-nav-item"
+        type="button"
+        data-page="seoPage"
+      >
+        <i data-lucide="search-check"></i>
+        <span>Site SEO</span>
+      </button>
+
+
+      <button
+        class="admin-nav-item"
+        type="button"
+        data-page="settingsPage"
+      >
+        <i data-lucide="settings"></i>
+        <span>Settings</span>
+      </button>
+
+
+    </nav>
+
+
+    <div class="admin-sidebar-bottom">
+
+
+      <a
+        href="index.html"
+        class="admin-view-site"
+        target="_blank"
+      >
+        <i data-lucide="external-link"></i>
+        View Website
+      </a>
+
+
+      <button
+        id="adminLogoutButton"
+        class="admin-logout-button"
+        type="button"
+      >
+        <i data-lucide="log-out"></i>
+        Logout
+      </button>
+
+
+    </div>
+
+
+  </aside>
+
+
+
+  <!-- =========================
+       MAIN AREA
+  ========================== -->
+
+  <div class="admin-main">
+
+
+    <header class="admin-topbar">
+
+
+      <div class="admin-topbar-left">
+
+
+        <button
+          id="adminMenuButton"
+          class="admin-menu-button"
+          type="button"
+        >
+          <i data-lucide="menu"></i>
+        </button>
+
+
+        <div>
+
+          <h1 id="adminPageTitle">
+            Dashboard
+          </h1>
+
+          <p id="adminPageSubtitle">
+            Manage Kinar Aage content and affiliate products.
+          </p>
+
+        </div>
+
+
+      </div>
+
+
+      <div class="admin-topbar-right">
+
+
+        <div class="admin-user">
+
+          <div class="admin-avatar">
+            A
+          </div>
+
+          <div>
+
+            <strong id="adminUserName">
+              Admin
+            </strong>
+
+            <span>
+              Administrator
+            </span>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+    </header>
+
+
+
+    <main class="admin-content">
+
+
+      <!-- =========================
+           DASHBOARD
+      ========================== -->
+
+      <section
+        class="admin-page active"
+        id="dashboardPage"
+      >
+
+
+        <div class="dashboard-welcome">
+
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Kinar Aage
+            </span>
+
+            <h2>
+              Affiliate Content Dashboard
+            </h2>
+
+            <p>
+              Manage product recommendations, affiliate links,
+              categories and website content from one place.
+            </p>
+
+          </div>
+
+
+          <button
+            class="admin-primary-button"
+            type="button"
+            data-open-page="createProductPage"
+          >
+            <i data-lucide="plus"></i>
+            Add New Product
+          </button>
+
+
+        </div>
+
+
+
+        <div class="admin-stat-grid">
+
+
+          <article class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+              <i data-lucide="package"></i>
+            </div>
+
+            <div>
+              <span>Total Products</span>
+              <strong id="dashboardTotalProducts">0</strong>
+            </div>
+
+          </article>
+
+
+          <article class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+              <i data-lucide="star"></i>
+            </div>
+
+            <div>
+              <span>Featured</span>
+              <strong id="dashboardFeaturedProducts">0</strong>
+            </div>
+
+          </article>
+
+
+          <article class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+              <i data-lucide="eye"></i>
+            </div>
+
+            <div>
+              <span>Published</span>
+              <strong id="dashboardPublishedProducts">0</strong>
+            </div>
+
+          </article>
+
+
+          <article class="admin-stat-card">
+
+            <div class="admin-stat-icon">
+              <i data-lucide="file-pen-line"></i>
+            </div>
+
+            <div>
+              <span>Drafts</span>
+              <strong id="dashboardDraftProducts">0</strong>
+            </div>
+
+          </article>
+
+
+        </div>
+
+
+
+        <div class="admin-panel">
+
+
+          <div class="admin-panel-header">
+
+            <div>
+
+              <h3>Recent Products</h3>
+
+              <p>
+                Latest content added to Kinar Aage.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="admin-product-table-wrap"
+            id="dashboardProductTable"
+          ></div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- =========================
+           PRODUCTS
+      ========================== -->
+
+      <section
+        class="admin-page"
+        id="productsPage"
+      >
+
+
+        <div class="admin-section-head">
+
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Content Library
+            </span>
+
+            <h2>Products</h2>
+
+            <p>
+              Manage all affiliate products and recommendations.
+            </p>
+
+          </div>
+
+
+          <button
+            class="admin-primary-button"
+            type="button"
+            data-open-page="createProductPage"
+          >
+            <i data-lucide="plus"></i>
+            Add Product
+          </button>
+
+
+        </div>
+
+
+
+        <div class="admin-toolbar">
+
+
+          <div class="admin-search-box">
+
+            <i data-lucide="search"></i>
+
+            <input
+              id="adminProductSearch"
+              type="search"
+              placeholder="Search products..."
+            >
+
+          </div>
+
+
+          <select id="adminCategoryFilter">
+
+            <option value="">
+              All Categories
+            </option>
+
+          </select>
+
+
+          <select id="adminStatusFilter">
+
+            <option value="">
+              All Status
+            </option>
+
+            <option value="published">
+              Published
+            </option>
+
+            <option value="draft">
+              Draft
+            </option>
+
+          </select>
+
+
+        </div>
+
+
+
+        <div class="admin-panel">
+
+          <div
+            id="adminProductsList"
+            class="admin-products-list"
+          ></div>
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- =========================
+           ADD / EDIT PRODUCT
+      ========================== -->
+
+      <section
+        class="admin-page"
+        id="createProductPage"
+      >
+
+
+        <div class="admin-section-head">
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Affiliate Content
+            </span>
+
+            <h2 id="productFormHeading">
+              Add New Product
+            </h2>
+
+            <p>
+              Create a premium recommendation page with SEO and affiliate links.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <form
+          id="productForm"
+          class="admin-product-form"
+        >
+
+
+          <input
+            type="hidden"
+            id="editingProductId"
+          >
+
+
+
+          <!-- BASIC INFORMATION -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>01</span>
+
+                <div>
+
+                  <h3>
+                    Basic Information
+                  </h3>
+
+                  <p>
+                    Product name, category and publishing settings.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field full-width">
+
+                <label for="productName">
+                  Product Name
+                </label>
+
+                <input
+                  id="productName"
+                  type="text"
+                  placeholder="Example: Best Wireless Earbuds for Daily Use"
+                  required
+                >
+
+                <small>
+                  Bangla, English or mixed text is supported.
+                </small>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productCategory">
+                  Category
+                </label>
+
+                <select
+                  id="productCategory"
+                  required
+                >
+
+                  <option value="">
+                    Select Category
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productStatus">
+                  Status
+                </label>
+
+                <select id="productStatus">
+
+                  <option value="published">
+                    Published
+                  </option>
+
+                  <option value="draft">
+                    Draft
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productFeatured">
+                  Featured Product
+                </label>
+
+                <select id="productFeatured">
+
+                  <option value="false">
+                    No
+                  </option>
+
+                  <option value="true">
+                    Yes
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productBadge">
+                  Product Badge
+                </label>
+
+                <input
+                  id="productBadge"
+                  type="text"
+                  placeholder="Example: Recommended"
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- PRODUCT IMAGE -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>02</span>
+
+                <div>
+
+                  <h3>Product Image</h3>
+
+                  <p>
+                    Upload the main product image from your device.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-image-upload-layout">
+
+
+              <div class="admin-image-upload-box">
+
+
+                <input
+                  id="productImageUpload"
+                  type="file"
+                  accept="image/*"
+                  hidden
+                >
+
+
+                <button
+                  id="productImageSelectButton"
+                  class="admin-image-select-button"
+                  type="button"
+                >
+
+                  <i data-lucide="image-plus"></i>
+
+                  <strong>
+                    Choose Product Image
+                  </strong>
+
+                  <span>
+                    Click to open Finder or Photo Library
+                  </span>
+
+                </button>
+
+
+                <div class="admin-image-help">
+                  Recommended: JPG, PNG or WebP • Maximum 2MB
+                </div>
+
+
+              </div>
+
+
+              <div class="admin-image-preview-card">
+
+
+                <span class="admin-preview-label">
+                  Preview
+                </span>
+
+
+                <div
+                  id="productImagePreview"
+                  class="admin-image-preview"
+                >
+
+                  <i data-lucide="image"></i>
+
+                  <span>
+                    No image selected
+                  </span>
+
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
+            <input
+              id="productImageData"
+              type="hidden"
+            >
+
+
+          </section>
+
+
+
+          <!-- PRODUCT SUMMARY -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>03</span>
+
+                <div>
+
+                  <h3>Product Summary</h3>
+
+                  <p>
+                    Short content used on cards and product introductions.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid">
+
+
+              <div class="admin-field">
+
+                <label for="productShortDescription">
+                  Short Description
+                </label>
+
+                <textarea
+                  id="productShortDescription"
+                  rows="4"
+                  placeholder="Write a concise recommendation summary..."
+                ></textarea>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productHighlights">
+                  Key Highlights
+                </label>
+
+                <textarea
+                  id="productHighlights"
+                  rows="5"
+                  placeholder="One highlight per line"
+                ></textarea>
+
+                <small>
+                  Write one item per line.
+                </small>
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- EDITORIAL -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>04</span>
+
+                <div>
+
+                  <h3>Editorial Content</h3>
+
+                  <p>
+                    Detailed product recommendation content.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid">
+
+
+              <div class="admin-field">
+
+                <label for="productIntro">
+                  Introduction
+                </label>
+
+                <textarea
+                  id="productIntro"
+                  rows="6"
+                  placeholder="Write the opening section..."
+                ></textarea>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productDescription">
+                  Full Product Content
+                </label>
+
+                <textarea
+                  id="productDescription"
+                  rows="14"
+                  placeholder="Write detailed product information..."
+                ></textarea>
+
+              </div>
+
+
+              <div class="admin-form-grid two-column">
+
+
+                <div class="admin-field">
+
+                  <label for="productPros">
+                    Pros
+                  </label>
+
+                  <textarea
+                    id="productPros"
+                    rows="6"
+                    placeholder="One point per line"
+                  ></textarea>
+
+                </div>
+
+
+                <div class="admin-field">
+
+                  <label for="productCons">
+                    Cons
+                  </label>
+
+                  <textarea
+                    id="productCons"
+                    rows="6"
+                    placeholder="One point per line"
+                  ></textarea>
+
+                </div>
+
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productVerdict">
+                  Final Verdict
+                </label>
+
+                <textarea
+                  id="productVerdict"
+                  rows="5"
+                  placeholder="Write the final recommendation..."
+                ></textarea>
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- AFFILIATE -->
+
+          <section class="admin-form-card affiliate-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>05</span>
+
+                <div>
+
+                  <h3>Affiliate Destination</h3>
+
+                  <p>
+                    Configure where visitors go when they click Buy Now.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field full-width">
+
+                <label for="productAffiliateUrl">
+                  Affiliate / Merchant URL
+                </label>
+
+                <input
+                  id="productAffiliateUrl"
+                  type="url"
+                  placeholder="https://merchant-website.com/product..."
+                  required
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productCtaLabel">
+                  CTA Button Label
+                </label>
+
+                <input
+                  id="productCtaLabel"
+                  type="text"
+                  value="Buy Now"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productMerchantName">
+                  Merchant Name
+                </label>
+
+                <input
+                  id="productMerchantName"
+                  type="text"
+                  placeholder="Example: Daraz"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="productAffiliateDisclosure">
+                  Affiliate Disclosure
+                </label>
+
+                <textarea
+                  id="productAffiliateDisclosure"
+                  rows="3"
+                ></textarea>
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- SEO -->
+
+          <section class="admin-form-card seo-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>06</span>
+
+                <div>
+
+                  <h3>Product SEO</h3>
+
+                  <p>
+                    Search engine and social sharing metadata.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field">
+
+                <label for="productSlug">
+                  URL Slug
+                </label>
+
+                <input
+                  id="productSlug"
+                  type="text"
+                  placeholder="best-wireless-earbuds"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productCanonical">
+                  Canonical URL
+                </label>
+
+                <input
+                  id="productCanonical"
+                  type="url"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="productMetaTitle">
+                  Meta Title
+                </label>
+
+                <input
+                  id="productMetaTitle"
+                  type="text"
+                  maxlength="70"
+                >
+
+                <div class="admin-character-count">
+                  <span id="metaTitleCount">0</span>
+                  / 70
+                </div>
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="productMetaDescription">
+                  Meta Description
+                </label>
+
+                <textarea
+                  id="productMetaDescription"
+                  rows="4"
+                  maxlength="170"
+                ></textarea>
+
+                <div class="admin-character-count">
+                  <span id="metaDescriptionCount">0</span>
+                  / 170
+                </div>
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="productTags">
+                  Tags / Keywords
+                </label>
+
+                <input
+                  id="productTags"
+                  type="text"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productOgTitle">
+                  Open Graph Title
+                </label>
+
+                <input
+                  id="productOgTitle"
+                  type="text"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="productOgImage">
+                  OG Image URL
+                </label>
+
+                <input
+                  id="productOgImage"
+                  type="text"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="productOgDescription">
+                  Open Graph Description
+                </label>
+
+                <textarea
+                  id="productOgDescription"
+                  rows="3"
+                ></textarea>
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <div class="admin-form-actions">
+
+
+            <button
+              id="cancelProductEditButton"
+              class="admin-secondary-button"
+              type="button"
+            >
+              Cancel
+            </button>
+
+
+            <button
+              id="saveProductButton"
+              class="admin-primary-button"
+              type="submit"
+            >
+              <i data-lucide="save"></i>
+              Save Product
+            </button>
+
+
+          </div>
+
+
+        </form>
+
+
+      </section>
+
+            <!-- =========================
+           CATEGORIES
+      ========================== -->
+
+      <section
+        class="admin-page"
+        id="categoriesPage"
+      >
+
+
+        <div class="admin-section-head">
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Navigation & Content
+            </span>
+
+            <h2>Categories</h2>
+
+            <p>
+              Add, edit and organize the categories shown across Kinar Aage.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="admin-form-card category-manager-card">
+
+
+          <div class="admin-card-head">
+
+            <div>
+
+              <span class="admin-eyebrow">
+                Category Editor
+              </span>
+
+              <h3 id="categoryFormHeading">
+                Add Category
+              </h3>
+
+              <p>
+                Manage category information, visibility, image and order.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <form id="categoryForm">
+
+
+            <input
+              type="hidden"
+              id="editingCategoryId"
+            >
+
+            <input
+              type="hidden"
+              id="categoryImageData"
+            >
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-form-group">
+
+                <label for="categoryName">
+                  Category Name
+                </label>
+
+                <input
+                  id="categoryName"
+                  type="text"
+                  required
+                >
+
+              </div>
+
+
+              <div class="admin-form-group">
+
+                <label for="categorySlug">
+                  Slug
+                </label>
+
+                <input
+                  id="categorySlug"
+                  type="text"
+                >
+
+              </div>
+
+
+              <div class="admin-form-group admin-form-group-full">
+
+                <label for="categoryDescription">
+                  Category Description
+                </label>
+
+                <textarea
+                  id="categoryDescription"
+                  rows="4"
+                ></textarea>
+
+              </div>
+
+
+              <div class="admin-form-group">
+
+                <label for="categoryStatus">
+                  Status
+                </label>
+
+                <select id="categoryStatus">
+
+                  <option value="active">
+                    Active
+                  </option>
+
+                  <option value="inactive">
+                    Inactive
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="admin-form-group">
+
+                <label for="categoryOrder">
+                  Display Order
+                </label>
+
+                <input
+                  id="categoryOrder"
+                  type="number"
+                  min="1"
+                >
+
+              </div>
+
+
+              <div class="admin-form-group admin-form-group-full">
+
+                <label>
+                  Category Image / Icon
+                </label>
+
+
+                <div class="admin-upload-box category-upload-box">
+
+
+                  <input
+                    id="categoryImageUpload"
+                    type="file"
+                    accept="image/*"
+                    hidden
+                  >
+
+
+                  <button
+                    id="categoryImageSelectButton"
+                    class="admin-secondary-button"
+                    type="button"
+                  >
+                    <i data-lucide="image-plus"></i>
+                    Choose Image
+                  </button>
+
+
+                  <div
+                    id="categoryImagePreview"
+                    class="admin-image-preview category-image-preview"
+                  >
+                    <span>
+                      No category image selected
+                    </span>
+                  </div>
+
+
+                  <p
+                    id="categoryImageWarning"
+                    class="admin-upload-warning"
+                    hidden
+                  ></p>
+
+
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
+
+            <div class="admin-form-actions">
+
+
+              <button
+                id="saveCategoryButton"
+                class="admin-primary-button"
+                type="submit"
+              >
+                <i data-lucide="save"></i>
+                Save Category
+              </button>
+
+
+              <button
+                id="cancelCategoryEditButton"
+                class="admin-secondary-button"
+                type="button"
+                hidden
+              >
+                Cancel Edit
+              </button>
+
+
+            </div>
+
+
+          </form>
+
+
+        </div>
+
+
+
+        <div class="admin-list-card category-list-card">
+
+
+          <div class="admin-card-head">
+
+            <div>
+
+              <span class="admin-eyebrow">
+                Current Categories
+              </span>
+
+              <h3>Manage Categories</h3>
+
+              <p>
+                These categories power the homepage and product system.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div
+            id="adminCategoriesList"
+            class="admin-category-grid"
+          ></div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- =========================
+           HOMEPAGE
+      ========================== -->
+
+      <section
+        class="admin-page"
+        id="homepagePage"
+      >
+
+
+        <div class="admin-section-head">
+
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Website Content
+            </span>
+
+            <h2>Homepage</h2>
+
+            <p>
+              Manage homepage text, promotional content, trust sections,
+              newsletter and footer content.
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <form id="homepageContentForm">
+
+
+          <!-- =========================
+               TOP INFO STRIP
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>01</span>
+
+                <div>
+
+                  <h3>
+                    Top Info Strip
+                  </h3>
+
+                  <p>
+                    Manage the three short messages shown above the main navigation area.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field">
+
+                <label for="homepageTopInfo1Icon">
+                  Item 1 Icon
+                </label>
+
+                <input
+                  id="homepageTopInfo1Icon"
+                  type="text"
+                  placeholder="✦"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTopInfo1Text">
+                  Item 1 Text
+                </label>
+
+                <input
+                  id="homepageTopInfo1Text"
+                  type="text"
+                  placeholder="Curated Product Recommendations"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTopInfo2Icon">
+                  Item 2 Icon
+                </label>
+
+                <input
+                  id="homepageTopInfo2Icon"
+                  type="text"
+                  placeholder="📘"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTopInfo2Text">
+                  Item 2 Text
+                </label>
+
+                <input
+                  id="homepageTopInfo2Text"
+                  type="text"
+                  placeholder="Practical Reviews & Buying Guides"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTopInfo3Icon">
+                  Item 3 Icon
+                </label>
+
+                <input
+                  id="homepageTopInfo3Icon"
+                  type="text"
+                  placeholder="↗"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTopInfo3Text">
+                  Item 3 Text
+                </label>
+
+                <input
+                  id="homepageTopInfo3Text"
+                  type="text"
+                  placeholder="A Simpler Way to Compare"
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               UTILITY ROW
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>02</span>
+
+                <div>
+
+                  <h3>
+                    Utility Row
+                  </h3>
+
+                  <p>
+                    Manage the three supporting information blocks below the header.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field">
+
+                <label for="homepageUtility1Icon">
+                  Item 1 Icon
+                </label>
+
+                <input
+                  id="homepageUtility1Icon"
+                  type="text"
+                  placeholder="✦"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageUtility1Title">
+                  Item 1 Title
+                </label>
+
+                <input
+                  id="homepageUtility1Title"
+                  type="text"
+                  placeholder="Focused Product Shortlists"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageUtility1Subtitle">
+                  Item 1 Subtitle
+                </label>
+
+                <input
+                  id="homepageUtility1Subtitle"
+                  type="text"
+                  placeholder="Less clutter, easier browsing"
+                >
+
+              </div>
+
+
+
+              <div class="admin-field">
+
+                <label for="homepageUtility2Icon">
+                  Item 2 Icon
+                </label>
+
+                <input
+                  id="homepageUtility2Icon"
+                  type="text"
+                  placeholder="✓"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageUtility2Title">
+                  Item 2 Title
+                </label>
+
+                <input
+                  id="homepageUtility2Title"
+                  type="text"
+                  placeholder="Useful Buying Context"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageUtility2Subtitle">
+                  Item 2 Subtitle
+                </label>
+
+                <input
+                  id="homepageUtility2Subtitle"
+                  type="text"
+                  placeholder="Key details before you decide"
+                >
+
+              </div>
+
+
+
+              <div class="admin-field">
+
+                <label for="homepageUtility3Icon">
+                  Item 3 Icon
+                </label>
+
+                <input
+                  id="homepageUtility3Icon"
+                  type="text"
+                  placeholder="↗"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageUtility3Title">
+                  Item 3 Title
+                </label>
+
+                <input
+                  id="homepageUtility3Title"
+                  type="text"
+                  placeholder="External Merchant Links"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageUtility3Subtitle">
+                  Item 3 Subtitle
+                </label>
+
+                <input
+                  id="homepageUtility3Subtitle"
+                  type="text"
+                  placeholder="Compare here, buy from merchants"
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               SECTION HEADINGS
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>03</span>
+
+                <div>
+
+                  <h3>
+                    Homepage Section Headings
+                  </h3>
+
+                  <p>
+                    Manage the main section titles and subtitles.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field">
+
+                <label for="homepageCategoriesTitle">
+                  Categories Title
+                </label>
+
+                <input
+                  id="homepageCategoriesTitle"
+                  type="text"
+                  placeholder="Browse Categories"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageCategoriesSubtitle">
+                  Categories Subtitle
+                </label>
+
+                <input
+                  id="homepageCategoriesSubtitle"
+                  type="text"
+                  placeholder="Find recommendations by category."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageFeaturedTitle">
+                  Featured Products Title
+                </label>
+
+                <input
+                  id="homepageFeaturedTitle"
+                  type="text"
+                  placeholder="Top Picks"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageFeaturedSubtitle">
+                  Featured Products Subtitle
+                </label>
+
+                <input
+                  id="homepageFeaturedSubtitle"
+                  type="text"
+                  placeholder="Products worth checking first."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageRecommendedTitle">
+                  Recommendations Title
+                </label>
+
+                <input
+                  id="homepageRecommendedTitle"
+                  type="text"
+                  placeholder="More Recommendations"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageRecommendedSubtitle">
+                  Recommendations Subtitle
+                </label>
+
+                <input
+                  id="homepageRecommendedSubtitle"
+                  type="text"
+                  placeholder="More useful products to explore."
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               PROMO TILE 1
+          ========================== -->
+
+          <section class="admin-form-card homepage-promo-admin-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>04</span>
+
+                <div>
+
+                  <h3>
+                    Promotional Tile 1
+                  </h3>
+
+                  <p>
+                    First promotional visual on the homepage.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <input
+              type="hidden"
+              id="homepagePromo1ImageData"
+            >
+
+
+            <div class="admin-image-upload-layout">
+
+
+              <div class="admin-image-upload-box">
+
+
+                <input
+                  id="homepagePromo1ImageUpload"
+                  type="file"
+                  accept="image/*"
+                  hidden
+                >
+
+
+                <button
+                  id="homepagePromo1ImageButton"
+                  class="admin-image-select-button"
+                  type="button"
+                >
+
+                  <i data-lucide="image-plus"></i>
+
+                  <strong>
+                    Choose Promo Image
+                  </strong>
+
+                  <span>
+                    Select from your device
+                  </span>
+
+                </button>
+
+
+              </div>
+
+
+              <div class="admin-image-preview-card">
+
+
+                <span class="admin-preview-label">
+                  Preview
+                </span>
+
+
+                <div
+                  id="homepagePromo1ImagePreview"
+                  class="admin-image-preview"
+                >
+                  <i data-lucide="image"></i>
+                  <span>No image selected</span>
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
+            <p
+              id="homepagePromo1ImageWarning"
+              class="admin-upload-warning"
+              hidden
+            ></p>
+
+
+            <div
+              class="admin-form-grid two-column"
+              style="margin-top:20px;"
+            >
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo1Title">
+                  Title
+                </label>
+
+                <input
+                  id="homepagePromo1Title"
+                  type="text"
+                  placeholder="Smart Tech Picks"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo1Subtitle">
+                  Subtitle
+                </label>
+
+                <input
+                  id="homepagePromo1Subtitle"
+                  type="text"
+                  placeholder="Useful gadgets worth exploring."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo1ButtonText">
+                  Button Text
+                </label>
+
+                <input
+                  id="homepagePromo1ButtonText"
+                  type="text"
+                  placeholder="Explore"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo1Link">
+                  Link
+                </label>
+
+                <input
+                  id="homepagePromo1Link"
+                  type="text"
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               PROMO TILE 2
+          ========================== -->
+
+          <section class="admin-form-card homepage-promo-admin-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>05</span>
+
+                <div>
+
+                  <h3>
+                    Promotional Tile 2
+                  </h3>
+
+                  <p>
+                    Second promotional visual on the homepage.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <input
+              type="hidden"
+              id="homepagePromo2ImageData"
+            >
+
+
+            <div class="admin-image-upload-layout">
+
+
+              <div class="admin-image-upload-box">
+
+
+                <input
+                  id="homepagePromo2ImageUpload"
+                  type="file"
+                  accept="image/*"
+                  hidden
+                >
+
+
+                <button
+                  id="homepagePromo2ImageButton"
+                  class="admin-image-select-button"
+                  type="button"
+                >
+
+                  <i data-lucide="image-plus"></i>
+
+                  <strong>
+                    Choose Promo Image
+                  </strong>
+
+                  <span>
+                    Select from your device
+                  </span>
+
+                </button>
+
+
+              </div>
+
+
+              <div class="admin-image-preview-card">
+
+
+                <span class="admin-preview-label">
+                  Preview
+                </span>
+
+
+                <div
+                  id="homepagePromo2ImagePreview"
+                  class="admin-image-preview"
+                >
+                  <i data-lucide="image"></i>
+                  <span>No image selected</span>
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
+            <p
+              id="homepagePromo2ImageWarning"
+              class="admin-upload-warning"
+              hidden
+            ></p>
+
+
+            <div
+              class="admin-form-grid two-column"
+              style="margin-top:20px;"
+            >
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo2Title">
+                  Title
+                </label>
+
+                <input
+                  id="homepagePromo2Title"
+                  type="text"
+                  placeholder="Home Essentials"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo2Subtitle">
+                  Subtitle
+                </label>
+
+                <input
+                  id="homepagePromo2Subtitle"
+                  type="text"
+                  placeholder="Practical picks for everyday living."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo2ButtonText">
+                  Button Text
+                </label>
+
+                <input
+                  id="homepagePromo2ButtonText"
+                  type="text"
+                  placeholder="Explore"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo2Link">
+                  Link
+                </label>
+
+                <input
+                  id="homepagePromo2Link"
+                  type="text"
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               PROMO TILE 3
+          ========================== -->
+
+          <section class="admin-form-card homepage-promo-admin-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>06</span>
+
+                <div>
+
+                  <h3>
+                    Promotional Tile 3
+                  </h3>
+
+                  <p>
+                    Third promotional visual on the homepage.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <input
+              type="hidden"
+              id="homepagePromo3ImageData"
+            >
+
+
+            <div class="admin-image-upload-layout">
+
+
+              <div class="admin-image-upload-box">
+
+
+                <input
+                  id="homepagePromo3ImageUpload"
+                  type="file"
+                  accept="image/*"
+                  hidden
+                >
+
+
+                <button
+                  id="homepagePromo3ImageButton"
+                  class="admin-image-select-button"
+                  type="button"
+                >
+
+                  <i data-lucide="image-plus"></i>
+
+                  <strong>
+                    Choose Promo Image
+                  </strong>
+
+                  <span>
+                    Select from your device
+                  </span>
+
+                </button>
+
+
+              </div>
+
+
+              <div class="admin-image-preview-card">
+
+
+                <span class="admin-preview-label">
+                  Preview
+                </span>
+
+
+                <div
+                  id="homepagePromo3ImagePreview"
+                  class="admin-image-preview"
+                >
+                  <i data-lucide="image"></i>
+                  <span>No image selected</span>
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
+            <p
+              id="homepagePromo3ImageWarning"
+              class="admin-upload-warning"
+              hidden
+            ></p>
+
+
+            <div
+              class="admin-form-grid two-column"
+              style="margin-top:20px;"
+            >
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo3Title">
+                  Title
+                </label>
+
+                <input
+                  id="homepagePromo3Title"
+                  type="text"
+                  placeholder="Everyday Recommendations"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo3Subtitle">
+                  Subtitle
+                </label>
+
+                <input
+                  id="homepagePromo3Subtitle"
+                  type="text"
+                  placeholder="More products worth knowing about."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo3ButtonText">
+                  Button Text
+                </label>
+
+                <input
+                  id="homepagePromo3ButtonText"
+                  type="text"
+                  placeholder="Explore"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePromo3Link">
+                  Link
+                </label>
+
+                <input
+                  id="homepagePromo3Link"
+                  type="text"
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               WHY KINAR AAGE
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>07</span>
+
+                <div>
+
+                  <h3>
+                    Why Kinar Aage
+                  </h3>
+
+                  <p>
+                    Manage the factual information section explaining how the website helps visitors.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhyTitle">
+                  Section Title
+                </label>
+
+                <input
+                  id="homepageWhyTitle"
+                  type="text"
+                  placeholder="Why Kinar Aage"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhySubtitle">
+                  Section Subtitle
+                </label>
+
+                <input
+                  id="homepageWhySubtitle"
+                  type="text"
+                  placeholder="A simpler way to understand products before making a buying decision."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhy1Icon">
+                  Card 1 Icon
+                </label>
+
+                <input
+                  id="homepageWhy1Icon"
+                  type="text"
+                  placeholder="🔎"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhy1Title">
+                  Card 1 Title
+                </label>
+
+                <input
+                  id="homepageWhy1Title"
+                  type="text"
+                  placeholder="Research Before You Buy"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageWhy1Description">
+                  Card 1 Description
+                </label>
+
+                <textarea
+                  id="homepageWhy1Description"
+                  rows="3"
+                ></textarea>
+
+              </div>
+
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhy2Icon">
+                  Card 2 Icon
+                </label>
+
+                <input
+                  id="homepageWhy2Icon"
+                  type="text"
+                  placeholder="✓"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhy2Title">
+                  Card 2 Title
+                </label>
+
+                <input
+                  id="homepageWhy2Title"
+                  type="text"
+                  placeholder="Curated Recommendations"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageWhy2Description">
+                  Card 2 Description
+                </label>
+
+                <textarea
+                  id="homepageWhy2Description"
+                  rows="3"
+                ></textarea>
+
+              </div>
+
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhy3Icon">
+                  Card 3 Icon
+                </label>
+
+                <input
+                  id="homepageWhy3Icon"
+                  type="text"
+                  placeholder="↗"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageWhy3Title">
+                  Card 3 Title
+                </label>
+
+                <input
+                  id="homepageWhy3Title"
+                  type="text"
+                  placeholder="Simple Buying Journey"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageWhy3Description">
+                  Card 3 Description
+                </label>
+
+                <textarea
+                  id="homepageWhy3Description"
+                  rows="3"
+                ></textarea>
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+                   <!-- =========================
+               NEWSLETTER
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>08</span>
+
+                <div>
+
+                  <h3>
+                    Newsletter Section
+                  </h3>
+
+                  <p>
+                    Manage the newsletter call-to-action content.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field">
+
+                <label for="homepageNewsletterOverline">
+                  Overline
+                </label>
+
+                <input
+                  id="homepageNewsletterOverline"
+                  type="text"
+                  placeholder="STAY UPDATED"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageNewsletterTitle">
+                  Title
+                </label>
+
+                <input
+                  id="homepageNewsletterTitle"
+                  type="text"
+                  placeholder="Get Useful Picks, Straight to Your Inbox"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageNewsletterDescription">
+                  Description
+                </label>
+
+                <textarea
+                  id="homepageNewsletterDescription"
+                  rows="3"
+                  placeholder="Product recommendations, buying guides and useful updates."
+                ></textarea>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageNewsletterPlaceholder">
+                  Email Placeholder
+                </label>
+
+                <input
+                  id="homepageNewsletterPlaceholder"
+                  type="text"
+                  placeholder="Enter your email address"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageNewsletterButtonText">
+                  Button Text
+                </label>
+
+                <input
+                  id="homepageNewsletterButtonText"
+                  type="text"
+                  placeholder="Subscribe"
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageNewsletterNote">
+                  Small Note
+                </label>
+
+                <input
+                  id="homepageNewsletterNote"
+                  type="text"
+                  placeholder="No spam. Just helpful content."
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               MINI TRUST ROW
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>09</span>
+
+                <div>
+
+                  <h3>
+                    Mini Information Row
+                  </h3>
+
+                  <p>
+                    Manage the four small information blocks shown near the bottom of the homepage.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust1Title">
+                  Item 1 Title
+                </label>
+
+                <input
+                  id="homepageTrust1Title"
+                  type="text"
+                  placeholder="Product Shortlists"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust1Subtitle">
+                  Item 1 Subtitle
+                </label>
+
+                <input
+                  id="homepageTrust1Subtitle"
+                  type="text"
+                  placeholder="Focused recommendations"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust2Title">
+                  Item 2 Title
+                </label>
+
+                <input
+                  id="homepageTrust2Title"
+                  type="text"
+                  placeholder="Buying Context"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust2Subtitle">
+                  Item 2 Subtitle
+                </label>
+
+                <input
+                  id="homepageTrust2Subtitle"
+                  type="text"
+                  placeholder="Key things to consider"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust3Title">
+                  Item 3 Title
+                </label>
+
+                <input
+                  id="homepageTrust3Title"
+                  type="text"
+                  placeholder="Helpful Resources"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust3Subtitle">
+                  Item 3 Subtitle
+                </label>
+
+                <input
+                  id="homepageTrust3Subtitle"
+                  type="text"
+                  placeholder="Guides & practical tips"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust4Title">
+                  Item 4 Title
+                </label>
+
+                <input
+                  id="homepageTrust4Title"
+                  type="text"
+                  placeholder="Affiliate Transparency"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageTrust4Subtitle">
+                  Item 4 Subtitle
+                </label>
+
+                <input
+                  id="homepageTrust4Subtitle"
+                  type="text"
+                  placeholder="Clear disclosure on eligible links"
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               DISCLOSURE
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>10</span>
+
+                <div>
+
+                  <h3>
+                    Affiliate Disclosure
+                  </h3>
+
+                  <p>
+                    Homepage-specific affiliate disclosure text.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid">
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageAffiliateDisclosure">
+                  Disclosure Text
+                </label>
+
+                <textarea
+                  id="homepageAffiliateDisclosure"
+                  rows="4"
+                  placeholder="Kinar Aage may earn a commission when you purchase through certain links, at no extra cost to you."
+                ></textarea>
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- =========================
+               FOOTER CONTENT
+          ========================== -->
+
+          <section class="admin-form-card">
+
+
+            <div class="admin-form-card-head">
+
+              <div>
+
+                <span>11</span>
+
+                <div>
+
+                  <h3>
+                    Footer Content
+                  </h3>
+
+                  <p>
+                    Manage footer descriptions, social links and bottom tagline.
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-form-grid two-column">
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageFooterDescription">
+                  Brand Description
+                </label>
+
+                <textarea
+                  id="homepageFooterDescription"
+                  rows="3"
+                  placeholder="A product discovery platform for recommendations, buying guides and practical comparison context."
+                ></textarea>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageFooterCommunityTitle">
+                  Community Heading
+                </label>
+
+                <input
+                  id="homepageFooterCommunityTitle"
+                  type="text"
+                  placeholder="Stay Connected"
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageFooterTagline">
+                  Bottom Tagline
+                </label>
+
+                <input
+                  id="homepageFooterTagline"
+                  type="text"
+                  placeholder="Know more. Choose better."
+                >
+
+              </div>
+
+
+              <div class="admin-field full-width">
+
+                <label for="homepageFooterCommunityText">
+                  Community Description
+                </label>
+
+                <textarea
+                  id="homepageFooterCommunityText"
+                  rows="3"
+                  placeholder="Follow Kinar Aage for new recommendations, guides and updates."
+                ></textarea>
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageFacebookUrl">
+                  Facebook URL
+                </label>
+
+                <input
+                  id="homepageFacebookUrl"
+                  type="url"
+                  placeholder="https://facebook.com/..."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageInstagramUrl">
+                  Instagram URL
+                </label>
+
+                <input
+                  id="homepageInstagramUrl"
+                  type="url"
+                  placeholder="https://instagram.com/..."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageYoutubeUrl">
+                  YouTube URL
+                </label>
+
+                <input
+                  id="homepageYoutubeUrl"
+                  type="url"
+                  placeholder="https://youtube.com/..."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepageXUrl">
+                  X / Twitter URL
+                </label>
+
+                <input
+                  id="homepageXUrl"
+                  type="url"
+                  placeholder="https://x.com/..."
+                >
+
+              </div>
+
+
+              <div class="admin-field">
+
+                <label for="homepagePinterestUrl">
+                  Pinterest URL
+                </label>
+
+                <input
+                  id="homepagePinterestUrl"
+                  type="url"
+                  placeholder="https://pinterest.com/..."
+                >
+
+              </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- SAVE HOMEPAGE -->
+
+          <div class="admin-form-actions">
+
+
+            <button
+              id="saveHomepageContentButton"
+              class="admin-primary-button"
+              type="submit"
+            >
+              <i data-lucide="save"></i>
+              Save Homepage Content
+            </button>
+
+
+          </div>
+
+
+        </form>
+
+
+      </section>
+
+
+
+      <!-- =========================
+           BANNERS
+      ========================== -->
+
+      <section
+        class="admin-page"
+        id="bannersPage"
+      >
+
+
+        <div class="admin-section-head">
+
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Website Visuals
+            </span>
+
+            <h2>Banners</h2>
+
+            <p>
+              Manage homepage hero and promotional banner visuals.
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- HERO -->
+
+        <section class="admin-form-card">
+
+
+          <div class="admin-form-card-head">
+
+            <div>
+
+              <span>01</span>
+
+              <div>
+
+                <h3>
+                  Homepage Hero Banner
+                </h3>
+
+                <p>
+                  Main visual shown at the top of the homepage.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="admin-image-upload-layout">
+
+
+            <div class="admin-image-upload-box">
+
+
+              <input
+                id="heroBannerUpload"
+                type="file"
+                accept="image/*"
+                hidden
+              >
+
+
+              <button
+                id="heroBannerSelectButton"
+                class="admin-image-select-button"
+                type="button"
+              >
+
+                <i data-lucide="image-plus"></i>
+
+                <strong>
+                  Choose Hero Banner
+                </strong>
+
+                <span>
+                  Select from your device
+                </span>
+
+              </button>
+
+
+            </div>
+
+
+            <div class="admin-image-preview-card">
+
+
+              <span class="admin-preview-label">
+                Preview
+              </span>
+
+
+              <div
+                id="heroBannerPreview"
+                class="admin-image-preview"
+              >
+                <i data-lucide="image"></i>
+                <span>No banner selected</span>
+              </div>
+
+
+            </div>
+
+
+          </div>
+
+
+          <input
+            id="heroBannerData"
+            type="hidden"
+          >
+
+
+          <div
+            id="heroBannerWarning"
+            style="display:none;"
+          ></div>
+
+
+
+          <div
+            class="admin-form-grid two-column"
+            style="margin-top:20px;"
+          >
+
+
+            <div class="admin-field full-width">
+
+              <label for="heroBannerOverline">
+                Hero Overline
+              </label>
+
+              <input
+                id="heroBannerOverline"
+                type="text"
+                placeholder="A SMARTER WAY TO SHOP"
+              >
+
+            </div>
+
+
+            <div class="admin-field full-width">
+
+              <label for="heroBannerTitle">
+                Banner Title
+              </label>
+
+              <input
+                id="heroBannerTitle"
+                type="text"
+                placeholder="Know More. Choose Better."
+              >
+
+            </div>
+
+
+            <div class="admin-field full-width">
+
+              <label for="heroBannerSubtitle">
+                Subtitle
+              </label>
+
+              <textarea
+                id="heroBannerSubtitle"
+                rows="3"
+              ></textarea>
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="heroBannerButtonText">
+                Button Text
+              </label>
+
+              <input
+                id="heroBannerButtonText"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="heroBannerButtonLink">
+                Button Link
+              </label>
+
+              <input
+                id="heroBannerButtonLink"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="heroPoint1">
+                Hero Point 1
+              </label>
+
+              <input
+                id="heroPoint1"
+                type="text"
+                placeholder="Curated Shortlists"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="heroPoint2">
+                Hero Point 2
+              </label>
+
+              <input
+                id="heroPoint2"
+                type="text"
+                placeholder="Buying Context"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="heroPoint3">
+                Hero Point 3
+              </label>
+
+              <input
+                id="heroPoint3"
+                type="text"
+                placeholder="Merchant Links"
+              >
+
+            </div>
+
+
+          </div>
+
+
+        </section>
+
+
+
+        <!-- OPTIONAL PROMO BANNER -->
+
+        <section class="admin-form-card">
+
+
+          <div class="admin-form-card-head">
+
+            <div>
+
+              <span>02</span>
+
+              <div>
+
+                <h3>
+                  Promotional Banner
+                </h3>
+
+                <p>
+                  Optional wide promotional banner.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="admin-image-upload-layout">
+
+
+            <div class="admin-image-upload-box">
+
+
+              <input
+                id="promoBannerUpload"
+                type="file"
+                accept="image/*"
+                hidden
+              >
+
+
+              <button
+                id="promoBannerSelectButton"
+                class="admin-image-select-button"
+                type="button"
+              >
+
+                <i data-lucide="image-plus"></i>
+
+                <strong>
+                  Choose Promotional Banner
+                </strong>
+
+                <span>
+                  Select from your device
+                </span>
+
+              </button>
+
+
+            </div>
+
+
+            <div class="admin-image-preview-card">
+
+
+              <span class="admin-preview-label">
+                Preview
+              </span>
+
+
+              <div
+                id="promoBannerPreview"
+                class="admin-image-preview"
+              >
+                <i data-lucide="image"></i>
+                <span>No banner selected</span>
+              </div>
+
+
+            </div>
+
+
+          </div>
+
+
+          <input
+            id="promoBannerData"
+            type="hidden"
+          >
+
+
+          <div
+            id="promoBannerWarning"
+            style="display:none;"
+          ></div>
+
+
+        </section>
+
+
+
+        <div class="admin-form-actions">
+
+
+          <button
+            id="saveBannerSettingsButton"
+            class="admin-primary-button"
+            type="button"
+          >
+            <i data-lucide="save"></i>
+            Save Banners
+          </button>
+
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- =========================
+           SITE SEO
+      ========================== -->
+
+      <section
+        class="admin-page"
+        id="seoPage"
+      >
+
+
+        <div class="admin-section-head">
+
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Search Optimization
+            </span>
+
+            <h2>Site SEO</h2>
+
+            <p>
+              Manage default SEO settings for the entire website.
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <form
+          id="siteSeoForm"
+          class="admin-form-card"
+        >
+
+
+          <div class="admin-form-grid two-column">
+
+
+            <div class="admin-field full-width">
+
+              <label for="siteSeoTitle">
+                Default Site Title
+              </label>
+
+              <input
+                id="siteSeoTitle"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="admin-field full-width">
+
+              <label for="siteSeoDescription">
+                Default Meta Description
+              </label>
+
+              <textarea
+                id="siteSeoDescription"
+                rows="4"
+              ></textarea>
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="siteSeoUrl">
+                Website URL
+              </label>
+
+              <input
+                id="siteSeoUrl"
+                type="url"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="siteSeoLanguage">
+                Default Language
+              </label>
+
+              <select id="siteSeoLanguage">
+
+                <option value="en">
+                  English
+                </option>
+
+                <option value="bn">
+                  Bangla
+                </option>
+
+                <option value="en-bn">
+                  English + Bangla
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="admin-field full-width">
+
+              <label for="siteSeoKeywords">
+                Default Keywords
+              </label>
+
+              <input
+                id="siteSeoKeywords"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="siteSeoOgImage">
+                Default OG Image
+              </label>
+
+              <input
+                id="siteSeoOgImage"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="siteSeoTwitterHandle">
+                X / Twitter Handle
+              </label>
+
+              <input
+                id="siteSeoTwitterHandle"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="admin-field full-width">
+
+              <label for="siteSeoSchema">
+                Organization / Website Schema JSON-LD
+              </label>
+
+              <textarea
+                id="siteSeoSchema"
+                rows="8"
+              ></textarea>
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="admin-form-actions">
+
+
+            <button
+              class="admin-primary-button"
+              type="submit"
+            >
+              <i data-lucide="save"></i>
+              Save SEO Settings
+            </button>
+
+
+          </div>
+
+
+        </form>
+
+
+      </section>
+
+
+
+      <!-- =========================
+           SETTINGS
+      ========================== -->
+
+      <section
+        class="admin-page"
+        id="settingsPage"
+      >
+
+
+        <div class="admin-section-head">
+
+
+          <div>
+
+            <span class="admin-eyebrow">
+              Website
+            </span>
+
+            <h2>Settings</h2>
+
+            <p>
+              General Kinar Aage website settings.
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <form
+          id="siteSettingsForm"
+          class="admin-form-card"
+        >
+
+
+          <div class="admin-form-grid two-column">
+
+
+            <div class="admin-field">
+
+              <label for="siteName">
+                Website Name
+              </label>
+
+              <input
+                id="siteName"
+                type="text"
+                value="Kinar Aage"
+              >
+
+            </div>
+
+
+            <div class="admin-field">
+
+              <label for="siteTagline">
+                Tagline
+              </label>
+
+              <input
+                id="siteTagline"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="admin-field full-width">
+
+              <label for="siteAffiliateDisclosure">
+                Default Affiliate Disclosure
+              </label>
+
+              <textarea
+                id="siteAffiliateDisclosure"
+                rows="4"
+              ></textarea>
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="admin-form-actions">
+
+
+            <button
+              class="admin-primary-button"
+              type="submit"
+            >
+              <i data-lucide="save"></i>
+              Save Settings
+            </button>
+
+
+          </div>
+
+
+        </form>
+
+
+      </section>
+
+
+    </main>
+
+
+  </div>
+
+
+</div>
+
+
+
+<div
+  class="admin-sidebar-overlay"
+  id="adminSidebarOverlay"
+></div>
+
+
+<div
+  class="admin-toast"
+  id="adminToast"
+></div>
+
+
+<script src="admin.js"></script>
+
+
+<script>
+  lucide.createIcons();
+</script>
+
+
+</body>
+
+</html> 
