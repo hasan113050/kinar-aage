@@ -997,7 +997,68 @@ const DEFAULT_HOMEPAGE_CONTENT = {
    CATEGORY DATA
 ========================================= */
 
-function getCategories() {
+async function getCategories() {
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    const firebaseCategories =
+      await firebaseModule
+        .getCategoriesFromFirestore();
+
+
+    if (
+      Array.isArray(
+        firebaseCategories
+      )
+    ) {
+
+      return firebaseCategories
+        .filter(
+          function(category) {
+
+            return (
+              category &&
+              category.status !==
+                "inactive"
+            );
+
+          }
+        )
+        .slice()
+        .sort(
+          function(a, b) {
+
+            return (
+              Number(
+                a.order || 999
+              ) -
+              Number(
+                b.order || 999
+              )
+            );
+
+          }
+        );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase category load error:",
+      error
+    );
+
+  }
+
 
   const storedCategories =
     getStoredData(
@@ -1123,7 +1184,7 @@ function getCategoryFallbackIcon(
    HOMEPAGE CATEGORIES
 ========================================= */
 
-function renderHomepageCategories() {
+async function renderHomepageCategories() {
 
   if (
     !homepageCategoryGrid
@@ -1133,7 +1194,7 @@ function renderHomepageCategories() {
 
 
   const categories =
-    getCategories();
+  await getCategories();
 
 
   if (
@@ -1219,7 +1280,7 @@ function renderHomepageCategories() {
    FOOTER CATEGORIES
 ========================================= */
 
-function renderFooterCategories() {
+async function renderFooterCategories() {
 
   if (
     !footerCategoryColumn
@@ -1228,8 +1289,8 @@ function renderFooterCategories() {
   }
 
 
-  const categories =
-    getCategories();
+ const categories =
+  await getCategories();
 
 
   footerCategoryColumn.innerHTML =
@@ -1280,7 +1341,52 @@ function renderFooterCategories() {
    PRODUCTS
 ========================================= */
 
-function getProducts() {
+async function getProducts() {
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    const firebaseProducts =
+      await firebaseModule
+        .getProductsFromFirestore();
+
+
+   if (
+  Array.isArray(
+    firebaseProducts
+  )
+) {
+
+      return firebaseProducts.filter(
+        function(product) {
+
+          return (
+            product &&
+            product.status !==
+              "draft"
+          );
+
+        }
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase product load error:",
+      error
+    );
+
+  }
+
 
   const products =
     getStoredData(
@@ -1600,13 +1706,14 @@ function createProductCard(
         <div class="product-card-actions">
 
           <a
-            class="product-details-link"
-            href="product.html?id=${encodeURIComponent(
-              productId
-            )}"
-          >
-            View Details
-          </a>
+  class="product-details-link"
+  href="product.html?slug=${encodeURIComponent(
+    product.slug ||
+    ""
+  )}"
+>
+  View Details
+</a>
 
 
           <a
@@ -1679,10 +1786,10 @@ function bindProductCardEvents(
    RENDER PRODUCTS
 ========================================= */
 
-function renderProducts() {
+async function renderProducts() {
 
   const products =
-    getProducts();
+    await getProducts();
 
 
   if (
@@ -1863,25 +1970,67 @@ function applyHeroTitle(
    BANNER SETTINGS
 ========================================= */
 
-function loadBannerSettings() {
+async function loadBannerSettings() {
 
-  const bannerSettings =
+  const localBannerSettings =
     getStoredData(
       BANNER_SETTINGS_KEY,
-      null
+      {}
     );
 
 
-  if (
-    !bannerSettings
-  ) {
-    return;
+  let firebaseBannerSettings =
+    null;
+
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    firebaseBannerSettings =
+      await firebaseModule
+        .getBannerSettingsFromFirestore();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase banner load error:",
+      error
+    );
+
   }
 
 
-  const hero =
-    bannerSettings.hero ||
+  const localHero =
+    localBannerSettings.hero ||
     {};
+
+
+  const firebaseHero =
+    firebaseBannerSettings?.hero ||
+    {};
+
+
+  const hero = {
+
+    ...localHero,
+    ...firebaseHero,
+
+    /*
+     * Image stays local for now.
+     */
+    image:
+  firebaseHero.image ||
+  localHero.image ||
+  ""
+
+  };
 
 
   if (
@@ -1949,10 +2098,12 @@ function loadBannerSettings() {
     hero.point1
   );
 
+
   setText(
     heroPoint2,
     hero.point2
   );
+
 
   setText(
     heroPoint3,
@@ -1960,8 +2111,11 @@ function loadBannerSettings() {
   );
 
 
+  /*
+   * Promo image remains local.
+   */
   const promo =
-    bannerSettings.promo ||
+    localBannerSettings.promo ||
     {};
 
 
@@ -1996,7 +2150,6 @@ function loadBannerSettings() {
   }
 
 }
-
 
 /* =========================================
    SITE SETTINGS
@@ -2918,3 +3071,4 @@ renderFooterCategories();
 renderProducts();
 
 updateWishlistCount();
+

@@ -18,15 +18,6 @@ const WISHLIST_KEY =
    DOM ELEMENTS
 ========================================= */
 
-const searchPageForm =
-  document.getElementById(
-    "searchPageForm"
-  );
-
-const searchPageInput =
-  document.getElementById(
-    "searchPageInput"
-  );
 
 const searchResultsTitle =
   document.getElementById(
@@ -75,11 +66,9 @@ function getStoredData(
         key
       );
 
-
     if (!rawData) {
       return fallback;
     }
-
 
     return JSON.parse(
       rawData
@@ -145,20 +134,16 @@ function showSiteToast(
     return;
   }
 
-
   siteToast.textContent =
     message;
-
 
   siteToast.classList.add(
     "show"
   );
 
-
   clearTimeout(
     showSiteToast.timer
   );
-
 
   showSiteToast.timer =
     setTimeout(
@@ -179,14 +164,56 @@ function showSiteToast(
    PRODUCT DATA
 ========================================= */
 
-function getProducts() {
+async function getProducts() {
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+    const firebaseProducts =
+      await firebaseModule
+        .getProductsFromFirestore();
+
+    if (
+      Array.isArray(
+        firebaseProducts
+      )
+    ) {
+
+      return firebaseProducts.filter(
+        function(product) {
+
+          return (
+            product &&
+            product.status !==
+              "draft"
+          );
+
+        }
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase product load error:",
+      error
+    );
+
+  }
+
 
   const products =
     getStoredData(
       PRODUCTS_KEY,
       []
     );
-
 
   if (
     !Array.isArray(
@@ -198,13 +225,13 @@ function getProducts() {
 
   }
 
-
   return products.filter(
     function(product) {
 
       return (
         product &&
-        product.status !== "draft"
+        product.status !==
+          "draft"
       );
 
     }
@@ -239,7 +266,6 @@ function getWishlist() {
       []
     );
 
-
   return Array.isArray(
     wishlist
   )
@@ -260,7 +286,6 @@ function saveWishlist(
     )
   );
 
-
   updateWishlistCount();
 
 }
@@ -271,7 +296,6 @@ function updateWishlistCount() {
   if (!wishlistCount) {
     return;
   }
-
 
   wishlistCount.textContent =
     getWishlist().length;
@@ -303,7 +327,6 @@ function toggleWishlist(
       productId
     );
 
-
   let wishlist =
     getWishlist();
 
@@ -323,14 +346,12 @@ function toggleWishlist(
         }
       );
 
-
     button.classList.remove(
       "active"
     );
 
     button.textContent =
       "♡";
-
 
     showSiteToast(
       "Removed from saved products."
@@ -344,7 +365,6 @@ function toggleWishlist(
       id
     );
 
-
     button.classList.add(
       "active"
     );
@@ -352,13 +372,11 @@ function toggleWishlist(
     button.textContent =
       "♥";
 
-
     showSiteToast(
       "Product saved."
     );
 
   }
-
 
   saveWishlist(
     wishlist
@@ -380,10 +398,15 @@ function createProductCard(
       product
     );
 
-
   const saved =
     isSavedProduct(
       productId
+    );
+
+  const productSlug =
+    String(
+      product.slug ||
+      ""
     );
 
 
@@ -508,8 +531,8 @@ function createProductCard(
 
           <a
             class="product-details-link"
-            href="product.html?id=${encodeURIComponent(
-              productId
+            href="product.html?slug=${encodeURIComponent(
+              productSlug
             )}"
           >
             View Details
@@ -561,7 +584,7 @@ function normalizeText(
 }
 
 
-function searchProducts(
+async function searchProducts(
   query
 ) {
 
@@ -572,7 +595,7 @@ function searchProducts(
 
 
   const products =
-    getProducts();
+    await getProducts();
 
 
   if (!cleanQuery) {
@@ -631,12 +654,12 @@ function searchProducts(
    RENDER SEARCH RESULTS
 ========================================= */
 
-function renderSearchResults(
+async function renderSearchResults(
   query
 ) {
 
   const results =
-    searchProducts(
+    await searchProducts(
       query
     );
 
@@ -721,9 +744,11 @@ function renderSearchResults(
 
   searchResultsGrid.innerHTML =
     results
+
       .map(
         createProductCard
       )
+
       .join(
         ""
       );
@@ -741,9 +766,11 @@ function renderSearchResults(
 function bindWishlistButtons() {
 
   document
+
     .querySelectorAll(
       "[data-save-product]"
     )
+
     .forEach(
       function(button) {
 
@@ -755,7 +782,6 @@ function bindWishlistButtons() {
               this.getAttribute(
                 "data-save-product"
               );
-
 
             toggleWishlist(
               productId,
@@ -771,48 +797,13 @@ function bindWishlistButtons() {
 }
 
 
-/* =========================================
-   SEARCH FORM
-========================================= */
-
-searchPageForm
-  ?.addEventListener(
-    "submit",
-    function(event) {
-
-      event.preventDefault();
-
-
-      const query =
-        searchPageInput
-          ?.value
-          .trim();
-
-
-      if (!query) {
-
-        window.location.href =
-          "search.html";
-
-        return;
-
-      }
-
-
-      window.location.href =
-        `search.html?q=${encodeURIComponent(
-          query
-        )}`;
-
-    }
-  );
 
 
 /* =========================================
    START
 ========================================= */
 
-function startSearchPage() {
+async function startSearchPage() {
 
   const params =
     new URLSearchParams(
@@ -826,19 +817,11 @@ function startSearchPage() {
     ) || "";
 
 
-  if (
-    searchPageInput
-  ) {
-
-    searchPageInput.value =
-      query;
-
-  }
-
 
   updateWishlistCount();
 
-  renderSearchResults(
+
+  await renderSearchResults(
     query
   );
 

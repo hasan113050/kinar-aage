@@ -227,20 +227,16 @@ function showSiteToast(
     return;
   }
 
-
   siteToast.textContent =
     message;
-
 
   siteToast.classList.add(
     "show"
   );
 
-
   clearTimeout(
     showSiteToast.timer
   );
-
 
   showSiteToast.timer =
     setTimeout(
@@ -261,7 +257,59 @@ function showSiteToast(
    CATEGORY DATA
 ========================================= */
 
-function getCategories() {
+async function getCategories() {
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    const firebaseCategories =
+      await firebaseModule
+        .getCategoriesFromFirestore();
+
+
+    if (
+      Array.isArray(
+        firebaseCategories
+      )
+    ) {
+
+      return firebaseCategories
+
+        .slice()
+
+        .sort(
+          function(a, b) {
+
+            return (
+              Number(
+                a.order || 999
+              ) -
+              Number(
+                b.order || 999
+              )
+            );
+
+          }
+        );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase category load error:",
+      error
+    );
+
+  }
+
 
   const storedCategories =
     getStoredData(
@@ -273,14 +321,15 @@ function getCategories() {
   const categories =
     Array.isArray(
       storedCategories
-    ) &&
-    storedCategories.length
+    )
       ? storedCategories
       : DEFAULT_CATEGORIES;
 
 
   return categories
+
     .slice()
+
     .sort(
       function(a, b) {
 
@@ -306,7 +355,6 @@ function getRequestedCategoryName() {
       window.location.search
     );
 
-
   return (
     params.get(
       "category"
@@ -317,20 +365,17 @@ function getRequestedCategoryName() {
 }
 
 
-function getCurrentCategory() {
+async function getCurrentCategory() {
 
   const requestedCategory =
     getRequestedCategoryName();
-
 
   if (!requestedCategory) {
     return null;
   }
 
-
-  const categories =
-    getCategories();
-
+ const categories =
+  await getCategories();
 
   return (
     categories.find(
@@ -356,14 +401,56 @@ function getCurrentCategory() {
    PRODUCT DATA
 ========================================= */
 
-function getProducts() {
+async function getProducts() {
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+    const firebaseProducts =
+      await firebaseModule
+        .getProductsFromFirestore();
+
+    if (
+      Array.isArray(
+        firebaseProducts
+      )
+    ) {
+
+      return firebaseProducts.filter(
+        function(product) {
+
+          return (
+            product &&
+            product.status !==
+              "draft"
+          );
+
+        }
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase product load error:",
+      error
+    );
+
+  }
+
 
   const products =
     getStoredData(
       PRODUCTS_KEY,
       []
     );
-
 
   if (
     !Array.isArray(
@@ -372,7 +459,6 @@ function getProducts() {
   ) {
     return [];
   }
-
 
   return products.filter(
     function(product) {
@@ -415,7 +501,6 @@ function getWishlist() {
       []
     );
 
-
   return Array.isArray(
     wishlist
   )
@@ -436,7 +521,6 @@ function saveWishlist(
     )
   );
 
-
   updateWishlistCount();
 
 }
@@ -447,7 +531,6 @@ function updateWishlistCount() {
   if (!wishlistCount) {
     return;
   }
-
 
   wishlistCount.textContent =
     getWishlist().length;
@@ -479,7 +562,6 @@ function toggleWishlist(
       productId
     );
 
-
   let wishlist =
     getWishlist();
 
@@ -499,15 +581,12 @@ function toggleWishlist(
         }
       );
 
-
     button.classList.remove(
       "active"
     );
 
-
     button.textContent =
       "♡";
-
 
     showSiteToast(
       "Removed from saved products."
@@ -521,22 +600,18 @@ function toggleWishlist(
       id
     );
 
-
     button.classList.add(
       "active"
     );
 
-
     button.textContent =
       "♥";
-
 
     showSiteToast(
       "Product saved."
     );
 
   }
-
 
   saveWishlist(
     wishlist
@@ -558,12 +633,16 @@ function createProductCard(
       product
     );
 
-
   const saved =
     isSavedProduct(
       productId
     );
 
+  const productSlug =
+    String(
+      product.slug ||
+      ""
+    );
 
   const productImage =
     product.image
@@ -636,6 +715,7 @@ function createProductCard(
 
       </div>
 
+
       <div class="product-card-body">
 
         <span class="product-card-category">
@@ -660,16 +740,18 @@ function createProductCard(
           )}
         </p>
 
+
         <div class="product-card-actions">
 
           <a
             class="product-details-link"
-            href="product.html?id=${encodeURIComponent(
-              productId
+            href="product.html?slug=${encodeURIComponent(
+              productSlug
             )}"
           >
             View Details
           </a>
+
 
           <a
             class="product-buy-link"
@@ -700,14 +782,13 @@ function createProductCard(
    CATEGORY PAGE
 ========================================= */
 
-function renderCategoryPage() {
+async function renderCategoryPage() {
 
   const requestedCategory =
     getRequestedCategoryName();
 
-
-  const currentCategory =
-    getCurrentCategory();
+ const currentCategory =
+  await getCurrentCategory();
 
 
   if (
@@ -723,7 +804,6 @@ function renderCategoryPage() {
 
     }
 
-
     if (
       categoryPageDescription
     ) {
@@ -733,8 +813,7 @@ function renderCategoryPage() {
 
     }
 
-
-    renderCategoryProducts(
+    await renderCategoryProducts(
       ""
     );
 
@@ -756,7 +835,6 @@ function renderCategoryPage() {
 
     }
 
-
     if (
       categoryPageDescription
     ) {
@@ -766,7 +844,6 @@ function renderCategoryPage() {
 
     }
 
-
     if (
       categoryProductCount
     ) {
@@ -775,7 +852,6 @@ function renderCategoryPage() {
         "0 Products";
 
     }
-
 
     if (
       categoryProductsGrid
@@ -789,7 +865,6 @@ function renderCategoryPage() {
         `;
 
     }
-
 
     document.title =
       `${requestedCategory} | Kinar Aage`;
@@ -813,7 +888,6 @@ function renderCategoryPage() {
 
     }
 
-
     if (
       categoryPageDescription
     ) {
@@ -823,7 +897,6 @@ function renderCategoryPage() {
 
     }
 
-
     if (
       categoryProductCount
     ) {
@@ -832,7 +905,6 @@ function renderCategoryPage() {
         "0 Products";
 
     }
-
 
     if (
       categoryProductsGrid
@@ -846,7 +918,6 @@ function renderCategoryPage() {
         `;
 
     }
-
 
     document.title =
       `${currentCategory.name} | Kinar Aage`;
@@ -865,7 +936,6 @@ function renderCategoryPage() {
 
   }
 
-
   if (
     categoryPageDescription
   ) {
@@ -876,12 +946,10 @@ function renderCategoryPage() {
 
   }
 
-
   document.title =
     `${currentCategory.name} | Kinar Aage`;
 
-
-  renderCategoryProducts(
+  await renderCategoryProducts(
     currentCategory.name
   );
 
@@ -892,12 +960,12 @@ function renderCategoryPage() {
    CATEGORY PRODUCTS
 ========================================= */
 
-function renderCategoryProducts(
+async function renderCategoryProducts(
   categoryName
 ) {
 
   const products =
-    getProducts();
+    await getProducts();
 
 
   const filteredProducts =
@@ -954,18 +1022,22 @@ function renderCategoryProducts(
 
   categoryProductsGrid.innerHTML =
     filteredProducts
+
       .map(
         createProductCard
       )
+
       .join(
         ""
       );
 
 
   categoryProductsGrid
+
     .querySelectorAll(
       "[data-save-product]"
     )
+
     .forEach(
       function(button) {
 

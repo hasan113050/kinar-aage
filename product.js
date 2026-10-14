@@ -360,7 +360,43 @@ function toList(
    PRODUCT DATA
 ========================================= */
 
-function getProducts() {
+async function getProducts() {
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    const firebaseProducts =
+      await firebaseModule
+        .getProductsFromFirestore();
+
+
+    if (
+      Array.isArray(
+        firebaseProducts
+      ) &&
+      firebaseProducts.length
+    ) {
+
+      return firebaseProducts;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase product load error:",
+      error
+    );
+
+  }
+
 
   const products =
     getStoredData(
@@ -399,7 +435,7 @@ function getProductId(
 }
 
 
-function getCurrentProduct() {
+async function getCurrentProduct() {
 
   const params =
     new URLSearchParams(
@@ -407,35 +443,36 @@ function getCurrentProduct() {
     );
 
 
-  const requestedId =
-    params.get(
-      "id"
-    );
+ const requestedSlug =
+  params.get(
+    "slug"
+  );
 
 
-  if (!requestedId) {
-    return null;
-  }
+if (!requestedSlug) {
+  return null;
+}
 
 
   const products =
-    getProducts();
+    await getProducts();
 
 
-  return (
-    products.find(
-      function(product) {
+ return (
+  products.find(
+    function(product) {
 
-        return (
-          getProductId(
-            product
-          ) === requestedId
-        );
+      return (
+        String(
+          product.slug ||
+          ""
+        ) === requestedSlug
+      );
 
-      }
-    ) ||
-    null
-  );
+    }
+  ) ||
+  null
+);
 
 }
 
@@ -803,10 +840,10 @@ function applyProductSeo(
    LOAD MAIN PRODUCT
 ========================================= */
 
-function loadProduct() {
+async function loadProduct() {
 
   const product =
-    getCurrentProduct();
+  await getCurrentProduct();
 
 
   if (!product) {
@@ -1189,16 +1226,15 @@ function createRelatedCard(
         </p>
 
 
-        <div class="product-card-actions">
-
-          <a
-            class="product-details-link"
-            href="product.html?id=${encodeURIComponent(
-              productId
-            )}"
-          >
-            View Details
-          </a>
+       <a
+  class="product-details-link"
+  href="product.html?slug=${encodeURIComponent(
+    product.slug ||
+    ""
+  )}"
+>
+  View Details
+</a>
 
 
           <a
@@ -1227,7 +1263,7 @@ function createRelatedCard(
 }
 
 
-function renderRelatedProducts(
+async function renderRelatedProducts(
   currentProduct
 ) {
 
@@ -1242,20 +1278,23 @@ function renderRelatedProducts(
     );
 
 
+  const allProducts =
+    await getProducts();
+
+
   const products =
-    getProducts()
-      .filter(
-        function(product) {
+    allProducts.filter(
+      function(product) {
 
-          return (
-            getProductId(
-              product
-            ) !== currentId &&
-            product.status !== "draft"
-          );
+        return (
+          getProductId(
+            product
+          ) !== currentId &&
+          product.status !== "draft"
+        );
 
-        }
-      );
+      }
+    );
 
 
   const sameCategory =

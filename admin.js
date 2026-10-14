@@ -25,10 +25,6 @@ const BANNER_SETTINGS_KEY =
 const HOMEPAGE_CONTENT_KEY =
   "kinarAageHomepageContent";
 
-const ADMIN_SESSION_KEY =
-  "kinarAageAdminSession";
-
-
 /* =========================================
    INITIAL CATEGORIES
 ========================================= */
@@ -1440,6 +1436,10 @@ function openAdminPage(
 
   }
 
+localStorage.setItem(
+  "kinarAageAdminActivePage",
+  pageId
+);
 
   closeAdminSidebar();
 
@@ -1768,19 +1768,153 @@ function setupImageUpload(
     );
 
 }
-
-
 /* =========================================
    PRODUCT IMAGE
 ========================================= */
 
-setupImageUpload(
-  productImageUpload,
-  productImageSelectButton,
-  productImagePreview,
-  productImageData,
-  null
-);
+productImageSelectButton
+  ?.addEventListener(
+    "click",
+    function() {
+
+      productImageUpload?.click();
+
+    }
+  );
+
+
+productImageUpload
+  ?.addEventListener(
+    "change",
+    async function() {
+
+      const file =
+        productImageUpload.files?.[0];
+
+
+      if (!file) {
+        return;
+      }
+
+
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        showAdminToast(
+          "Please select a valid image file."
+        );
+
+        productImageUpload.value =
+          "";
+
+        return;
+
+      }
+
+
+      if (
+        file.size >
+        2 * 1024 * 1024
+      ) {
+
+        showAdminToast(
+          "Image must be 2 MB or smaller."
+        );
+
+        productImageUpload.value =
+          "";
+
+        return;
+
+      }
+
+
+      try {
+
+        productImageSelectButton.disabled =
+          true;
+
+
+        showAdminToast(
+          "Uploading product image..."
+        );
+
+
+        const cloudinaryModule =
+          await import(
+            "./cloudinary-upload.js"
+          );
+
+
+        const result =
+          await cloudinaryModule
+            .uploadImageToCloudinary(
+              file
+            );
+
+
+        if (
+          !result?.url
+        ) {
+
+          throw new Error(
+            "Cloudinary did not return an image URL."
+          );
+
+        }
+
+
+        if (
+          productImageData
+        ) {
+
+          productImageData.value =
+            result.url;
+
+        }
+
+
+        showImagePreview(
+          productImagePreview,
+          result.url
+        );
+
+
+        showAdminToast(
+          "Product image uploaded successfully."
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Cloudinary product image upload error:",
+          error
+        );
+
+
+        showAdminToast(
+          "Product image upload failed."
+        );
+
+      }
+
+      finally {
+
+        productImageSelectButton.disabled =
+          false;
+
+        productImageUpload.value =
+          "";
+
+      }
+
+    }
+  );
 
 
 /* =========================================
@@ -1844,11 +1978,90 @@ function resetProductForm() {
     "No image selected"
   );
 
+if (
+  productSlugInput
+) {
 
+  delete productSlugInput
+    .dataset
+    .manual;
+
+}
   updateMetaCounters();
 
 }
 
+/* =========================================
+   PRODUCT AUTO SLUG
+========================================= */
+
+const productNameInput =
+  document.getElementById(
+    "productName"
+  );
+
+const productSlugInput =
+  document.getElementById(
+    "productSlug"
+  );
+
+
+productNameInput
+  ?.addEventListener(
+    "input",
+    function() {
+
+      if (
+        !productSlugInput
+      ) {
+        return;
+      }
+
+
+      if (
+        productSlugInput
+          .dataset
+          .manual ===
+        "true"
+      ) {
+        return;
+      }
+
+
+      productSlugInput.value =
+        createSlug(
+          productNameInput.value
+        );
+
+    }
+  );
+
+
+productSlugInput
+  ?.addEventListener(
+    "input",
+    function() {
+
+      if (
+        productSlugInput.value
+          .trim()
+      ) {
+
+        productSlugInput.dataset.manual =
+          "true";
+
+      }
+
+      else {
+
+        delete productSlugInput
+          .dataset
+          .manual;
+
+      }
+
+    }
+  );
 
 function collectProductFormData() {
 
@@ -2013,7 +2226,7 @@ function collectProductFormData() {
 productForm
   ?.addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
       event.preventDefault();
 
@@ -2115,6 +2328,73 @@ productForm
       saveProducts(
         products
       );
+
+
+      try {
+
+        const firebaseModule =
+          await import(
+            "./firebase-db.js"
+          );
+
+
+        const savedProduct =
+          products.find(
+            product =>
+              String(
+                product.id
+              ) ===
+              String(
+                newData.id
+              )
+          );
+
+
+        if (savedProduct) {
+
+          const firebaseProduct = {
+
+            ...savedProduct,
+
+            image:
+              String(
+                savedProduct.image ||
+                ""
+              )
+                .startsWith(
+                  "data:"
+                )
+                ? ""
+                : (
+                    savedProduct.image ||
+                    ""
+                  )
+
+          };
+
+
+          await firebaseModule
+            .saveProductToFirestore(
+              firebaseProduct
+            );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Firebase product save error:",
+          error
+        );
+
+
+        showAdminToast(
+          "Product saved locally, but Firebase save failed."
+        );
+
+      }
 
 
       resetProductForm();
@@ -2288,6 +2568,16 @@ function editProduct(
     product.slug
   );
 
+  if (
+  productSlugInput
+) {
+
+  delete productSlugInput
+    .dataset
+    .manual;
+
+}
+
   setValue(
     "productCanonical",
     product.canonical
@@ -2336,7 +2626,7 @@ function editProduct(
 }
 
 
-function deleteProduct(
+async function deleteProduct(
   productId
 ) {
 
@@ -2351,32 +2641,62 @@ function deleteProduct(
   }
 
 
-  const products =
-    getProducts()
-      .filter(
-        product =>
-          String(
-            product.id
-          ) !==
-          String(
-            productId
-          )
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
       );
 
 
-  saveProducts(
-    products
-  );
+    await firebaseModule
+      .deleteProductFromFirestore(
+        productId
+      );
 
 
-  renderAdminProducts();
+    const products =
+      getProducts()
+        .filter(
+          product =>
+            String(
+              product.id
+            ) !==
+            String(
+              productId
+            )
+        );
 
-  updateDashboard();
+
+    saveProducts(
+      products
+    );
 
 
-  showAdminToast(
-    "Product deleted."
-  );
+    renderAdminProducts();
+
+    updateDashboard();
+
+
+    showAdminToast(
+      "Product deleted."
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Product delete error:",
+      error
+    );
+
+
+    showAdminToast(
+      "Product delete failed."
+    );
+
+  }
 
 }
 
@@ -3027,7 +3347,6 @@ setupImageUpload(
   "hidden"
 );
 
-
 /* =========================================
    RESET CATEGORY FORM
 ========================================= */
@@ -3213,7 +3532,7 @@ categorySlug
 categoryForm
   ?.addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
       event.preventDefault();
 
@@ -3452,7 +3771,36 @@ categoryForm
         );
 
       }
+try {
 
+  const firebaseModule =
+    await import(
+      "./firebase-db.js"
+    );
+
+
+  await firebaseModule
+    .saveCategoryToFirestore(
+      newCategory
+    );
+
+}
+
+catch (error) {
+
+  console.error(
+    "Category Firebase save error:",
+    error
+  );
+
+
+  showAdminToast(
+    "Category Firebase save failed."
+  );
+
+  return;
+
+}
 
       saveCategories(
         categories
@@ -3566,7 +3914,7 @@ function editCategory(
 }
 
 
-function deleteCategory(
+async function deleteCategory(
   categoryId
 ) {
 
@@ -3623,7 +3971,36 @@ function deleteCategory(
     return;
   }
 
+try {
 
+  const firebaseModule =
+    await import(
+      "./firebase-db.js"
+    );
+
+
+  await firebaseModule
+    .deleteCategoryFromFirestore(
+      categoryId
+    );
+
+}
+
+catch (error) {
+
+  console.error(
+    "Category delete error:",
+    error
+  );
+
+
+  showAdminToast(
+    "Category delete failed."
+  );
+
+  return;
+
+}
   const updated =
     categories.filter(
       item =>
@@ -3849,6 +4226,7 @@ function renderCategories() {
     );
 
 }
+
 
 /* =========================================
    HOMEPAGE IMAGE UPLOADS
@@ -4077,7 +4455,6 @@ function getHomepageContent() {
   };
 
 }
-
 
 /* =========================================
    LOAD HOMEPAGE CONTENT
@@ -4525,7 +4902,6 @@ function loadHomepageContent() {
   );
 
 }
-
 
 /* =========================================
    SAVE HOMEPAGE CONTENT
@@ -5131,14 +5507,185 @@ homepageContentForm
    BANNER UPLOADS
 ========================================= */
 
-setupImageUpload(
-  heroBannerUpload,
-  heroBannerSelectButton,
-  heroBannerPreview,
-  heroBannerData,
-  heroBannerWarning,
-  "style"
-);
+heroBannerSelectButton
+  ?.addEventListener(
+    "click",
+    function() {
+
+      heroBannerUpload?.click();
+
+    }
+  );
+
+
+heroBannerUpload
+  ?.addEventListener(
+    "change",
+    async function() {
+
+      const file =
+        heroBannerUpload.files?.[0];
+
+
+      if (!file) {
+        return;
+      }
+
+
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        if (heroBannerWarning) {
+
+          heroBannerWarning.textContent =
+            "Please select a valid image file.";
+
+          heroBannerWarning.style.display =
+            "block";
+
+        }
+
+        heroBannerUpload.value =
+          "";
+
+        return;
+
+      }
+
+
+      if (
+        file.size >
+        2 * 1024 * 1024
+      ) {
+
+        if (heroBannerWarning) {
+
+          heroBannerWarning.textContent =
+            "Image must be 2 MB or smaller.";
+
+          heroBannerWarning.style.display =
+            "block";
+
+        }
+
+        heroBannerUpload.value =
+          "";
+
+        return;
+
+      }
+
+
+      if (heroBannerWarning) {
+
+        heroBannerWarning.textContent =
+          "";
+
+        heroBannerWarning.style.display =
+          "none";
+
+      }
+
+
+      try {
+
+        heroBannerSelectButton.disabled =
+          true;
+
+
+        showAdminToast(
+          "Uploading banner..."
+        );
+
+
+        const cloudinaryModule =
+          await import(
+            "./cloudinary-upload.js"
+          );
+
+
+        const result =
+          await cloudinaryModule
+            .uploadImageToCloudinary(
+              file
+            );
+
+
+        if (
+          !result?.url
+        ) {
+
+          throw new Error(
+            "Cloudinary did not return an image URL."
+          );
+
+        }
+
+
+        if (
+          heroBannerData
+        ) {
+
+          heroBannerData.value =
+            result.url;
+
+        }
+
+
+        showImagePreview(
+          heroBannerPreview,
+          result.url
+        );
+
+
+        showAdminToast(
+          "Banner uploaded successfully."
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Cloudinary banner upload error:",
+          error
+        );
+
+
+        if (heroBannerWarning) {
+
+          heroBannerWarning.textContent =
+            error.message ||
+            "Banner upload failed.";
+
+          heroBannerWarning.style.display =
+            "block";
+
+        }
+
+
+        showAdminToast(
+          "Banner upload failed."
+        );
+
+      }
+
+      finally {
+
+        heroBannerSelectButton.disabled =
+          false;
+
+        heroBannerUpload.value =
+          "";
+
+      }
+
+    }
+  );
+
 
 setupImageUpload(
   promoBannerUpload,
@@ -5157,7 +5704,7 @@ setupImageUpload(
 saveBannerSettingsButton
   ?.addEventListener(
     "click",
-    function() {
+    async function() {
 
       const previous =
         getStoredData(
@@ -5257,30 +5804,182 @@ saveBannerSettingsButton
       );
 
 
-      showAdminToast(
-        "Banner settings saved."
-      );
+      const firebaseData = {
+
+        hero: {
+
+          image:
+            data.hero.image ||
+            "",
+
+          overline:
+            data.hero.overline,
+
+          title:
+            data.hero.title,
+
+          subtitle:
+            data.hero.subtitle,
+
+          buttonText:
+            data.hero.buttonText,
+
+          buttonLink:
+            data.hero.buttonLink,
+
+          point1:
+            data.hero.point1,
+
+          point2:
+            data.hero.point2,
+
+          point3:
+            data.hero.point3
+
+        },
+
+        updatedAt:
+          data.updatedAt
+
+      };
+
+
+      try {
+
+        saveBannerSettingsButton.disabled =
+          true;
+
+
+        const firebaseModule =
+          await import(
+            "./firebase-db.js"
+          );
+
+
+        await firebaseModule
+          .saveBannerSettingsToFirestore(
+            firebaseData
+          );
+
+
+        showAdminToast(
+          "Banner settings saved to Firebase."
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Firebase banner save error:",
+          error
+        );
+
+
+        showAdminToast(
+          "Saved locally, but Firebase save failed."
+        );
+
+      }
+
+      finally {
+
+        saveBannerSettingsButton.disabled =
+          false;
+
+      }
 
     }
   );
 
-
-/* =========================================
+  /* =========================================
    LOAD BANNERS
 ========================================= */
 
-function loadBannerSettings() {
+async function loadBannerSettings() {
 
-  const data =
+  const localData =
     getStoredData(
       BANNER_SETTINGS_KEY,
       {}
     );
 
 
-  const hero =
-    data.hero ||
+  let firebaseData = null;
+
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    firebaseData =
+      await firebaseModule
+        .getBannerSettingsFromFirestore();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Firebase banner load error:",
+      error
+    );
+
+  }
+
+
+  const localHero =
+    localData.hero ||
     {};
+
+
+  const firebaseHero =
+    firebaseData?.hero ||
+    {};
+
+
+  const hero = {
+
+    ...localHero,
+    ...firebaseHero,
+
+    image:
+      firebaseHero.image ||
+      localHero.image ||
+      ""
+
+  };
+
+
+  const promo =
+    localData.promo ||
+    {};
+
+
+  const mergedData = {
+
+    ...localData,
+
+    hero,
+
+    promo,
+
+    updatedAt:
+      firebaseData?.updatedAt ||
+      localData.updatedAt ||
+      ""
+
+  };
+
+
+  saveStoredData(
+    BANNER_SETTINGS_KEY,
+    mergedData
+  );
 
 
   if (
@@ -5308,11 +6007,13 @@ function loadBannerSettings() {
     "A SMARTER WAY TO SHOP"
   );
 
+
   setValue(
     "heroBannerTitle",
     hero.title ||
     "Know More. Choose Better."
   );
+
 
   setValue(
     "heroBannerSubtitle",
@@ -5320,11 +6021,13 @@ function loadBannerSettings() {
     "In-depth reviews, buying guides and selected product recommendations for better everyday decisions."
   );
 
+
   setValue(
     "heroBannerButtonText",
     hero.buttonText ||
     "Explore Top Picks"
   );
+
 
   setValue(
     "heroBannerButtonLink",
@@ -5332,11 +6035,13 @@ function loadBannerSettings() {
     "#featured"
   );
 
+
   setValue(
     "heroPoint1",
     hero.point1 ||
     "Curated Shortlists"
   );
+
 
   setValue(
     "heroPoint2",
@@ -5344,16 +6049,12 @@ function loadBannerSettings() {
     "Buying Context"
   );
 
+
   setValue(
     "heroPoint3",
     hero.point3 ||
     "Merchant Links"
   );
-
-
-  const promo =
-    data.promo ||
-    {};
 
 
   if (
@@ -5609,30 +6310,6 @@ function loadSiteSettings() {
 
 
 /* =========================================
-   LOGOUT
-========================================= */
-
-document
-  .getElementById(
-    "adminLogoutButton"
-  )
-  ?.addEventListener(
-    "click",
-    function() {
-
-      localStorage.removeItem(
-        ADMIN_SESSION_KEY
-      );
-
-
-      window.location.href =
-        "login.html";
-
-    }
-  );
-
-
-/* =========================================
    ESCAPE KEY
 ========================================= */
 
@@ -5682,7 +6359,24 @@ renderCategories();
 updateDashboard();
 
 updateMetaCounters();
+const savedAdminPage =
+  localStorage.getItem(
+    "kinarAageAdminActivePage"
+  );
 
+
+if (
+  savedAdminPage &&
+  PAGE_CONFIG[
+    savedAdminPage
+  ]
+) {
+
+  openAdminPage(
+    savedAdminPage
+  );
+
+}
 
 if (
   typeof lucide !==
