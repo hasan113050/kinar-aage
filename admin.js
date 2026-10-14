@@ -6334,55 +6334,73 @@ document.addEventListener(
    START
 ========================================= */
 
-getProducts();
+async function startAdmin() {
 
-getCategories();
+  try {
 
-renderCategorySelects();
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
 
-loadSiteSeo();
+    const firebaseCategories =
+      await firebaseModule
+        .getCategoriesFromFirestore();
 
-loadSiteSettings();
+    saveCategories(
+      Array.isArray(
+        firebaseCategories
+      )
+        ? firebaseCategories
+        : []
+    );
 
-loadBannerSettings();
+  }
+  catch (error) {
 
-loadHomepageContent();
+    console.error(
+      "Admin category Firebase load error:",
+      error
+    );
 
-resetProductForm();
-
-resetCategoryForm();
-
-renderAdminProducts();
-
-renderCategories();
-
-updateDashboard();
-
-updateMetaCounters();
-const savedAdminPage =
-  localStorage.getItem(
-    "kinarAageAdminActivePage"
-  );
+  }
 
 
-if (
-  savedAdminPage &&
-  PAGE_CONFIG[
-    savedAdminPage
-  ]
-) {
+  getProducts();
 
-  openAdminPage(
-    savedAdminPage
-  );
+  renderCategorySelects();
+
+  loadSiteSeo();
+
+  loadSiteSettings();
+
+  loadBannerSettings();
+
+  loadHomepageContent();
+
+  resetProductForm();
+
+  resetCategoryForm();
+
+  renderAdminProducts();
+
+  renderCategories();
+
+  updateDashboard();
+
+  updateMetaCounters();
+
+
+  if (
+    typeof lucide !==
+    "undefined"
+  ) {
+
+    lucide.createIcons();
+
+  }
 
 }
 
-if (
-  typeof lucide !==
-  "undefined"
-) {
 
-  lucide.createIcons();
-
-}
+startAdmin();
