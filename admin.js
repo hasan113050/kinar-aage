@@ -6355,6 +6355,18 @@ async function startAdmin() {
         : []
     );
 
+     const firebaseProducts =
+  await firebaseModule
+    .getProductsFromFirestore();
+
+saveProducts(
+  Array.isArray(
+    firebaseProducts
+  )
+    ? firebaseProducts
+    : []
+);
+
   }
   catch (error) {
 
