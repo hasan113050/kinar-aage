@@ -6401,6 +6401,9 @@ saveProducts(
   updateDashboard();
 
   updateMetaCounters();
+  openAdminPage(
+  "dashboardPage"
+);
 
 
   if (
