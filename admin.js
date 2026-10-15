@@ -6401,8 +6401,21 @@ saveProducts(
   updateDashboard();
 
   updateMetaCounters();
-  openAdminPage(
-  "dashboardPage"
+ const savedAdminPage =
+  localStorage.getItem(
+    "kinarAageAdminActivePage"
+  );
+
+const initialAdminPage =
+  savedAdminPage &&
+  PAGE_CONFIG[
+    savedAdminPage
+  ]
+    ? savedAdminPage
+    : "dashboardPage";
+
+openAdminPage(
+  initialAdminPage
 );
 
 
