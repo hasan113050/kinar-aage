@@ -167,9 +167,11 @@ async function getProducts() {
         "./firebase-db.js"
       );
 
+
     const firebaseProducts =
       await firebaseModule
         .getProductsFromFirestore();
+
 
     if (
       Array.isArray(
@@ -191,6 +193,9 @@ async function getProducts() {
 
     }
 
+
+    return [];
+
   }
 
   catch (error) {
@@ -200,36 +205,10 @@ async function getProducts() {
       error
     );
 
-  }
-
-
-  const products =
-    getStoredData(
-      PRODUCTS_KEY,
-      []
-    );
-
-  if (
-    !Array.isArray(
-      products
-    )
-  ) {
 
     return [];
 
   }
-
-  return products.filter(
-    function(product) {
-
-      return (
-        product &&
-        product.status !==
-          "draft"
-      );
-
-    }
-  );
 
 }
 
@@ -662,6 +641,34 @@ if (
    START
 ========================================= */
 
-updateWishlistCount();
+async function startWishlistPage() {
 
-renderWishlistPage();
+  try {
+
+    updateWishlistCount();
+
+    await renderWishlistPage();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Wishlist page startup error:",
+      error
+    );
+
+  }
+
+  finally {
+
+    document.body.classList.remove(
+      "page-data-loading"
+    );
+
+  }
+
+}
+
+
+startWishlistPage();

@@ -2608,3 +2608,427 @@ img {
 
   letter-spacing: 0.1px;
 }
+
+/* =========================================
+   KINAR AAGE ADMIN - LIGHT ORANGE THEME
+========================================= */
+
+:root {
+  --admin-accent: #F85606;
+  --admin-accent-hover: #D94D05;
+
+  --admin-accent-soft: #FFF1E8;
+  --admin-accent-soft-2: #FFF8F4;
+
+  --admin-bg: #FAF7F5;
+  --admin-surface: #FFFFFF;
+
+  --admin-text: #212121;
+  --admin-muted: #757575;
+
+  --admin-border: #EDE5E1;
+  --admin-border-soft: #F3ECE8;
+
+  --admin-danger: #D64545;
+
+  --admin-shadow:
+    0 8px 28px rgba(60, 35, 20, 0.06);
+}
+
+
+/* =========================================
+   MAIN BACKGROUND
+========================================= */
+
+body {
+  background:
+    var(--admin-bg);
+  color:
+    var(--admin-text);
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.admin-sidebar {
+  background:
+    #ffffff;
+
+  border-right:
+    1px solid
+    var(--admin-border);
+}
+
+
+.admin-brand {
+  color:
+    var(--admin-text);
+}
+
+
+.admin-brand span {
+  color:
+    var(--admin-accent);
+}
+
+
+/* =========================================
+   SIDEBAR NAV
+========================================= */
+
+.admin-nav-item {
+  color:
+    #666666;
+
+  border-radius:
+    9px;
+
+  transition:
+    background .18s ease,
+    color .18s ease;
+}
+
+
+.admin-nav-item:hover {
+  background:
+    var(--admin-accent-soft);
+
+  color:
+    var(--admin-accent);
+}
+
+
+.admin-nav-item.active {
+  background:
+    var(--admin-accent-soft);
+
+  color:
+    var(--admin-accent);
+}
+
+
+/* =========================================
+   HEADER / TOP BAR
+========================================= */
+
+.admin-topbar,
+.admin-header {
+  background:
+    rgba(255, 255, 255, .96);
+
+  border-bottom:
+    1px solid
+    var(--admin-border);
+}
+
+
+.admin-page-title,
+.admin-topbar h1,
+.admin-header h1 {
+  color:
+    var(--admin-text);
+}
+
+
+.admin-page-subtitle {
+  color:
+    var(--admin-muted);
+}
+
+
+/* =========================================
+   CARDS
+========================================= */
+
+.admin-card,
+.dashboard-card,
+.stat-card,
+.admin-panel,
+.admin-form-card {
+  background:
+    var(--admin-surface);
+
+  border-color:
+    var(--admin-border);
+
+  box-shadow:
+    var(--admin-shadow);
+}
+
+
+/* =========================================
+   DASHBOARD STATS
+========================================= */
+
+.stat-card {
+  border:
+    1px solid
+    var(--admin-border-soft);
+}
+
+
+.stat-card:hover {
+  border-color:
+    #F4CDB8;
+}
+
+
+.stat-card-icon {
+  background:
+    var(--admin-accent-soft);
+
+  color:
+    var(--admin-accent);
+}
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.admin-main input,
+.admin-main select,
+.admin-main textarea,
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  border-color:
+    var(--admin-border);
+
+  background:
+    #FCFBFA;
+
+  color:
+    var(--admin-text);
+}
+
+
+.admin-main input:focus,
+.admin-main select:focus,
+.admin-main textarea:focus,
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+  border-color:
+    var(--admin-accent);
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(248, 86, 6, .08);
+
+  outline:
+    none;
+}
+
+
+/* =========================================
+   PRIMARY BUTTONS
+========================================= */
+
+.admin-primary-button,
+.primary-admin-button,
+.admin-save-button,
+button.primary {
+  background:
+    var(--admin-accent);
+
+  color:
+    #ffffff;
+
+  border-color:
+    var(--admin-accent);
+}
+
+
+.admin-primary-button:hover,
+.primary-admin-button:hover,
+.admin-save-button:hover,
+button.primary:hover {
+  background:
+    var(--admin-accent-hover);
+
+  border-color:
+    var(--admin-accent-hover);
+}
+
+
+/* =========================================
+   SECONDARY BUTTONS
+========================================= */
+
+.admin-secondary-button,
+.secondary-button {
+  background:
+    #ffffff;
+
+  color:
+    var(--admin-text);
+
+  border:
+    1px solid
+    var(--admin-border);
+}
+
+
+.admin-secondary-button:hover,
+.secondary-button:hover {
+  background:
+    var(--admin-accent-soft);
+
+  color:
+    var(--admin-accent);
+
+  border-color:
+    #F5C8B1;
+}
+
+
+/* =========================================
+   PRODUCT / CATEGORY ROWS
+========================================= */
+
+.admin-product-row,
+.admin-category-row {
+  background:
+    #ffffff;
+
+  border-color:
+    var(--admin-border-soft);
+}
+
+
+.admin-product-row:hover,
+.admin-category-row:hover {
+  background:
+    var(--admin-accent-soft-2);
+
+  border-color:
+    #F2D7C9;
+}
+
+
+/* =========================================
+   STATUS BADGES
+========================================= */
+
+.status-badge.published,
+.status-badge.active {
+  background:
+    #EEF9F1;
+
+  color:
+    #2E7D4F;
+}
+
+
+.status-badge.draft,
+.status-badge.inactive {
+  background:
+    #F4F4F4;
+
+  color:
+    #777777;
+}
+
+
+/* =========================================
+   SMALL ACCENT ELEMENTS
+========================================= */
+
+.admin-section-label,
+.admin-eyebrow,
+.admin-card-label {
+  color:
+    var(--admin-accent);
+}
+
+
+/* =========================================
+   TABLES
+========================================= */
+
+.admin-table,
+.dashboard-table {
+  background:
+    #ffffff;
+
+  border-color:
+    var(--admin-border);
+}
+
+
+.admin-table th,
+.dashboard-table th {
+  background:
+    #FFF8F4;
+
+  color:
+    #555555;
+}
+
+
+.admin-table td,
+.dashboard-table td {
+  border-color:
+    var(--admin-border-soft);
+}
+
+
+/* =========================================
+   IMAGE PREVIEW
+========================================= */
+
+.admin-image-preview {
+  background:
+    #FFF9F6;
+
+  border-color:
+    #F0DDD3;
+}
+
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+.admin-sidebar::-webkit-scrollbar,
+.admin-main::-webkit-scrollbar {
+  width:
+    6px;
+}
+
+
+.admin-sidebar::-webkit-scrollbar-thumb,
+.admin-main::-webkit-scrollbar-thumb {
+  background:
+    #E8C5B3;
+
+  border-radius:
+    10px;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width: 900px) {
+
+  .admin-sidebar {
+    background:
+      #ffffff;
+  }
+
+
+  .admin-topbar,
+  .admin-header {
+    background:
+      #ffffff;
+  }
+
+}

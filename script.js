@@ -3048,27 +3048,61 @@ window.addEventListener(
    START
 ========================================= */
 
-loadBannerSettings();
+async function startHomepage() {
 
-loadSiteSettings();
+  try {
+
+    /*
+      These are immediate/local UI settings.
+      They can be prepared while Firebase
+      content is loading, but the page stays
+      hidden until everything is ready.
+    */
+
+    loadSiteSettings();
+
+    loadHomepageContent();
+
+    updateWishlistCount();
 
 
-/*
-Homepage content loads AFTER
-general site settings.
+    /*
+      Wait for all Firebase-powered content
+      before revealing the page.
+    */
 
-This allows homepage-specific
-affiliate disclosure text to override
-the general site disclosure.
-*/
+    await Promise.all([
 
-loadHomepageContent();
+      loadBannerSettings(),
 
-renderHomepageCategories();
+      renderHomepageCategories(),
 
-renderFooterCategories();
+      renderFooterCategories(),
 
-renderProducts();
+      renderProducts()
 
-updateWishlistCount();
+    ]);
 
+  }
+
+  catch (error) {
+
+    console.error(
+      "Homepage startup error:",
+      error
+    );
+
+  }
+
+  finally {
+
+    document.body.classList.remove(
+      "page-data-loading"
+    );
+
+  }
+
+}
+
+
+startHomepage();

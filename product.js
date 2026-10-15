@@ -378,13 +378,15 @@ async function getProducts() {
     if (
       Array.isArray(
         firebaseProducts
-      ) &&
-      firebaseProducts.length
+      )
     ) {
 
       return firebaseProducts;
 
     }
+
+
+    return [];
 
   }
 
@@ -395,28 +397,10 @@ async function getProducts() {
       error
     );
 
-  }
-
-
-  const products =
-    getStoredData(
-      PRODUCTS_KEY,
-      []
-    );
-
-
-  if (
-    !Array.isArray(
-      products
-    )
-  ) {
 
     return [];
 
   }
-
-
-  return products;
 
 }
 
@@ -1126,9 +1110,9 @@ async function loadProduct() {
   );
 
 
-  renderRelatedProducts(
-    product
-  );
+ await renderRelatedProducts(
+  product
+);
 
 }
 
@@ -1393,6 +1377,34 @@ if (
    START
 ========================================= */
 
-updateWishlistCount();
+async function startProductPage() {
 
-loadProduct();
+  try {
+
+    updateWishlistCount();
+
+    await loadProduct();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Product page startup error:",
+      error
+    );
+
+  }
+
+  finally {
+
+    document.body.classList.remove(
+      "page-data-loading"
+    );
+
+  }
+
+}
+
+
+startProductPage();

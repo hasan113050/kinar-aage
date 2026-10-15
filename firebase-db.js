@@ -3,16 +3,21 @@ import { app } from "./firebase-config.js";
 import {
   getFirestore,
   doc,
-  getDoc,
+  getDocFromServer,
   setDoc,
   collection,
-  getDocs,
+  getDocsFromServer,
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
 
 export const db =
   getFirestore(app);
 
+
+/* =========================================
+   BANNER SETTINGS
+========================================= */
 
 export async function saveBannerSettingsToFirestore(
   bannerSettings
@@ -24,6 +29,7 @@ export async function saveBannerSettingsToFirestore(
       "siteSettings",
       "banner"
     );
+
 
   await setDoc(
     bannerRef,
@@ -45,34 +51,55 @@ export async function getBannerSettingsFromFirestore() {
       "banner"
     );
 
+
   const snapshot =
-    await getDoc(
+    await getDocFromServer(
       bannerRef
     );
 
-  if (!snapshot.exists()) {
+
+  if (
+    !snapshot.exists()
+  ) {
+
     return null;
+
   }
+
 
   return snapshot.data();
 
 }
+
+
+/* =========================================
+   PRODUCTS
+========================================= */
+
 export async function saveProductToFirestore(
   product
 ) {
 
-  if (!product?.id) {
+  if (
+    !product?.id
+  ) {
+
     throw new Error(
       "Product ID is required."
     );
+
   }
+
 
   const productRef =
     doc(
       db,
       "products",
-      String(product.id)
+      String(
+        product.id
+      )
     );
+
 
   await setDoc(
     productRef,
@@ -93,12 +120,16 @@ export async function getProductsFromFirestore() {
       "products"
     );
 
+
   const snapshot =
-    await getDocs(
+    await getDocsFromServer(
       productsRef
     );
 
-  const products = [];
+
+  const products =
+    [];
+
 
   snapshot.forEach(
     function(documentSnapshot) {
@@ -112,17 +143,60 @@ export async function getProductsFromFirestore() {
     }
   );
 
+
   return products;
 
 }
+
+
+export async function deleteProductFromFirestore(
+  productId
+) {
+
+  if (
+    !productId
+  ) {
+
+    throw new Error(
+      "Product ID is required."
+    );
+
+  }
+
+
+  const productRef =
+    doc(
+      db,
+      "products",
+      String(
+        productId
+      )
+    );
+
+
+  await deleteDoc(
+    productRef
+  );
+
+}
+
+
+/* =========================================
+   CATEGORIES
+========================================= */
+
 export async function saveCategoryToFirestore(
   category
 ) {
 
-  if (!category?.id) {
+  if (
+    !category?.id
+  ) {
+
     throw new Error(
       "Category ID is required."
     );
+
   }
 
 
@@ -146,6 +220,7 @@ export async function saveCategoryToFirestore(
 
 }
 
+
 export async function getCategoriesFromFirestore() {
 
   const categoriesRef =
@@ -154,12 +229,16 @@ export async function getCategoriesFromFirestore() {
       "categories"
     );
 
+
   const snapshot =
-    await getDocs(
+    await getDocsFromServer(
       categoriesRef
     );
 
-  const categories = [];
+
+  const categories =
+    [];
+
 
   snapshot.forEach(
     function(documentSnapshot) {
@@ -173,18 +252,24 @@ export async function getCategoriesFromFirestore() {
     }
   );
 
+
   return categories;
 
 }
+
 
 export async function deleteCategoryFromFirestore(
   categoryId
 ) {
 
-  if (!categoryId) {
+  if (
+    !categoryId
+  ) {
+
     throw new Error(
       "Category ID is required."
     );
+
   }
 
 
@@ -200,33 +285,6 @@ export async function deleteCategoryFromFirestore(
 
   await deleteDoc(
     categoryRef
-  );
-
-}
-
-export async function deleteProductFromFirestore(
-  productId
-) {
-
-  if (!productId) {
-    throw new Error(
-      "Product ID is required."
-    );
-  }
-
-
-  const productRef =
-    doc(
-      db,
-      "products",
-      String(
-        productId
-      )
-    );
-
-
-  await deleteDoc(
-    productRef
   );
 
 }

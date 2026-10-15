@@ -3709,48 +3709,100 @@ categoryForm
         };
 
 
-        if (
-          oldName !==
-          name
-        ) {
+       if (
+  oldName !==
+  name
+) {
 
-          const products =
-            getProducts()
-              .map(
-                product => {
-
-                  if (
-                    product.category ===
-                    oldName
-                  ) {
-
-                    return {
-
-                      ...product,
-
-                      category:
-                        name,
-
-                      updatedAt:
-                        new Date()
-                          .toISOString()
-
-                    };
-
-                  }
+  const updatedProducts =
+    [];
 
 
-                  return product;
+  const products =
+    getProducts()
+      .map(
+        product => {
 
-                }
-              );
+          if (
+            product.category ===
+            oldName
+          ) {
+
+            const updatedProduct = {
+
+              ...product,
+
+              category:
+                name,
+
+              updatedAt:
+                new Date()
+                  .toISOString()
+
+            };
 
 
-          saveProducts(
-            products
-          );
+            updatedProducts.push(
+              updatedProduct
+            );
+
+
+            return updatedProduct;
+
+          }
+
+
+          return product;
 
         }
+      );
+
+
+  try {
+
+    const firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    for (
+      const product
+      of updatedProducts
+    ) {
+
+      await firebaseModule
+        .saveProductToFirestore(
+          product
+        );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Category product sync error:",
+      error
+    );
+
+
+    showAdminToast(
+      "Category rename failed to sync products."
+    );
+
+
+    return;
+
+  }
+
+
+  saveProducts(
+    products
+  );
+
+}
 
 
         showAdminToast(
@@ -3935,17 +3987,69 @@ async function deleteCategory(
 
 
   if (!category) {
+
+    showAdminToast(
+      "Category not found."
+    );
+
     return;
+
+  }
+
+
+  let firebaseModule;
+
+  let currentProducts =
+    [];
+
+
+  try {
+
+    firebaseModule =
+      await import(
+        "./firebase-db.js"
+      );
+
+
+    const firebaseProducts =
+      await firebaseModule
+        .getProductsFromFirestore();
+
+
+    currentProducts =
+      Array.isArray(
+        firebaseProducts
+      )
+        ? firebaseProducts
+        : [];
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Category delete safety check error:",
+      error
+    );
+
+
+    showAdminToast(
+      "Could not verify category usage. Delete cancelled."
+    );
+
+
+    return;
+
   }
 
 
   const productsUsingCategory =
-    getProducts()
-      .filter(
-        product =>
-          product.category ===
+    currentProducts.filter(
+      product =>
+        product &&
+        product.category ===
           category.name
-      );
+    );
 
 
   if (
@@ -3955,6 +4059,7 @@ async function deleteCategory(
     showAdminToast(
       `Cannot delete. ${productsUsingCategory.length} product(s) are using this category.`
     );
+
 
     return;
 
@@ -3971,36 +4076,34 @@ async function deleteCategory(
     return;
   }
 
-try {
 
-  const firebaseModule =
-    await import(
-      "./firebase-db.js"
+  try {
+
+    await firebaseModule
+      .deleteCategoryFromFirestore(
+        categoryId
+      );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Category delete error:",
+      error
     );
 
 
-  await firebaseModule
-    .deleteCategoryFromFirestore(
-      categoryId
+    showAdminToast(
+      "Category delete failed."
     );
 
-}
 
-catch (error) {
+    return;
 
-  console.error(
-    "Category delete error:",
-    error
-  );
+  }
 
 
-  showAdminToast(
-    "Category delete failed."
-  );
-
-  return;
-
-}
   const updated =
     categories.filter(
       item =>
@@ -4030,7 +4133,6 @@ catch (error) {
   );
 
 }
-
 
 /* =========================================
    CATEGORY LIST

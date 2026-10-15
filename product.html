@@ -24,6 +24,11 @@
     content="index, follow"
   >
 
+
+  <!-- =========================================
+       GOOGLE FONTS
+  ========================================== -->
+
   <link
     rel="preconnect"
     href="https://fonts.googleapis.com"
@@ -40,6 +45,11 @@
     rel="stylesheet"
   >
 
+
+  <!-- =========================================
+       MAIN CSS
+  ========================================== -->
+
   <link
     rel="stylesheet"
     href="style.css"
@@ -48,47 +58,82 @@
 </head>
 
 
-<body>
+<body class="page-data-loading">
 
 
   <!-- =========================================
        HEADER
+       Same global header used on homepage
   ========================================== -->
 
   <header class="site-header"></header>
 
 
-  <!-- =========================================
-       PRODUCT HERO
-  ========================================== -->
 
   <main>
+
+
+    <!-- =========================================
+         PRODUCT HERO
+    ========================================== -->
 
     <section class="product-detail-hero">
 
       <div class="container product-detail-grid">
 
 
-        <div class="product-detail-media">
+        <!-- =========================================
+             PRODUCT IMAGE
+        ========================================== -->
 
+        <div class="product-detail-media">
 
           <div
             id="productDetailImage"
             class="product-detail-image"
           >
 
+
+            <!-- Product Badge
+                 Hot Product / Recommended / etc.
+                 Loaded dynamically from product.js
+            -->
+
+            <div
+              id="productDetailBadge"
+              class="product-detail-badge product-image-badge"
+              hidden
+            >
+              Featured
+            </div>
+
+
             <div class="product-detail-placeholder">
               K
             </div>
 
-          </div>
 
+          </div>
 
         </div>
 
 
+
+        <!-- =========================================
+             PRODUCT SUMMARY
+        ========================================== -->
+
         <div class="product-detail-summary">
 
+
+          <!-- Product Name -->
+
+          <h1 id="productDetailName">
+            Product Name
+          </h1>
+
+
+          <!-- Category -->
 
           <a
             id="productCategoryLink"
@@ -99,19 +144,7 @@
           </a>
 
 
-          <div
-            id="productDetailBadge"
-            class="product-detail-badge"
-            hidden
-          >
-            Featured
-          </div>
-
-
-          <h1 id="productDetailName">
-            Product Name
-          </h1>
-
+          <!-- Short Description -->
 
           <p
             id="productDetailShortDescription"
@@ -121,11 +154,15 @@
           </p>
 
 
+          <!-- Product Highlights -->
+
           <div
             id="productHighlights"
             class="product-highlights"
           ></div>
 
+
+          <!-- Product Actions -->
 
           <div class="product-detail-actions">
 
@@ -153,27 +190,6 @@
           </div>
 
 
-          <div class="product-merchant-box">
-
-            <span>
-              Merchant
-            </span>
-
-            <strong id="productMerchantName">
-              External Merchant
-            </strong>
-
-          </div>
-
-
-          <p
-            id="productAffiliateDisclosure"
-            class="product-detail-disclosure"
-          >
-            Kinar Aage may earn a commission when you purchase through this link.
-          </p>
-
-
         </div>
 
 
@@ -184,7 +200,7 @@
 
 
     <!-- =========================================
-         INTRO
+         PRODUCT CONTENT
     ========================================== -->
 
     <section class="product-content-section">
@@ -192,8 +208,16 @@
       <div class="container product-content-layout">
 
 
+        <!-- =========================================
+             MAIN PRODUCT CONTENT
+        ========================================== -->
+
         <article class="product-main-content">
 
+
+          <!-- =========================================
+               OVERVIEW
+          ========================================== -->
 
           <div
             id="productIntroBlock"
@@ -211,7 +235,7 @@
 
 
           <!-- =========================================
-               FULL EDITORIAL CONTENT
+               WHAT YOU SHOULD KNOW
           ========================================== -->
 
           <div
@@ -236,6 +260,8 @@
           <div class="product-pros-cons-grid">
 
 
+            <!-- PROS -->
+
             <div class="product-pros-card">
 
               <span class="product-review-label">
@@ -246,6 +272,9 @@
 
             </div>
 
+
+
+            <!-- CONS -->
 
             <div class="product-cons-card">
 
@@ -263,7 +292,7 @@
 
 
           <!-- =========================================
-               VERDICT
+               OUR VERDICT
           ========================================== -->
 
           <div class="product-verdict-card">
@@ -289,6 +318,7 @@
 
 
           <div class="product-side-card">
+
 
             <span>
               Interested in this product?
@@ -380,6 +410,7 @@
 
       <div class="container final-cta-inner">
 
+
         <div>
 
           <span class="section-eyebrow">
@@ -399,6 +430,7 @@
         >
           Explore More Products
         </a>
+
 
       </div>
 
@@ -420,6 +452,8 @@
 
       <div class="footer-main">
 
+
+        <!-- FOOTER BRAND -->
 
         <div class="footer-brand">
 
@@ -446,6 +480,9 @@
         </div>
 
 
+
+        <!-- EXPLORE -->
+
         <div class="footer-column">
 
           <strong>
@@ -467,6 +504,9 @@
         </div>
 
 
+
+        <!-- COMPANY -->
+
         <div class="footer-column">
 
           <strong>
@@ -483,6 +523,9 @@
 
         </div>
 
+
+
+        <!-- INFORMATION -->
 
         <div class="footer-column">
 
@@ -508,6 +551,9 @@
       </div>
 
 
+
+      <!-- FOOTER BOTTOM -->
+
       <div class="footer-bottom">
 
         <p>
@@ -527,12 +573,23 @@
 
 
 
+  <!-- =========================================
+       TOAST
+  ========================================== -->
+
   <div
     id="siteToast"
     class="site-toast"
   ></div>
 
-<script src="header.js"></script>
+
+
+  <!-- =========================================
+       SCRIPTS
+  ========================================== -->
+
+  <script src="header.js"></script>
+
   <script src="product.js"></script>
 
 

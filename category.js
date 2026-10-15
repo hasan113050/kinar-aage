@@ -299,6 +299,9 @@ async function getCategories() {
 
     }
 
+
+    return [];
+
   }
 
   catch (error) {
@@ -308,42 +311,10 @@ async function getCategories() {
       error
     );
 
+
+    return [];
+
   }
-
-
-  const storedCategories =
-    getStoredData(
-      CATEGORIES_KEY,
-      null
-    );
-
-
-  const categories =
-    Array.isArray(
-      storedCategories
-    )
-      ? storedCategories
-      : DEFAULT_CATEGORIES;
-
-
-  return categories
-
-    .slice()
-
-    .sort(
-      function(a, b) {
-
-        return (
-          Number(
-            a.order || 999
-          ) -
-          Number(
-            b.order || 999
-          )
-        );
-
-      }
-    );
 
 }
 
@@ -410,9 +381,11 @@ async function getProducts() {
         "./firebase-db.js"
       );
 
+
     const firebaseProducts =
       await firebaseModule
         .getProductsFromFirestore();
+
 
     if (
       Array.isArray(
@@ -434,6 +407,9 @@ async function getProducts() {
 
     }
 
+
+    return [];
+
   }
 
   catch (error) {
@@ -443,34 +419,10 @@ async function getProducts() {
       error
     );
 
-  }
 
-
-  const products =
-    getStoredData(
-      PRODUCTS_KEY,
-      []
-    );
-
-  if (
-    !Array.isArray(
-      products
-    )
-  ) {
     return [];
+
   }
-
-  return products.filter(
-    function(product) {
-
-      return (
-        product &&
-        product.status !==
-          "draft"
-      );
-
-    }
-  );
 
 }
 
@@ -1114,6 +1066,34 @@ window.addEventListener(
    START
 ========================================= */
 
-updateWishlistCount();
+async function startCategoryPage() {
 
-renderCategoryPage();
+  try {
+
+    updateWishlistCount();
+
+    await renderCategoryPage();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Category page startup error:",
+      error
+    );
+
+  }
+
+  finally {
+
+    document.body.classList.remove(
+      "page-data-loading"
+    );
+
+  }
+
+}
+
+
+startCategoryPage();
