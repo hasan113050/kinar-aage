@@ -6336,6 +6336,23 @@ document.addEventListener(
 
 async function startAdmin() {
 
+  const savedAdminPage =
+  localStorage.getItem(
+    "kinarAageAdminActivePage"
+  );
+
+const initialAdminPage =
+  savedAdminPage &&
+  PAGE_CONFIG[
+    savedAdminPage
+  ]
+    ? savedAdminPage
+    : "dashboardPage";
+
+openAdminPage(
+  initialAdminPage
+);
+
   try {
 
     const firebaseModule =
@@ -6401,22 +6418,7 @@ saveProducts(
   updateDashboard();
 
   updateMetaCounters();
- const savedAdminPage =
-  localStorage.getItem(
-    "kinarAageAdminActivePage"
-  );
 
-const initialAdminPage =
-  savedAdminPage &&
-  PAGE_CONFIG[
-    savedAdminPage
-  ]
-    ? savedAdminPage
-    : "dashboardPage";
-
-openAdminPage(
-  initialAdminPage
-);
 
 
   if (
