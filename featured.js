@@ -262,10 +262,12 @@ function createProductCard(
       : "";
 
 
-  const slug =
-    encodeURIComponent(
-      product.slug || ""
-    );
+ const slug =
+  encodeURIComponent(
+    product.slug ||
+    product.id ||
+    ""
+  );
 
 
   const affiliateUrl =
@@ -323,11 +325,11 @@ function createProductCard(
         <div class="product-card-actions">
 
           <a
-            href="product.html?slug=${slug}"
-            class="product-details-link"
-          >
-            View Details
-          </a>
+  href="product.html?product=${slug}"
+  class="product-details-link"
+>
+  View Details
+</a>
 
 
           <a

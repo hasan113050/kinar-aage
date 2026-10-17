@@ -1,37 +1,83 @@
-import { app } from "./firebase-config.js";
+/* =========================================
+   KINAR AAGE - SECURE ADMIN LOGIN
+========================================= */
+
+import {
+  app
+} from "./firebase-config.js";
+
 
 import {
   getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  signOut
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 
 
-const auth = getAuth(app);
+import {
+  getFirestore,
+  doc,
+  getDocFromServer
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
+
+const auth =
+  getAuth(
+    app
+  );
+
+
+const db =
+  getFirestore(
+    app
+  );
+
+
+/* =========================================
+   DOM
+========================================= */
 
 const adminLoginForm =
-  document.getElementById("adminLoginForm");
+  document.getElementById(
+    "adminLoginForm"
+  );
 
 const adminEmail =
-  document.getElementById("adminEmail");
+  document.getElementById(
+    "adminEmail"
+  );
 
 const adminPassword =
-  document.getElementById("adminPassword");
+  document.getElementById(
+    "adminPassword"
+  );
 
 const adminLoginButton =
-  document.getElementById("adminLoginButton");
+  document.getElementById(
+    "adminLoginButton"
+  );
 
 const forgotPasswordButton =
-  document.getElementById("forgotPasswordButton");
+  document.getElementById(
+    "forgotPasswordButton"
+  );
 
 const togglePasswordButton =
-  document.getElementById("togglePasswordButton");
+  document.getElementById(
+    "togglePasswordButton"
+  );
 
 const loginMessage =
-  document.getElementById("loginMessage");
+  document.getElementById(
+    "loginMessage"
+  );
 
+
+/* =========================================
+   MESSAGE
+========================================= */
 
 function showMessage(
   message,
@@ -42,11 +88,14 @@ function showMessage(
     return;
   }
 
+
   loginMessage.textContent =
     message;
 
+
   loginMessage.className =
     "login-message";
+
 
   if (type) {
 
@@ -59,14 +108,115 @@ function showMessage(
 }
 
 
+/* =========================================
+   CHECK APPROVED ADMIN
+========================================= */
+
+async function isApprovedAdmin(
+  user
+) {
+
+  if (
+    !user?.uid
+  ) {
+
+    return false;
+
+  }
+
+
+  const adminRef =
+    doc(
+      db,
+      "admins",
+      user.uid
+    );
+
+
+  const snapshot =
+    await getDocFromServer(
+      adminRef
+    );
+
+
+  if (
+    !snapshot.exists()
+  ) {
+
+    return false;
+
+  }
+
+
+  const adminData =
+    snapshot.data();
+
+
+  return (
+    adminData.role === "admin" &&
+    adminData.active === true
+  );
+
+}
+
+
+/* =========================================
+   EXISTING LOGIN SESSION
+========================================= */
+
 onAuthStateChanged(
   auth,
-  function(user) {
+  async function(user) {
 
-    if (user) {
+    if (!user) {
+      return;
+    }
 
-      window.location.href =
-        "admin.html";
+
+    try {
+
+      const approved =
+        await isApprovedAdmin(
+          user
+        );
+
+
+      if (
+        approved
+      ) {
+
+        window.location.href =
+          "admin.html";
+
+        return;
+
+      }
+
+
+      await signOut(
+        auth
+      );
+
+
+      showMessage(
+        "This account does not have admin access.",
+        "error"
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "Admin verification error:",
+        error
+      );
+
+
+      showMessage(
+        "Unable to verify admin access.",
+        "error"
+      );
 
     }
 
@@ -74,7 +224,13 @@ onAuthStateChanged(
 );
 
 
-if (adminLoginForm) {
+/* =========================================
+   LOGIN
+========================================= */
+
+if (
+  adminLoginForm
+) {
 
   adminLoginForm.addEventListener(
     "submit",
@@ -85,6 +241,7 @@ if (adminLoginForm) {
 
       const email =
         adminEmail.value.trim();
+
 
       const password =
         adminPassword.value;
@@ -108,19 +265,54 @@ if (adminLoginForm) {
       adminLoginButton.disabled =
         true;
 
+
       adminLoginButton.textContent =
         "Logging in...";
 
-      showMessage("");
+
+      showMessage(
+        ""
+      );
 
 
       try {
 
-        await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        const credential =
+          await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+
+        const user =
+          credential.user;
+
+
+        const approved =
+          await isApprovedAdmin(
+            user
+          );
+
+
+        if (
+          !approved
+        ) {
+
+          await signOut(
+            auth
+          );
+
+
+          showMessage(
+            "This account is not authorized as an admin.",
+            "error"
+          );
+
+
+          return;
+
+        }
 
 
         showMessage(
@@ -157,7 +349,7 @@ if (adminLoginForm) {
         }
 
 
-        if (
+        else if (
           error.code ===
           "auth/invalid-email"
         ) {
@@ -168,18 +360,18 @@ if (adminLoginForm) {
         }
 
 
-        if (
+        else if (
           error.code ===
           "auth/user-disabled"
         ) {
 
           message =
-            "This admin account has been disabled.";
+            "This account has been disabled.";
 
         }
 
 
-        if (
+        else if (
           error.code ===
           "auth/too-many-requests"
         ) {
@@ -190,7 +382,7 @@ if (adminLoginForm) {
         }
 
 
-        if (
+        else if (
           error.code ===
           "auth/network-request-failed"
         ) {
@@ -213,6 +405,7 @@ if (adminLoginForm) {
         adminLoginButton.disabled =
           false;
 
+
         adminLoginButton.textContent =
           "Login";
 
@@ -224,7 +417,13 @@ if (adminLoginForm) {
 }
 
 
-if (forgotPasswordButton) {
+/* =========================================
+   FORGOT PASSWORD
+========================================= */
+
+if (
+  forgotPasswordButton
+) {
 
   forgotPasswordButton.addEventListener(
     "click",
@@ -234,14 +433,18 @@ if (forgotPasswordButton) {
         adminEmail.value.trim();
 
 
-      if (!email) {
+      if (
+        !email
+      ) {
 
         showMessage(
           "Enter your email first, then click Forgot Password.",
           "error"
         );
 
+
         adminEmail.focus();
+
 
         return;
 
@@ -251,10 +454,14 @@ if (forgotPasswordButton) {
       forgotPasswordButton.disabled =
         true;
 
+
       forgotPasswordButton.textContent =
         "Sending...";
 
-      showMessage("");
+
+      showMessage(
+        ""
+      );
 
 
       try {
@@ -295,7 +502,7 @@ if (forgotPasswordButton) {
         }
 
 
-        if (
+        else if (
           error.code ===
           "auth/too-many-requests"
         ) {
@@ -306,7 +513,7 @@ if (forgotPasswordButton) {
         }
 
 
-        if (
+        else if (
           error.code ===
           "auth/network-request-failed"
         ) {
@@ -329,6 +536,7 @@ if (forgotPasswordButton) {
         forgotPasswordButton.disabled =
           false;
 
+
         forgotPasswordButton.textContent =
           "Forgot Password?";
 
@@ -340,25 +548,32 @@ if (forgotPasswordButton) {
 }
 
 
-if (togglePasswordButton) {
+/* =========================================
+   SHOW / HIDE PASSWORD
+========================================= */
+
+if (
+  togglePasswordButton
+) {
 
   togglePasswordButton.addEventListener(
     "click",
     function() {
 
-      const isPasswordHidden =
-        adminPassword.type === "password";
+      const hidden =
+        adminPassword.type ===
+        "password";
 
 
       adminPassword.type =
-        isPasswordHidden
+        hidden
           ? "text"
           : "password";
 
 
       togglePasswordButton.setAttribute(
         "aria-label",
-        isPasswordHidden
+        hidden
           ? "Hide password"
           : "Show password"
       );

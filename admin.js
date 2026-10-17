@@ -1,29 +1,40 @@
 /* =========================================
-   KINAR AAGE ADMIN
+   KINAR AAGE ADMIN - FULL REPLACEMENT
 ========================================= */
 
+const PRODUCTS_KEY = "kinarAageProducts";
+const CATEGORIES_KEY = "kinarAageCategories";
+const SITE_SEO_KEY = "kinarAageSiteSeo";
+const SITE_SETTINGS_KEY = "kinarAageSiteSettings";
+const BANNER_SETTINGS_KEY = "kinarAageBannerSettings";
+const HOMEPAGE_CONTENT_KEY = "kinarAageHomepageContent";
+const ADMIN_SESSION_KEY = "kinarAageAdminSession";
+const ACTIVE_PAGE_KEY = "kinarAageAdminActivePage";
 
-/* =========================================
-   STORAGE KEYS
-========================================= */
 
-const PRODUCTS_KEY =
-  "kinarAageProducts";
+const $ = id =>
+  document.getElementById(id);
 
-const CATEGORIES_KEY =
-  "kinarAageCategories";
 
-const SITE_SEO_KEY =
-  "kinarAageSiteSeo";
+const value = id =>
+  ($(id)?.value || "").trim();
 
-const SITE_SETTINGS_KEY =
-  "kinarAageSiteSettings";
 
-const BANNER_SETTINGS_KEY =
-  "kinarAageBannerSettings";
+const setValue = (
+  id,
+  val = ""
+) => {
 
-const HOMEPAGE_CONTENT_KEY =
-  "kinarAageHomepageContent";
+  const node =
+    $(id);
+
+  if (node) {
+    node.value =
+      val ?? "";
+  }
+
+};
+
 
 /* =========================================
    INITIAL CATEGORIES
@@ -119,265 +130,516 @@ const INITIAL_PRODUCTS = [
 
   {
     id: 1,
-    name: "Best Wireless Earbuds for Everyday Use",
-    category: "Electronics & Gadgets",
-    status: "published",
-    featured: true,
-    badge: "Editor's Pick",
-    image: "",
+
+    name:
+      "Best Wireless Earbuds for Everyday Use",
+
+    category:
+      "Electronics & Gadgets",
+
+    status:
+      "published",
+
+    featured:
+      true,
+
+    badge:
+      "Editor's Pick",
+
+    image:
+      "",
+
     shortDescription:
       "A practical wireless earbuds recommendation for everyday calls, music and casual use.",
+
     highlights: [
       "Comfortable for everyday use",
       "Good battery performance",
       "Easy wireless connectivity"
     ],
-    intro: "",
-    description: "",
+
+    intro:
+      "",
+
+    description:
+      "",
+
     pros: [],
+
     cons: [],
-    verdict: "",
-    affiliateUrl: "https://example.com",
-    ctaLabel: "Buy Now",
-    merchantName: "",
-    affiliateDisclosure: "",
+
+    verdict:
+      "",
+
+    affiliateUrl:
+      "https://example.com",
+
+    ctaLabel:
+      "Buy Now",
+
+    merchantName:
+      "",
+
+    affiliateDisclosure:
+      "",
+
     slug:
       "best-wireless-earbuds-for-everyday-use",
-    canonical: "",
+
+    canonical:
+      "",
+
     metaTitle:
       "Best Wireless Earbuds for Everyday Use",
-    metaDescription: "",
+
+    metaDescription:
+      "",
+
     tags: [
       "wireless earbuds",
       "electronics",
       "gadgets"
     ],
-    ogTitle: "",
-    ogDescription: "",
-    ogImage: "",
-    createdAt:
-      new Date().toISOString(),
-    updatedAt:
-      new Date().toISOString()
+
+    ogTitle:
+      "",
+
+    ogDescription:
+      "",
+
+    ogImage:
+      ""
   },
+
 
   {
     id: 2,
-    name: "Smart Kitchen Appliance Worth Considering",
-    category: "Home & Kitchen",
-    status: "published",
-    featured: true,
-    badge: "Recommended",
-    image: "",
+
+    name:
+      "Smart Kitchen Appliance Worth Considering",
+
+    category:
+      "Home & Kitchen",
+
+    status:
+      "published",
+
+    featured:
+      true,
+
+    badge:
+      "Recommended",
+
+    image:
+      "",
+
     shortDescription:
       "A useful kitchen appliance recommendation for making daily home tasks easier.",
+
     highlights: [
       "Useful for daily cooking",
       "Easy to operate",
       "Practical home appliance"
     ],
-    intro: "",
-    description: "",
+
+    intro:
+      "",
+
+    description:
+      "",
+
     pros: [],
+
     cons: [],
-    verdict: "",
-    affiliateUrl: "https://example.com",
-    ctaLabel: "Buy Now",
-    merchantName: "",
-    affiliateDisclosure: "",
+
+    verdict:
+      "",
+
+    affiliateUrl:
+      "https://example.com",
+
+    ctaLabel:
+      "Buy Now",
+
+    merchantName:
+      "",
+
+    affiliateDisclosure:
+      "",
+
     slug:
       "smart-kitchen-appliance-worth-considering",
-    canonical: "",
+
+    canonical:
+      "",
+
     metaTitle:
       "Smart Kitchen Appliance Worth Considering",
-    metaDescription: "",
+
+    metaDescription:
+      "",
+
     tags: [
       "home",
       "kitchen",
       "appliance"
     ],
-    ogTitle: "",
-    ogDescription: "",
-    ogImage: "",
-    createdAt:
-      new Date().toISOString(),
-    updatedAt:
-      new Date().toISOString()
+
+    ogTitle:
+      "",
+
+    ogDescription:
+      "",
+
+    ogImage:
+      ""
   },
+
 
   {
     id: 3,
-    name: "Everyday Fashion Essential",
-    category: "Fashion",
-    status: "published",
-    featured: false,
-    badge: "",
-    image: "",
+
+    name:
+      "Everyday Fashion Essential",
+
+    category:
+      "Fashion",
+
+    status:
+      "published",
+
+    featured:
+      false,
+
+    badge:
+      "",
+
+    image:
+      "",
+
     shortDescription:
       "A simple everyday fashion recommendation focused on comfort and versatility.",
+
     highlights: [
       "Versatile styling",
       "Comfortable for regular use",
       "Easy to match"
     ],
-    intro: "",
-    description: "",
+
+    intro:
+      "",
+
+    description:
+      "",
+
     pros: [],
+
     cons: [],
-    verdict: "",
-    affiliateUrl: "https://example.com",
-    ctaLabel: "Buy Now",
-    merchantName: "",
-    affiliateDisclosure: "",
+
+    verdict:
+      "",
+
+    affiliateUrl:
+      "https://example.com",
+
+    ctaLabel:
+      "Buy Now",
+
+    merchantName:
+      "",
+
+    affiliateDisclosure:
+      "",
+
     slug:
       "everyday-fashion-essential",
-    canonical: "",
+
+    canonical:
+      "",
+
     metaTitle:
       "Everyday Fashion Essential",
-    metaDescription: "",
+
+    metaDescription:
+      "",
+
     tags: [
       "fashion",
       "style"
     ],
-    ogTitle: "",
-    ogDescription: "",
-    ogImage: "",
-    createdAt:
-      new Date().toISOString(),
-    updatedAt:
-      new Date().toISOString()
+
+    ogTitle:
+      "",
+
+    ogDescription:
+      "",
+
+    ogImage:
+      ""
   },
+
 
   {
     id: 4,
-    name: "Personal Care Product We Recommend",
-    category: "Beauty & Personal Care",
-    status: "published",
-    featured: false,
-    badge: "",
-    image: "",
+
+    name:
+      "Personal Care Product We Recommend",
+
+    category:
+      "Beauty & Personal Care",
+
+    status:
+      "published",
+
+    featured:
+      false,
+
+    badge:
+      "",
+
+    image:
+      "",
+
     shortDescription:
       "A practical personal care recommendation for regular everyday use.",
+
     highlights: [
       "Simple everyday use",
       "Easy care routine",
       "Practical choice"
     ],
-    intro: "",
-    description: "",
+
+    intro:
+      "",
+
+    description:
+      "",
+
     pros: [],
+
     cons: [],
-    verdict: "",
-    affiliateUrl: "https://example.com",
-    ctaLabel: "Buy Now",
-    merchantName: "",
-    affiliateDisclosure: "",
+
+    verdict:
+      "",
+
+    affiliateUrl:
+      "https://example.com",
+
+    ctaLabel:
+      "Buy Now",
+
+    merchantName:
+      "",
+
+    affiliateDisclosure:
+      "",
+
     slug:
       "personal-care-product-we-recommend",
-    canonical: "",
+
+    canonical:
+      "",
+
     metaTitle:
       "Personal Care Product We Recommend",
-    metaDescription: "",
+
+    metaDescription:
+      "",
+
     tags: [
       "beauty",
       "personal care"
     ],
-    ogTitle: "",
-    ogDescription: "",
-    ogImage: "",
-    createdAt:
-      new Date().toISOString(),
-    updatedAt:
-      new Date().toISOString()
+
+    ogTitle:
+      "",
+
+    ogDescription:
+      "",
+
+    ogImage:
+      ""
   },
+
 
   {
     id: 5,
-    name: "A Book Worth Reading",
-    category: "Books",
-    status: "published",
-    featured: false,
-    badge: "",
-    image: "",
+
+    name:
+      "A Book Worth Reading",
+
+    category:
+      "Books",
+
+    status:
+      "published",
+
+    featured:
+      false,
+
+    badge:
+      "",
+
+    image:
+      "",
+
     shortDescription:
       "A book recommendation worth considering for learning, ideas and personal growth.",
+
     highlights: [
       "Useful insights",
       "Easy to revisit",
       "Good learning value"
     ],
-    intro: "",
-    description: "",
+
+    intro:
+      "",
+
+    description:
+      "",
+
     pros: [],
+
     cons: [],
-    verdict: "",
-    affiliateUrl: "https://example.com",
-    ctaLabel: "Buy Now",
-    merchantName: "",
-    affiliateDisclosure: "",
+
+    verdict:
+      "",
+
+    affiliateUrl:
+      "https://example.com",
+
+    ctaLabel:
+      "Buy Now",
+
+    merchantName:
+      "",
+
+    affiliateDisclosure:
+      "",
+
     slug:
       "a-book-worth-reading",
-    canonical: "",
+
+    canonical:
+      "",
+
     metaTitle:
       "A Book Worth Reading",
-    metaDescription: "",
+
+    metaDescription:
+      "",
+
     tags: [
       "books",
       "reading"
     ],
-    ogTitle: "",
-    ogDescription: "",
-    ogImage: "",
-    createdAt:
-      new Date().toISOString(),
-    updatedAt:
-      new Date().toISOString()
+
+    ogTitle:
+      "",
+
+    ogDescription:
+      "",
+
+    ogImage:
+      ""
   },
+
 
   {
     id: 6,
-    name: "Fitness Product Recommendation",
-    category: "Sports & Fitness",
-    status: "published",
-    featured: false,
-    badge: "",
-    image: "",
+
+    name:
+      "Fitness Product Recommendation",
+
+    category:
+      "Sports & Fitness",
+
+    status:
+      "published",
+
+    featured:
+      false,
+
+    badge:
+      "",
+
+    image:
+      "",
+
     shortDescription:
       "A practical fitness product recommendation for regular training and movement.",
+
     highlights: [
       "Useful for regular exercise",
       "Simple to use",
       "Practical fitness support"
     ],
-    intro: "",
-    description: "",
+
+    intro:
+      "",
+
+    description:
+      "",
+
     pros: [],
+
     cons: [],
-    verdict: "",
-    affiliateUrl: "https://example.com",
-    ctaLabel: "Buy Now",
-    merchantName: "",
-    affiliateDisclosure: "",
+
+    verdict:
+      "",
+
+    affiliateUrl:
+      "https://example.com",
+
+    ctaLabel:
+      "Buy Now",
+
+    merchantName:
+      "",
+
+    affiliateDisclosure:
+      "",
+
     slug:
       "fitness-product-recommendation",
-    canonical: "",
+
+    canonical:
+      "",
+
     metaTitle:
       "Fitness Product Recommendation",
-    metaDescription: "",
+
+    metaDescription:
+      "",
+
     tags: [
       "sports",
       "fitness"
     ],
-    ogTitle: "",
-    ogDescription: "",
-    ogImage: "",
-    createdAt:
-      new Date().toISOString(),
-    updatedAt:
-      new Date().toISOString()
+
+    ogTitle:
+      "",
+
+    ogDescription:
+      "",
+
+    ogImage:
+      ""
   }
 
-];
+].map(
+  product => ({
+    ...product,
+
+    createdAt:
+      new Date()
+        .toISOString(),
+
+    updatedAt:
+      new Date()
+        .toISOString()
+  })
+);
 
 
 /* =========================================
@@ -389,19 +651,25 @@ const DEFAULT_HOMEPAGE_CONTENT = {
   topInfo: [
 
     {
-      icon: "✦",
+      icon:
+        "✦",
+
       text:
         "Curated Product Recommendations"
     },
 
     {
-      icon: "📘",
+      icon:
+        "📘",
+
       text:
         "Practical Reviews & Buying Guides"
     },
 
     {
-      icon: "↗",
+      icon:
+        "↗",
+
       text:
         "A Simpler Way to Compare"
     }
@@ -412,25 +680,34 @@ const DEFAULT_HOMEPAGE_CONTENT = {
   utilityItems: [
 
     {
-      icon: "✦",
+      icon:
+        "✦",
+
       title:
         "Focused Product Shortlists",
+
       subtitle:
         "Less clutter, easier browsing"
     },
 
     {
-      icon: "✓",
+      icon:
+        "✓",
+
       title:
         "Useful Buying Context",
+
       subtitle:
         "Key details before you decide"
     },
 
     {
-      icon: "↗",
+      icon:
+        "↗",
+
       title:
         "External Merchant Links",
+
       subtitle:
         "Compare here, buy from merchants"
     }
@@ -460,37 +737,52 @@ const DEFAULT_HOMEPAGE_CONTENT = {
   promos: [
 
     {
-      image: "",
+      image:
+        "",
+
       title:
         "Smart Tech Picks",
+
       subtitle:
         "Useful gadgets worth exploring.",
+
       buttonText:
         "Explore",
+
       link:
         "category.html?category=Electronics%20%26%20Gadgets"
     },
 
     {
-      image: "",
+      image:
+        "",
+
       title:
         "Home Essentials",
+
       subtitle:
         "Practical picks for everyday living.",
+
       buttonText:
         "Explore",
+
       link:
         "category.html?category=Home%20%26%20Kitchen"
     },
 
     {
-      image: "",
+      image:
+        "",
+
       title:
         "Everyday Recommendations",
+
       subtitle:
         "More products worth knowing about.",
+
       buttonText:
         "Explore",
+
       link:
         "index.html#recommended"
     }
@@ -509,25 +801,34 @@ const DEFAULT_HOMEPAGE_CONTENT = {
     cards: [
 
       {
-        icon: "🔎",
+        icon:
+          "🔎",
+
         title:
           "Research Before You Buy",
+
         description:
           "We bring together useful product information, key features and practical points so you can compare more confidently."
       },
 
       {
-        icon: "✓",
+        icon:
+          "✓",
+
         title:
           "Curated Recommendations",
+
         description:
           "Instead of showing endless products, Kinar Aage focuses on selected recommendations that are easier to understand and explore."
       },
 
       {
-        icon: "↗",
+        icon:
+          "↗",
+
         title:
           "Simple Buying Journey",
+
         description:
           "When you find a suitable product, you can continue directly to the relevant merchant through the provided purchase link."
       }
@@ -565,6 +866,7 @@ const DEFAULT_HOMEPAGE_CONTENT = {
     {
       title:
         "Product Shortlists",
+
       subtitle:
         "Focused recommendations"
     },
@@ -572,6 +874,7 @@ const DEFAULT_HOMEPAGE_CONTENT = {
     {
       title:
         "Buying Context",
+
       subtitle:
         "Key things to consider"
     },
@@ -579,6 +882,7 @@ const DEFAULT_HOMEPAGE_CONTENT = {
     {
       title:
         "Helpful Resources",
+
       subtitle:
         "Guides & practical tips"
     },
@@ -586,6 +890,7 @@ const DEFAULT_HOMEPAGE_CONTENT = {
     {
       title:
         "Affiliate Transparency",
+
       subtitle:
         "Clear disclosure on eligible links"
     }
@@ -613,11 +918,20 @@ const DEFAULT_HOMEPAGE_CONTENT = {
 
     social: {
 
-      facebook: "",
-      instagram: "",
-      youtube: "",
-      x: "",
-      pinterest: ""
+      facebook:
+        "",
+
+      instagram:
+        "",
+
+      youtube:
+        "",
+
+      x:
+        "",
+
+      pinterest:
+        ""
 
     }
 
@@ -627,409 +941,59 @@ const DEFAULT_HOMEPAGE_CONTENT = {
 
 
 /* =========================================
-   BASIC DOM
-========================================= */
-
-const adminSidebar =
-  document.getElementById(
-    "adminSidebar"
-  );
-
-const adminSidebarOverlay =
-  document.getElementById(
-    "adminSidebarOverlay"
-  );
-
-const adminMenuButton =
-  document.getElementById(
-    "adminMenuButton"
-  );
-
-const adminPageTitle =
-  document.getElementById(
-    "adminPageTitle"
-  );
-
-const adminPageSubtitle =
-  document.getElementById(
-    "adminPageSubtitle"
-  );
-
-const adminToast =
-  document.getElementById(
-    "adminToast"
-  );
-
-
-/* =========================================
-   PRODUCT DOM
-========================================= */
-
-const productForm =
-  document.getElementById(
-    "productForm"
-  );
-
-const editingProductId =
-  document.getElementById(
-    "editingProductId"
-  );
-
-const productFormHeading =
-  document.getElementById(
-    "productFormHeading"
-  );
-
-const productImageUpload =
-  document.getElementById(
-    "productImageUpload"
-  );
-
-const productImageSelectButton =
-  document.getElementById(
-    "productImageSelectButton"
-  );
-
-const productImagePreview =
-  document.getElementById(
-    "productImagePreview"
-  );
-
-const productImageData =
-  document.getElementById(
-    "productImageData"
-  );
-
-const adminProductsList =
-  document.getElementById(
-    "adminProductsList"
-  );
-
-const dashboardProductTable =
-  document.getElementById(
-    "dashboardProductTable"
-  );
-
-const adminProductSearch =
-  document.getElementById(
-    "adminProductSearch"
-  );
-
-const adminCategoryFilter =
-  document.getElementById(
-    "adminCategoryFilter"
-  );
-
-const adminStatusFilter =
-  document.getElementById(
-    "adminStatusFilter"
-  );
-
-const cancelProductEditButton =
-  document.getElementById(
-    "cancelProductEditButton"
-  );
-
-const metaTitleCount =
-  document.getElementById(
-    "metaTitleCount"
-  );
-
-const metaDescriptionCount =
-  document.getElementById(
-    "metaDescriptionCount"
-  );
-
-
-/* =========================================
-   CATEGORY DOM
-========================================= */
-
-const categoryForm =
-  document.getElementById(
-    "categoryForm"
-  );
-
-const editingCategoryId =
-  document.getElementById(
-    "editingCategoryId"
-  );
-
-const categoryFormHeading =
-  document.getElementById(
-    "categoryFormHeading"
-  );
-
-const categoryName =
-  document.getElementById(
-    "categoryName"
-  );
-
-const categorySlug =
-  document.getElementById(
-    "categorySlug"
-  );
-
-const categoryDescription =
-  document.getElementById(
-    "categoryDescription"
-  );
-
-const categoryStatus =
-  document.getElementById(
-    "categoryStatus"
-  );
-
-const categoryOrder =
-  document.getElementById(
-    "categoryOrder"
-  );
-
-const categoryImageUpload =
-  document.getElementById(
-    "categoryImageUpload"
-  );
-
-const categoryImageSelectButton =
-  document.getElementById(
-    "categoryImageSelectButton"
-  );
-
-const categoryImagePreview =
-  document.getElementById(
-    "categoryImagePreview"
-  );
-
-const categoryImageData =
-  document.getElementById(
-    "categoryImageData"
-  );
-
-const categoryImageWarning =
-  document.getElementById(
-    "categoryImageWarning"
-  );
-
-const adminCategoriesList =
-  document.getElementById(
-    "adminCategoriesList"
-  );
-
-const cancelCategoryEditButton =
-  document.getElementById(
-    "cancelCategoryEditButton"
-  );
-
-
-/* =========================================
-   HOMEPAGE DOM
-========================================= */
-
-const homepageContentForm =
-  document.getElementById(
-    "homepageContentForm"
-  );
-
-const homepagePromo1ImageUpload =
-  document.getElementById(
-    "homepagePromo1ImageUpload"
-  );
-
-const homepagePromo1ImageButton =
-  document.getElementById(
-    "homepagePromo1ImageButton"
-  );
-
-const homepagePromo1ImagePreview =
-  document.getElementById(
-    "homepagePromo1ImagePreview"
-  );
-
-const homepagePromo1ImageData =
-  document.getElementById(
-    "homepagePromo1ImageData"
-  );
-
-const homepagePromo1ImageWarning =
-  document.getElementById(
-    "homepagePromo1ImageWarning"
-  );
-
-
-const homepagePromo2ImageUpload =
-  document.getElementById(
-    "homepagePromo2ImageUpload"
-  );
-
-const homepagePromo2ImageButton =
-  document.getElementById(
-    "homepagePromo2ImageButton"
-  );
-
-const homepagePromo2ImagePreview =
-  document.getElementById(
-    "homepagePromo2ImagePreview"
-  );
-
-const homepagePromo2ImageData =
-  document.getElementById(
-    "homepagePromo2ImageData"
-  );
-
-const homepagePromo2ImageWarning =
-  document.getElementById(
-    "homepagePromo2ImageWarning"
-  );
-
-
-const homepagePromo3ImageUpload =
-  document.getElementById(
-    "homepagePromo3ImageUpload"
-  );
-
-const homepagePromo3ImageButton =
-  document.getElementById(
-    "homepagePromo3ImageButton"
-  );
-
-const homepagePromo3ImagePreview =
-  document.getElementById(
-    "homepagePromo3ImagePreview"
-  );
-
-const homepagePromo3ImageData =
-  document.getElementById(
-    "homepagePromo3ImageData"
-  );
-
-const homepagePromo3ImageWarning =
-  document.getElementById(
-    "homepagePromo3ImageWarning"
-  );
-
-
-/* =========================================
-   BANNER DOM
-========================================= */
-
-const heroBannerUpload =
-  document.getElementById(
-    "heroBannerUpload"
-  );
-
-const heroBannerSelectButton =
-  document.getElementById(
-    "heroBannerSelectButton"
-  );
-
-const heroBannerPreview =
-  document.getElementById(
-    "heroBannerPreview"
-  );
-
-const heroBannerData =
-  document.getElementById(
-    "heroBannerData"
-  );
-
-const heroBannerWarning =
-  document.getElementById(
-    "heroBannerWarning"
-  );
-
-const promoBannerUpload =
-  document.getElementById(
-    "promoBannerUpload"
-  );
-
-const promoBannerSelectButton =
-  document.getElementById(
-    "promoBannerSelectButton"
-  );
-
-const promoBannerPreview =
-  document.getElementById(
-    "promoBannerPreview"
-  );
-
-const promoBannerData =
-  document.getElementById(
-    "promoBannerData"
-  );
-
-const promoBannerWarning =
-  document.getElementById(
-    "promoBannerWarning"
-  );
-
-const saveBannerSettingsButton =
-  document.getElementById(
-    "saveBannerSettingsButton"
-  );
-
-
-/* =========================================
    PAGE CONFIG
 ========================================= */
 
 const PAGE_CONFIG = {
 
-  dashboardPage: {
-    title: "Dashboard",
-    subtitle:
-      "Manage Kinar Aage content and affiliate products."
-  },
+  dashboardPage: [
+    "Dashboard",
+    "Manage Kinar Aage content and affiliate products."
+  ],
 
-  productsPage: {
-    title: "Products",
-    subtitle:
-      "Manage all affiliate products and recommendations."
-  },
+  productsPage: [
+    "Products",
+    "Manage all affiliate products and recommendations."
+  ],
 
-  createProductPage: {
-    title: "Add Product",
-    subtitle:
-      "Create or edit affiliate product content."
-  },
+  createProductPage: [
+    "Add Product",
+    "Create or edit affiliate product content."
+  ],
 
-  categoriesPage: {
-    title: "Categories",
-    subtitle:
-      "Manage category names, images, descriptions and display order."
-  },
+  categoriesPage: [
+    "Categories",
+    "Manage category names, images, descriptions and display order."
+  ],
 
-  homepagePage: {
-    title: "Homepage",
-    subtitle:
-      "Manage homepage text, promotional content and footer settings."
-  },
+  homepagePage: [
+    "Homepage",
+    "Manage homepage text, promotional content and footer settings."
+  ],
 
-  bannersPage: {
-    title: "Banners",
-    subtitle:
-      "Manage homepage hero and promotional visuals."
-  },
+  bannersPage: [
+    "Banners",
+    "Manage homepage hero and promotional visuals."
+  ],
 
-  seoPage: {
-    title: "Site SEO",
-    subtitle:
-      "Manage default search and social metadata."
-  },
+  seoPage: [
+    "Site SEO",
+    "Manage default search and social metadata."
+  ],
 
-  settingsPage: {
-    title: "Settings",
-    subtitle:
-      "Manage general Kinar Aage website settings."
-  }
+  settingsPage: [
+    "Settings",
+    "Manage general Kinar Aage website settings."
+  ]
 
 };
 
 
 /* =========================================
-   HELPERS
+   STORAGE HELPERS
 ========================================= */
 
-function getStoredData(
+function readStore(
   key,
   fallback
 ) {
@@ -1041,13 +1005,12 @@ function getStoredData(
         key
       );
 
-    if (!raw) {
-      return fallback;
-    }
 
-    return JSON.parse(
-      raw
-    );
+    return raw
+      ? JSON.parse(
+          raw
+        )
+      : fallback;
 
   }
 
@@ -1058,6 +1021,7 @@ function getStoredData(
       error
     );
 
+
     return fallback;
 
   }
@@ -1065,79 +1029,74 @@ function getStoredData(
 }
 
 
-function saveStoredData(
+function writeStore(
   key,
-  value
+  data
 ) {
 
   localStorage.setItem(
     key,
     JSON.stringify(
-      value
+      data
     )
   );
 
 }
 
 
+/* =========================================
+   GENERAL HELPERS
+========================================= */
+
 function escapeHtml(
-  value = ""
+  input = ""
 ) {
 
   return String(
-    value
+    input
   )
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 
-}
+    .replace(
+      /&/g,
+      "&amp;"
+    )
 
+    .replace(
+      /</g,
+      "&lt;"
+    )
 
-function getValue(
-  id
-) {
+    .replace(
+      />/g,
+      "&gt;"
+    )
 
-  return (
-    document.getElementById(
-      id
-    )?.value ||
-    ""
-  ).trim();
+    .replace(
+      /"/g,
+      "&quot;"
+    )
 
-}
-
-
-function setValue(
-  id,
-  value = ""
-) {
-
-  const element =
-    document.getElementById(
-      id
+    .replace(
+      /'/g,
+      "&#039;"
     );
-
-  if (element) {
-
-    element.value =
-      value ?? "";
-
-  }
 
 }
 
 
 function linesToArray(
-  value
+  input
 ) {
 
   return String(
-    value || ""
+    input ||
+    ""
   )
-    .split(/\r?\n/)
+
+    .split(
+      /\r?\n/
+    )
+
     .map(
       item =>
         item
@@ -1147,71 +1106,104 @@ function linesToArray(
           )
           .trim()
     )
-    .filter(Boolean);
+
+    .filter(
+      Boolean
+    );
 
 }
 
 
 function arrayToLines(
-  value
+  input
 ) {
 
   return Array.isArray(
-    value
+    input
   )
-    ? value.join("\n")
+    ? input.join(
+        "\n"
+      )
     : "";
 
 }
 
 
 function tagsToArray(
-  value
+  input
 ) {
 
   return String(
-    value || ""
+    input ||
+    ""
   )
-    .split(",")
+
+    .split(
+      ","
+    )
+
     .map(
       item =>
         item.trim()
     )
-    .filter(Boolean);
+
+    .filter(
+      Boolean
+    );
 
 }
 
 
 function arrayToTags(
-  value
+  input
 ) {
 
   return Array.isArray(
-    value
+    input
   )
-    ? value.join(", ")
+    ? input.join(
+        ", "
+      )
     : "";
 
 }
 
 
 function createSlug(
-  text = ""
+  input = ""
 ) {
 
   return String(
-    text
+    input
   )
-    .normalize("NFKD")
+
+    .normalize(
+      "NFKD"
+    )
+
     .toLowerCase()
+
     .trim()
+
     .replace(
       /[^\p{L}\p{N}\s-]/gu,
       ""
     )
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+
+    .replace(
+      /\s+/g,
+      "-"
+    )
+
+    .replace(
+      /-+/g,
+      "-"
+    )
+
+    .replace(
+      /^-|-$/g,
+      ""
+    );
 
 }
 
@@ -1219,7 +1211,9 @@ function createSlug(
 function generateId() {
 
   return (
-    Date.now().toString() +
+    Date.now()
+      .toString() +
+
     Math.random()
       .toString(16)
       .slice(2)
@@ -1228,123 +1222,163 @@ function generateId() {
 }
 
 
-function showAdminToast(
+function toast(
   message
 ) {
 
-  if (!adminToast) {
+  const node =
+    $("adminToast");
+
+
+  if (!node) {
     return;
   }
 
-  adminToast.textContent =
+
+  node.textContent =
     message;
 
-  adminToast.classList.add(
+
+  node.classList.add(
     "show"
   );
 
+
   clearTimeout(
-    showAdminToast.timer
+    toast.timer
   );
 
-  showAdminToast.timer =
+
+  toast.timer =
     setTimeout(
       function() {
 
-        adminToast.classList.remove(
+        node.classList.remove(
           "show"
         );
 
       },
-      2200
+      2300
     );
 
 }
 
+
+function refreshIcons() {
+
+  if (
+    typeof lucide !==
+    "undefined"
+  ) {
+
+    lucide.createIcons();
+
+  }
+
+}
+
+
 /* =========================================
-   PRODUCTS STORAGE
+   PRODUCTS / CATEGORIES STORAGE
 ========================================= */
 
 function getProducts() {
 
-  let products =
-    getStoredData(
+  const data =
+    readStore(
       PRODUCTS_KEY,
       null
     );
 
+
   if (
-    !Array.isArray(
-      products
+    Array.isArray(
+      data
     )
   ) {
 
-    products =
-      INITIAL_PRODUCTS;
-
-    saveStoredData(
-      PRODUCTS_KEY,
-      products
-    );
+    return data;
 
   }
 
-  return products;
+
+  writeStore(
+    PRODUCTS_KEY,
+    INITIAL_PRODUCTS
+  );
+
+
+  return [
+    ...INITIAL_PRODUCTS
+  ];
 
 }
 
 
 function saveProducts(
-  products
+  data
 ) {
 
-  saveStoredData(
+  writeStore(
     PRODUCTS_KEY,
-    products
+    data
   );
 
 }
 
 
-/* =========================================
-   CATEGORIES STORAGE
-========================================= */
-
 function getCategories() {
 
-  let categories =
-    getStoredData(
+  const data =
+    readStore(
       CATEGORIES_KEY,
       null
     );
 
+
+  const list =
+    Array.isArray(
+      data
+    )
+      ? data
+      : [
+          ...INITIAL_CATEGORIES
+        ];
+
+
   if (
     !Array.isArray(
-      categories
+      data
     )
   ) {
 
-    categories =
-      INITIAL_CATEGORIES;
-
-    saveStoredData(
+    writeStore(
       CATEGORIES_KEY,
-      categories
+      list
     );
 
   }
 
-  return categories
+
+  return list
+
     .slice()
+
     .sort(
-      function(a, b) {
+      function(
+        a,
+        b
+      ) {
 
         return (
           Number(
-            a.order || 999
+            a.order ||
+            999
           ) -
+
           Number(
-            b.order || 999
+            b.order ||
+            999
           )
         );
 
@@ -1355,22 +1389,84 @@ function getCategories() {
 
 
 function saveCategories(
-  categories
+  data
 ) {
 
-  saveStoredData(
+  writeStore(
     CATEGORIES_KEY,
-    categories
+    data
   );
 
 }
 
 
 /* =========================================
-   NAVIGATION
+   FIREBASE / CLOUDINARY
 ========================================= */
 
-function openAdminPage(
+async function firebaseModule() {
+
+  try {
+
+    return await import(
+      "./firebase-db.js"
+    );
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Firebase module unavailable:",
+      error
+    );
+
+
+    return null;
+
+  }
+
+}
+
+
+async function cloudinaryUpload(
+  file
+) {
+
+  const module =
+    await import(
+      "./cloudinary-upload.js"
+    );
+
+
+  const result =
+    await module
+      .uploadImageToCloudinary(
+        file
+      );
+
+
+  if (
+    !result?.url
+  ) {
+
+    throw new Error(
+      "Cloudinary did not return an image URL."
+    );
+
+  }
+
+
+  return result.url;
+
+}
+
+
+/* =========================================
+   ADMIN NAVIGATION
+========================================= */
+
+function openPage(
   pageId
 ) {
 
@@ -1383,7 +1479,8 @@ function openAdminPage(
 
         page.classList.toggle(
           "active",
-          page.id === pageId
+          page.id ===
+            pageId
         );
 
       }
@@ -1395,11 +1492,11 @@ function openAdminPage(
       ".admin-nav-item"
     )
     .forEach(
-      button => {
+      item => {
 
-        button.classList.toggle(
+        item.classList.toggle(
           "active",
-          button.dataset.page ===
+          item.dataset.page ===
             pageId
         );
 
@@ -1416,32 +1513,52 @@ function openAdminPage(
   if (config) {
 
     if (
-      adminPageTitle
+      $("adminPageTitle")
     ) {
 
-      adminPageTitle.textContent =
-        config.title;
+      $("adminPageTitle")
+        .textContent =
+        config[0];
 
     }
 
 
     if (
-      adminPageSubtitle
+      $("adminPageSubtitle")
     ) {
 
-      adminPageSubtitle.textContent =
-        config.subtitle;
+      $("adminPageSubtitle")
+        .textContent =
+        config[1];
 
     }
 
   }
 
-localStorage.setItem(
-  "kinarAageAdminActivePage",
-  pageId
-);
 
-  closeAdminSidebar();
+  localStorage.setItem(
+    ACTIVE_PAGE_KEY,
+    pageId
+  );
+
+
+  closeSidebar();
+
+}
+
+
+function closeSidebar() {
+
+  $("adminSidebar")
+    ?.classList.remove(
+      "open"
+    );
+
+
+  $("adminSidebarOverlay")
+    ?.classList.remove(
+      "show"
+    );
 
 }
 
@@ -1457,7 +1574,7 @@ document
         "click",
         function() {
 
-          openAdminPage(
+          openPage(
             button.dataset.page
           );
 
@@ -1479,7 +1596,7 @@ document
         "click",
         function() {
 
-          openAdminPage(
+          openPage(
             button.dataset.openPage
           );
 
@@ -1490,32 +1607,18 @@ document
   );
 
 
-function closeAdminSidebar() {
-
-  adminSidebar
-    ?.classList.remove(
-      "open"
-    );
-
-  adminSidebarOverlay
-    ?.classList.remove(
-      "show"
-    );
-
-}
-
-
-adminMenuButton
+$("adminMenuButton")
   ?.addEventListener(
     "click",
     function() {
 
-      adminSidebar
+      $("adminSidebar")
         ?.classList.toggle(
           "open"
         );
 
-      adminSidebarOverlay
+
+      $("adminSidebarOverlay")
         ?.classList.toggle(
           "show"
         );
@@ -1524,20 +1627,37 @@ adminMenuButton
   );
 
 
-adminSidebarOverlay
+$("adminSidebarOverlay")
   ?.addEventListener(
     "click",
-    closeAdminSidebar
+    closeSidebar
   );
+
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key ===
+      "Escape"
+    ) {
+
+      closeSidebar();
+
+    }
+
+  }
+);
 
 
 /* =========================================
    IMAGE HELPERS
 ========================================= */
 
-function showImagePreview(
+function showPreview(
   container,
-  imageSource,
+  src,
   emptyText =
     "No image selected"
 ) {
@@ -1547,11 +1667,26 @@ function showImagePreview(
   }
 
 
-  if (!imageSource) {
+  if (src) {
+
+    container.innerHTML =
+      `
+        <img
+          src="${escapeHtml(
+            src
+          )}"
+          alt="Preview"
+        >
+      `;
+
+  }
+
+  else {
 
     container.innerHTML =
       `
         <i data-lucide="image"></i>
+
         <span>
           ${escapeHtml(
             emptyText
@@ -1559,44 +1694,141 @@ function showImagePreview(
         </span>
       `;
 
-
-    if (
-      typeof lucide !==
-      "undefined"
-    ) {
-
-      lucide.createIcons();
-
-    }
-
-
-    return;
-
   }
 
 
-  container.innerHTML =
-    `
-      <img
-        src="${escapeHtml(
-          imageSource
-        )}"
-        alt="Preview"
-      >
-    `;
+  refreshIcons();
 
 }
 
 
-function setupImageUpload(
-  input,
-  button,
-  preview,
-  hiddenInput,
-  warning,
-  warningDisplayMode =
-    "hidden"
+function setWarning(
+  node,
+  message = "",
+  styleMode = false
 ) {
+
+  if (!node) {
+    return;
+  }
+
+
+  node.textContent =
+    message;
+
+
+  if (styleMode) {
+
+    node.style.display =
+      message
+        ? "block"
+        : "none";
+
+  }
+
+  else {
+
+    node.hidden =
+      !message;
+
+  }
+
+}
+
+
+function validateImage(
+  file,
+  warning,
+  styleMode = false
+) {
+
+  setWarning(
+    warning,
+    "",
+    styleMode
+  );
+
+
+  if (!file) {
+    return false;
+  }
+
+
+  if (
+    !file.type.startsWith(
+      "image/"
+    )
+  ) {
+
+    setWarning(
+      warning,
+      "Please select a valid image file.",
+      styleMode
+    );
+
+
+    return false;
+
+  }
+
+
+  if (
+    file.size >
+    2 * 1024 * 1024
+  ) {
+
+    setWarning(
+      warning,
+      "Image must be 2 MB or smaller.",
+      styleMode
+    );
+
+
+    toast(
+      "Image must be 2 MB or smaller."
+    );
+
+
+    return false;
+
+  }
+
+
+  return true;
+
+}
+
+/* =========================================
+   CLOUDINARY IMAGE SETUP
+========================================= */
+
+function setupCloudinaryImage({
+
+  inputId,
+  buttonId,
+  previewId,
+  dataId,
+  warningId,
+  styleMode = false,
+  label = "Image"
+
+}) {
+
+  const input =
+    $(inputId);
+
+  const button =
+    $(buttonId);
+
+  const preview =
+    $(previewId);
+
+  const hidden =
+    $(dataId);
+
+  const warning =
+    $(warningId);
+
 
   button
     ?.addEventListener(
@@ -1612,70 +1844,104 @@ function setupImageUpload(
   input
     ?.addEventListener(
       "change",
-      function() {
+      async function() {
 
         const file =
           input.files?.[0];
 
 
-        if (!file) {
+        if (
+          !validateImage(
+            file,
+            warning,
+            styleMode
+          )
+        ) {
+
+          input.value =
+            "";
+
           return;
+
         }
 
 
-        if (warning) {
+        try {
 
-          warning.textContent =
-            "";
+          if (button) {
 
-          if (
-            warningDisplayMode ===
-            "style"
-          ) {
-
-            warning.style.display =
-              "none";
-
-          }
-
-          else {
-
-            warning.hidden =
+            button.disabled =
               true;
 
           }
 
+
+          toast(
+            `Uploading ${label.toLowerCase()}...`
+          );
+
+
+          const url =
+            await cloudinaryUpload(
+              file
+            );
+
+
+          if (hidden) {
+
+            hidden.value =
+              url;
+
+          }
+
+
+          showPreview(
+            preview,
+            url
+          );
+
+
+          setWarning(
+            warning,
+            "",
+            styleMode
+          );
+
+
+          toast(
+            `${label} uploaded successfully.`
+          );
+
         }
 
+        catch (error) {
 
-        if (
-          !file.type.startsWith(
-            "image/"
-          )
-        ) {
-
-          if (warning) {
-
-            warning.textContent =
-              "Please select a valid image file.";
+          console.error(
+            `${label} upload error:`,
+            error
+          );
 
 
-            if (
-              warningDisplayMode ===
-              "style"
-            ) {
+          setWarning(
+            warning,
+            error?.message ||
+              `${label} upload failed.`,
+            styleMode
+          );
 
-              warning.style.display =
-                "block";
 
-            }
+          toast(
+            `${label} upload failed.`
+          );
 
-            else {
+        }
 
-              warning.hidden =
-                false;
+        finally {
 
-            }
+          if (button) {
+
+            button.disabled =
+              false;
 
           }
 
@@ -1683,379 +1949,448 @@ function setupImageUpload(
           input.value =
             "";
 
-          return;
-
         }
-
-
-        if (
-          file.size >
-          2 * 1024 * 1024
-        ) {
-
-          if (warning) {
-
-            warning.textContent =
-              "Image must be 2 MB or smaller.";
-
-
-            if (
-              warningDisplayMode ===
-              "style"
-            ) {
-
-              warning.style.display =
-                "block";
-
-            }
-
-            else {
-
-              warning.hidden =
-                false;
-
-            }
-
-          }
-
-          else {
-
-            showAdminToast(
-              "Image must be 2 MB or smaller."
-            );
-
-          }
-
-
-          input.value =
-            "";
-
-          return;
-
-        }
-
-
-        const reader =
-          new FileReader();
-
-
-        reader.onload =
-          function(event) {
-
-            if (
-              hiddenInput
-            ) {
-
-              hiddenInput.value =
-                event.target.result;
-
-            }
-
-
-            showImagePreview(
-              preview,
-              event.target.result
-            );
-
-          };
-
-
-        reader.readAsDataURL(
-          file
-        );
 
       }
     );
 
 }
-/* =========================================
-   PRODUCT IMAGE
-========================================= */
-
-productImageSelectButton
-  ?.addEventListener(
-    "click",
-    function() {
-
-      productImageUpload?.click();
-
-    }
-  );
-
-
-productImageUpload
-  ?.addEventListener(
-    "change",
-    async function() {
-
-      const file =
-        productImageUpload.files?.[0];
-
-
-      if (!file) {
-        return;
-      }
-
-
-      if (
-        !file.type.startsWith(
-          "image/"
-        )
-      ) {
-
-        showAdminToast(
-          "Please select a valid image file."
-        );
-
-        productImageUpload.value =
-          "";
-
-        return;
-
-      }
-
-
-      if (
-        file.size >
-        2 * 1024 * 1024
-      ) {
-
-        showAdminToast(
-          "Image must be 2 MB or smaller."
-        );
-
-        productImageUpload.value =
-          "";
-
-        return;
-
-      }
-
-
-      try {
-
-        productImageSelectButton.disabled =
-          true;
-
-
-        showAdminToast(
-          "Uploading product image..."
-        );
-
-
-        const cloudinaryModule =
-          await import(
-            "./cloudinary-upload.js"
-          );
-
-
-        const result =
-          await cloudinaryModule
-            .uploadImageToCloudinary(
-              file
-            );
-
-
-        if (
-          !result?.url
-        ) {
-
-          throw new Error(
-            "Cloudinary did not return an image URL."
-          );
-
-        }
-
-
-        if (
-          productImageData
-        ) {
-
-          productImageData.value =
-            result.url;
-
-        }
-
-
-        showImagePreview(
-          productImagePreview,
-          result.url
-        );
-
-
-        showAdminToast(
-          "Product image uploaded successfully."
-        );
-
-      }
-
-      catch (error) {
-
-        console.error(
-          "Cloudinary product image upload error:",
-          error
-        );
-
-
-        showAdminToast(
-          "Product image upload failed."
-        );
-
-      }
-
-      finally {
-
-        productImageSelectButton.disabled =
-          false;
-
-        productImageUpload.value =
-          "";
-
-      }
-
-    }
-  );
 
 
 /* =========================================
-   PRODUCT FORM
+   ALL CLOUDINARY UPLOADS
 ========================================= */
 
-function resetProductForm() {
+setupCloudinaryImage({
 
-  productForm?.reset();
+  inputId:
+    "productImageUpload",
 
+  buttonId:
+    "productImageSelectButton",
 
-  if (
-    editingProductId
-  ) {
+  previewId:
+    "productImagePreview",
 
-    editingProductId.value =
-      "";
+  dataId:
+    "productImageData",
 
-  }
+  label:
+    "Product image"
 
-
-  if (
-    productImageData
-  ) {
-
-    productImageData.value =
-      "";
-
-  }
+});
 
 
-  if (
-    productFormHeading
-  ) {
+setupCloudinaryImage({
 
-    productFormHeading.textContent =
-      "Add New Product";
+  inputId:
+    "categoryImageUpload",
 
-  }
+  buttonId:
+    "categoryImageSelectButton",
+
+  previewId:
+    "categoryImagePreview",
+
+  dataId:
+    "categoryImageData",
+
+  warningId:
+    "categoryImageWarning",
+
+  label:
+    "Category image"
+
+});
+
+setupCloudinaryImage({
+
+  inputId:
+    "siteLogoUpload",
+
+  buttonId:
+    "siteLogoSelectButton",
+
+  previewId:
+    "siteLogoPreview",
+
+  dataId:
+    "siteLogoData",
+
+  warningId:
+    "siteLogoWarning",
+
+  label:
+    "Website logo"
+
+});
+
+setupCloudinaryImage({
+
+  inputId:
+    "homepagePromo1ImageUpload",
+
+  buttonId:
+    "homepagePromo1ImageButton",
+
+  previewId:
+    "homepagePromo1ImagePreview",
+
+  dataId:
+    "homepagePromo1ImageData",
+
+  warningId:
+    "homepagePromo1ImageWarning",
+
+  label:
+    "Promo image"
+
+});
 
 
-  setValue(
-    "productStatus",
-    "published"
-  );
+setupCloudinaryImage({
 
-  setValue(
-    "productFeatured",
-    "false"
-  );
+  inputId:
+    "homepagePromo2ImageUpload",
 
-  setValue(
-    "productCtaLabel",
-    "Buy Now"
-  );
+  buttonId:
+    "homepagePromo2ImageButton",
+
+  previewId:
+    "homepagePromo2ImagePreview",
+
+  dataId:
+    "homepagePromo2ImageData",
+
+  warningId:
+    "homepagePromo2ImageWarning",
+
+  label:
+    "Promo image"
+
+});
 
 
-  showImagePreview(
-    productImagePreview,
-    "",
-    "No image selected"
-  );
+setupCloudinaryImage({
 
-if (
-  productSlugInput
+  inputId:
+    "homepagePromo3ImageUpload",
+
+  buttonId:
+    "homepagePromo3ImageButton",
+
+  previewId:
+    "homepagePromo3ImagePreview",
+
+  dataId:
+    "homepagePromo3ImageData",
+
+  warningId:
+    "homepagePromo3ImageWarning",
+
+  label:
+    "Promo image"
+
+});
+
+
+setupCloudinaryImage({
+
+  inputId:
+    "heroBannerUpload",
+
+  buttonId:
+    "heroBannerSelectButton",
+
+  previewId:
+    "heroBannerPreview",
+
+  dataId:
+    "heroBannerData",
+
+  warningId:
+    "heroBannerWarning",
+
+  styleMode:
+    true,
+
+  label:
+    "Hero banner"
+
+});
+
+
+setupCloudinaryImage({
+
+  inputId:
+    "promoBannerUpload",
+
+  buttonId:
+    "promoBannerSelectButton",
+
+  previewId:
+    "promoBannerPreview",
+
+  dataId:
+    "promoBannerData",
+
+  warningId:
+    "promoBannerWarning",
+
+  styleMode:
+    true,
+
+  label:
+    "Promo banner"
+
+});
+
+
+/* =========================================
+   CATEGORY SELECTS
+========================================= */
+
+function renderCategorySelects(
+  forcedProductCategory = ""
 ) {
 
-  delete productSlugInput
-    .dataset
-    .manual;
+  const categories =
+    getCategories();
+
+
+  const active =
+    categories.filter(
+      category =>
+        category.status !==
+        "inactive"
+    );
+
+
+  const productSelect =
+    $("productCategory");
+
+
+  const filter =
+    $("adminCategoryFilter");
+
+
+  if (productSelect) {
+
+    const current =
+      forcedProductCategory ||
+      productSelect.value;
+
+
+    let html =
+      '<option value="">Select category</option>';
+
+
+    active.forEach(
+      category => {
+
+        html +=
+          `
+            <option
+              value="${escapeHtml(
+                category.name
+              )}"
+            >
+              ${escapeHtml(
+                category.name
+              )}
+            </option>
+          `;
+
+      }
+    );
+
+
+    if (
+      current &&
+      !active.some(
+        category =>
+          category.name ===
+          current
+      )
+    ) {
+
+      html +=
+        `
+          <option
+            value="${escapeHtml(
+              current
+            )}"
+          >
+            ${escapeHtml(
+              current
+            )} (Inactive)
+          </option>
+        `;
+
+    }
+
+
+    productSelect.innerHTML =
+      html;
+
+
+    productSelect.value =
+      current ||
+      "";
+
+  }
+
+
+  if (filter) {
+
+    const current =
+      filter.value;
+
+
+    filter.innerHTML =
+      '<option value="">All Categories</option>' +
+
+      categories
+        .map(
+          category =>
+            `
+              <option
+                value="${escapeHtml(
+                  category.name
+                )}"
+              >
+                ${escapeHtml(
+                  category.name
+                )}
+              </option>
+            `
+        )
+        .join("");
+
+
+    filter.value =
+      current ||
+      "";
+
+  }
 
 }
-  updateMetaCounters();
+
+
+/* =========================================
+   META COUNTERS
+========================================= */
+
+function updateMetaCounters() {
+
+  const title =
+    value(
+      "productMetaTitle"
+    );
+
+
+  const description =
+    value(
+      "productMetaDescription"
+    );
+
+
+  if (
+    $("metaTitleCount")
+  ) {
+
+    $("metaTitleCount")
+      .textContent =
+      `${title.length}/60`;
+
+  }
+
+
+  if (
+    $("metaDescriptionCount")
+  ) {
+
+    $("metaDescriptionCount")
+      .textContent =
+      `${description.length}/160`;
+
+  }
 
 }
+
+
+$("productMetaTitle")
+  ?.addEventListener(
+    "input",
+    updateMetaCounters
+  );
+
+
+$("productMetaDescription")
+  ?.addEventListener(
+    "input",
+    updateMetaCounters
+  );
+
 
 /* =========================================
    PRODUCT AUTO SLUG
 ========================================= */
 
-const productNameInput =
-  document.getElementById(
-    "productName"
-  );
-
-const productSlugInput =
-  document.getElementById(
-    "productSlug"
-  );
-
-
-productNameInput
+$("productName")
   ?.addEventListener(
     "input",
     function() {
 
-      if (
-        !productSlugInput
-      ) {
-        return;
-      }
+      const slug =
+        $("productSlug");
 
 
       if (
-        productSlugInput
-          .dataset
-          .manual ===
-        "true"
+        slug &&
+        slug.dataset.manual !==
+          "true"
       ) {
-        return;
+
+        slug.value =
+          createSlug(
+            value(
+              "productName"
+            )
+          );
+
       }
-
-
-      productSlugInput.value =
-        createSlug(
-          productNameInput.value
-        );
 
     }
   );
 
 
-productSlugInput
+$("productSlug")
   ?.addEventListener(
     "input",
     function() {
 
+      const slug =
+        $("productSlug");
+
+
+      if (!slug) {
+        return;
+      }
+
+
       if (
-        productSlugInput.value
-          .trim()
+        slug.value.trim()
       ) {
 
-        productSlugInput.dataset.manual =
+        slug.dataset.manual =
           "true";
 
       }
 
       else {
 
-        delete productSlugInput
-          .dataset
+        delete slug.dataset
           .manual;
 
       }
@@ -2063,12 +2398,102 @@ productSlugInput
     }
   );
 
-function collectProductFormData() {
+
+/* =========================================
+   RESET PRODUCT FORM
+========================================= */
+
+function resetProductForm() {
+
+  $("productForm")
+    ?.reset();
+
+
+  setValue(
+    "editingProductId",
+    ""
+  );
+
+
+  setValue(
+    "productImageData",
+    ""
+  );
+
+
+  setValue(
+    "productStatus",
+    "published"
+  );
+
+
+  setValue(
+    "productFeatured",
+    "false"
+  );
+
+
+  setValue(
+    "productCtaLabel",
+    "Buy Now"
+  );
+
+
+  if (
+    $("productFormHeading")
+  ) {
+
+    $("productFormHeading")
+      .textContent =
+      "Add New Product";
+
+  }
+
+
+  if (
+    $("productSlug")
+  ) {
+
+    delete $("productSlug")
+      .dataset.manual;
+
+  }
+
+
+  showPreview(
+    $("productImagePreview"),
+    ""
+  );
+
+
+  updateMetaCounters();
+
+}
+
+
+/* =========================================
+   COLLECT PRODUCT
+========================================= */
+
+function collectProduct() {
 
   const existingId =
-    editingProductId
-      ?.value ||
-    "";
+    value(
+      "editingProductId"
+    );
+
+
+  const old =
+    getProducts()
+      .find(
+        product =>
+          String(
+            product.id
+          ) ===
+          String(
+            existingId
+          )
+      );
 
 
   return {
@@ -2078,152 +2503,170 @@ function collectProductFormData() {
       generateId(),
 
     name:
-      getValue(
+      value(
         "productName"
       ),
 
     category:
-      getValue(
+      value(
         "productCategory"
       ),
 
     status:
-      getValue(
+      value(
         "productStatus"
       ) ||
       "published",
 
     featured:
-      getValue(
+      value(
         "productFeatured"
       ) ===
       "true",
 
     badge:
-      getValue(
+      value(
         "productBadge"
       ),
 
     image:
-      productImageData
-        ?.value ||
+      value(
+        "productImageData"
+      ) ||
+      old?.image ||
       "",
 
     shortDescription:
-      getValue(
+      value(
         "productShortDescription"
       ),
 
     highlights:
       linesToArray(
-        getValue(
+        value(
           "productHighlights"
         )
       ),
 
     intro:
-      getValue(
+      value(
         "productIntro"
       ),
 
     description:
-      getValue(
+      value(
         "productDescription"
       ),
 
     pros:
       linesToArray(
-        getValue(
+        value(
           "productPros"
         )
       ),
 
     cons:
       linesToArray(
-        getValue(
+        value(
           "productCons"
         )
       ),
 
     verdict:
-      getValue(
+      value(
         "productVerdict"
       ),
 
     affiliateUrl:
-      getValue(
+      value(
         "productAffiliateUrl"
       ),
 
     ctaLabel:
-      getValue(
+      value(
         "productCtaLabel"
       ) ||
       "Buy Now",
 
     merchantName:
-      getValue(
+      value(
         "productMerchantName"
       ),
 
     affiliateDisclosure:
-      getValue(
+      value(
         "productAffiliateDisclosure"
       ),
 
     slug:
-      getValue(
+      value(
         "productSlug"
       ) ||
       createSlug(
-        getValue(
+        value(
           "productName"
         )
       ),
 
     canonical:
-      getValue(
+      value(
         "productCanonical"
       ),
 
     metaTitle:
-      getValue(
+      value(
         "productMetaTitle"
+      ) ||
+      value(
+        "productName"
       ),
 
     metaDescription:
-      getValue(
+      value(
         "productMetaDescription"
       ),
 
     tags:
       tagsToArray(
-        getValue(
+        value(
           "productTags"
         )
       ),
 
     ogTitle:
-      getValue(
+      value(
         "productOgTitle"
       ),
 
     ogImage:
-      getValue(
+      value(
         "productOgImage"
       ),
 
     ogDescription:
-      getValue(
+      value(
         "productOgDescription"
-      )
+      ),
+
+    createdAt:
+      old?.createdAt ||
+      new Date()
+        .toISOString(),
+
+    updatedAt:
+      new Date()
+        .toISOString()
 
   };
 
 }
 
 
-productForm
+/* =========================================
+   SAVE PRODUCT
+========================================= */
+
+$("productForm")
   ?.addEventListener(
     "submit",
     async function(event) {
@@ -2231,18 +2674,16 @@ productForm
       event.preventDefault();
 
 
-      const newData =
-        collectProductFormData();
+      const product =
+        collectProduct();
 
 
       if (
-        !newData.name ||
-        !newData.category ||
-        !newData.affiliateUrl
+        !product.name
       ) {
 
-        showAdminToast(
-          "Product name, category and affiliate URL are required."
+        toast(
+          "Product name is required."
         );
 
         return;
@@ -2250,76 +2691,48 @@ productForm
       }
 
 
-      let products =
+      if (
+        !product.category
+      ) {
+
+        toast(
+          "Please select a category."
+        );
+
+        return;
+
+      }
+
+
+      const products =
         getProducts();
 
 
-      const existingIndex =
+      const index =
         products.findIndex(
-          product =>
+          item =>
             String(
-              product.id
+              item.id
             ) ===
             String(
-              newData.id
+              product.id
             )
         );
 
 
       if (
-        existingIndex >= 0
+        index >= 0
       ) {
 
-        const oldProduct =
-          products[
-            existingIndex
-          ];
-
-
-        products[
-          existingIndex
-        ] = {
-
-          ...oldProduct,
-          ...newData,
-
-          createdAt:
-            oldProduct.createdAt ||
-            new Date()
-              .toISOString(),
-
-          updatedAt:
-            new Date()
-              .toISOString()
-
-        };
-
-
-        showAdminToast(
-          "Product updated."
-        );
+        products[index] =
+          product;
 
       }
 
       else {
 
-        products.unshift({
-
-          ...newData,
-
-          createdAt:
-            new Date()
-              .toISOString(),
-
-          updatedAt:
-            new Date()
-              .toISOString()
-
-        });
-
-
-        showAdminToast(
-          "Product added."
+        products.unshift(
+          product
         );
 
       }
@@ -2332,66 +2745,41 @@ productForm
 
       try {
 
-        const firebaseModule =
-          await import(
-            "./firebase-db.js"
-          );
+        const firebase =
+          await firebaseModule();
 
 
-        const savedProduct =
-          products.find(
-            product =>
-              String(
-                product.id
-              ) ===
-              String(
-                newData.id
-              )
-          );
+        if (
+          typeof firebase
+            ?.saveProductToFirestore ===
+          "function"
+        ) {
 
-
-        if (savedProduct) {
-
-          const firebaseProduct = {
-
-            ...savedProduct,
-
-            image:
-              String(
-                savedProduct.image ||
-                ""
-              )
-                .startsWith(
-                  "data:"
-                )
-                ? ""
-                : (
-                    savedProduct.image ||
-                    ""
-                  )
-
-          };
-
-
-          await firebaseModule
+          await firebase
             .saveProductToFirestore(
-              firebaseProduct
+              product
             );
 
         }
+
+
+        toast(
+          index >= 0
+            ? "Product updated."
+            : "Product added."
+        );
 
       }
 
       catch (error) {
 
         console.error(
-          "Firebase product save error:",
           error
         );
 
 
-        showAdminToast(
-          "Product saved locally, but Firebase save failed."
+        toast(
+          "Saved locally, but Firebase save failed."
         );
 
       }
@@ -2403,31 +2791,19 @@ productForm
 
       updateDashboard();
 
-      openAdminPage(
+      openPage(
         "productsPage"
       );
 
     }
   );
 
-
-cancelProductEditButton
-  ?.addEventListener(
-    "click",
-    function() {
-
-      resetProductForm();
-
-      openAdminPage(
-        "productsPage"
-      );
-
-    }
-  );
-
+  /* =========================================
+   EDIT PRODUCT
+========================================= */
 
 function editProduct(
-  productId
+  id
 ) {
 
   const product =
@@ -2438,7 +2814,7 @@ function editProduct(
             item.id
           ) ===
           String(
-            productId
+            id
           )
       );
 
@@ -2448,12 +2824,10 @@ function editProduct(
   }
 
 
-  editingProductId.value =
-    product.id;
-
-
-  productFormHeading.textContent =
-    "Edit Product";
+  setValue(
+    "editingProductId",
+    product.id
+  );
 
 
   setValue(
@@ -2461,14 +2835,11 @@ function editProduct(
     product.name
   );
 
+
   renderCategorySelects(
     product.category
   );
 
-  setValue(
-    "productCategory",
-    product.category
-  );
 
   setValue(
     "productStatus",
@@ -2476,26 +2847,26 @@ function editProduct(
     "published"
   );
 
+
   setValue(
     "productFeatured",
-    product.featured
-      ? "true"
-      : "false"
+    String(
+      Boolean(
+        product.featured
+      )
+    )
   );
+
 
   setValue(
     "productBadge",
-    product.badge
+    product.badge ||
+    ""
   );
 
 
-  productImageData.value =
-    product.image ||
-    "";
-
-
-  showImagePreview(
-    productImagePreview,
+  setValue(
+    "productImageData",
     product.image ||
     ""
   );
@@ -2503,8 +2874,10 @@ function editProduct(
 
   setValue(
     "productShortDescription",
-    product.shortDescription
+    product.shortDescription ||
+    ""
   );
+
 
   setValue(
     "productHighlights",
@@ -2513,15 +2886,20 @@ function editProduct(
     )
   );
 
+
   setValue(
     "productIntro",
-    product.intro
+    product.intro ||
+    ""
   );
+
 
   setValue(
     "productDescription",
-    product.description
+    product.description ||
+    ""
   );
+
 
   setValue(
     "productPros",
@@ -2530,6 +2908,7 @@ function editProduct(
     )
   );
 
+
   setValue(
     "productCons",
     arrayToLines(
@@ -2537,15 +2916,20 @@ function editProduct(
     )
   );
 
+
   setValue(
     "productVerdict",
-    product.verdict
+    product.verdict ||
+    ""
   );
+
 
   setValue(
     "productAffiliateUrl",
-    product.affiliateUrl
+    product.affiliateUrl ||
+    ""
   );
+
 
   setValue(
     "productCtaLabel",
@@ -2553,45 +2937,48 @@ function editProduct(
     "Buy Now"
   );
 
+
   setValue(
     "productMerchantName",
-    product.merchantName
+    product.merchantName ||
+    ""
   );
+
 
   setValue(
     "productAffiliateDisclosure",
-    product.affiliateDisclosure
+    product.affiliateDisclosure ||
+    ""
   );
+
 
   setValue(
     "productSlug",
-    product.slug
+    product.slug ||
+    ""
   );
 
-  if (
-  productSlugInput
-) {
-
-  delete productSlugInput
-    .dataset
-    .manual;
-
-}
 
   setValue(
     "productCanonical",
-    product.canonical
+    product.canonical ||
+    ""
   );
+
 
   setValue(
     "productMetaTitle",
-    product.metaTitle
+    product.metaTitle ||
+    ""
   );
+
 
   setValue(
     "productMetaDescription",
-    product.metaDescription
+    product.metaDescription ||
+    ""
   );
+
 
   setValue(
     "productTags",
@@ -2600,297 +2987,189 @@ function editProduct(
     )
   );
 
+
   setValue(
     "productOgTitle",
-    product.ogTitle
+    product.ogTitle ||
+    ""
   );
+
 
   setValue(
     "productOgImage",
-    product.ogImage
+    product.ogImage ||
+    ""
   );
+
 
   setValue(
     "productOgDescription",
-    product.ogDescription
+    product.ogDescription ||
+    ""
+  );
+
+
+  if (
+    $("productSlug")
+  ) {
+
+    $("productSlug")
+      .dataset.manual =
+      "true";
+
+  }
+
+
+  if (
+    $("productFormHeading")
+  ) {
+
+    $("productFormHeading")
+      .textContent =
+      "Edit Product";
+
+  }
+
+
+  showPreview(
+    $("productImagePreview"),
+    product.image ||
+    ""
   );
 
 
   updateMetaCounters();
 
 
-  openAdminPage(
+  openPage(
     "createProductPage"
   );
+
+
+  window.scrollTo({
+
+    top:
+      0,
+
+    behavior:
+      "smooth"
+
+  });
 
 }
 
 
+/* =========================================
+   DELETE PRODUCT
+========================================= */
+
 async function deleteProduct(
-  productId
+  id
 ) {
 
-  const confirmed =
-    window.confirm(
-      "Delete this product permanently?"
-    );
+  if (
+    !confirm(
+      "Delete this product?"
+    )
+  ) {
 
-
-  if (!confirmed) {
     return;
+
   }
+
+
+  const products =
+    getProducts()
+      .filter(
+        product =>
+          String(
+            product.id
+          ) !==
+          String(
+            id
+          )
+      );
+
+
+  saveProducts(
+    products
+  );
 
 
   try {
 
-    const firebaseModule =
-      await import(
-        "./firebase-db.js"
-      );
+    const firebase =
+      await firebaseModule();
 
 
-    await firebaseModule
-      .deleteProductFromFirestore(
-        productId
-      );
+    if (
+      typeof firebase
+        ?.deleteProductFromFirestore ===
+      "function"
+    ) {
 
-
-    const products =
-      getProducts()
-        .filter(
-          product =>
-            String(
-              product.id
-            ) !==
-            String(
-              productId
-            )
+      await firebase
+        .deleteProductFromFirestore(
+          id
         );
 
-
-    saveProducts(
-      products
-    );
-
-
-    renderAdminProducts();
-
-    updateDashboard();
-
-
-    showAdminToast(
-      "Product deleted."
-    );
+    }
 
   }
 
   catch (error) {
 
     console.error(
-      "Product delete error:",
       error
     );
 
 
-    showAdminToast(
-      "Product delete failed."
+    toast(
+      "Deleted locally, but Firebase delete failed."
     );
 
   }
+
+
+  renderAdminProducts();
+
+  updateDashboard();
 
 }
 
 
 /* =========================================
-   CATEGORY SELECTS
-========================================= */
-
-function renderCategorySelects(
-  forcedProductCategory = ""
-) {
-
-  const allCategories =
-    getCategories();
-
-
-  const activeCategories =
-    allCategories.filter(
-      category =>
-        category.status !==
-        "inactive"
-    );
-
-
-  const productCategory =
-    document.getElementById(
-      "productCategory"
-    );
-
-
-  if (
-    productCategory
-  ) {
-
-    const currentValue =
-      forcedProductCategory ||
-      productCategory.value;
-
-
-    let options =
-      activeCategories.slice();
-
-
-    if (
-      currentValue &&
-      !options.some(
-        item =>
-          item.name ===
-          currentValue
-      )
-    ) {
-
-      const existingCategory =
-        allCategories.find(
-          item =>
-            item.name ===
-            currentValue
-        );
-
-
-      if (
-        existingCategory
-      ) {
-
-        options.push(
-          existingCategory
-        );
-
-      }
-
-    }
-
-
-    productCategory.innerHTML =
-      `
-        <option value="">
-          Select Category
-        </option>
-      ` +
-      options
-        .map(
-          category => `
-            <option
-              value="${escapeHtml(
-                category.name
-              )}"
-            >
-              ${escapeHtml(
-                category.name
-              )}
-              ${
-                category.status ===
-                "inactive"
-                  ? " (Inactive)"
-                  : ""
-              }
-            </option>
-          `
-        )
-        .join("");
-
-
-    if (currentValue) {
-
-      productCategory.value =
-        currentValue;
-
-    }
-
-  }
-
-
-  if (
-    adminCategoryFilter
-  ) {
-
-    const currentFilter =
-      adminCategoryFilter.value;
-
-
-    adminCategoryFilter.innerHTML =
-      `
-        <option value="">
-          All Categories
-        </option>
-      ` +
-      activeCategories
-        .map(
-          category => `
-            <option
-              value="${escapeHtml(
-                category.name
-              )}"
-            >
-              ${escapeHtml(
-                category.name
-              )}
-            </option>
-          `
-        )
-        .join("");
-
-
-    if (
-      activeCategories.some(
-        category =>
-          category.name ===
-          currentFilter
-      )
-    ) {
-
-      adminCategoryFilter.value =
-        currentFilter;
-
-    }
-
-  }
-
-}
-
-
-/* =========================================
-   PRODUCT LIST
+   RENDER PRODUCTS
 ========================================= */
 
 function renderAdminProducts() {
 
-  if (
-    !adminProductsList
-  ) {
+  const list =
+    $("adminProductsList");
+
+
+  if (!list) {
     return;
   }
 
 
   const search =
-    String(
-      adminProductSearch
-        ?.value ||
-      ""
+    value(
+      "adminProductSearch"
     )
-      .toLowerCase()
-      .trim();
+      .toLowerCase();
 
 
   const category =
-    adminCategoryFilter
-      ?.value ||
-    "";
+    value(
+      "adminCategoryFilter"
+    );
 
 
   const status =
-    adminStatusFilter
-      ?.value ||
-    "";
+    value(
+      "adminStatusFilter"
+    );
 
 
   const products =
@@ -2898,42 +3177,40 @@ function renderAdminProducts() {
       .filter(
         product => {
 
-          const matchesSearch =
-            !search ||
-            String(
-              product.name ||
-              ""
-            )
-              .toLowerCase()
-              .includes(
-                search
-              ) ||
-            String(
-              product.category ||
-              ""
-            )
-              .toLowerCase()
-              .includes(
-                search
-              );
-
-
-          const matchesCategory =
-            !category ||
-            product.category ===
-              category;
-
-
-          const matchesStatus =
-            !status ||
-            product.status ===
-              status;
+          const text =
+            `
+              ${product.name || ""}
+              ${product.category || ""}
+              ${product.merchantName || ""}
+            `
+              .toLowerCase();
 
 
           return (
-            matchesSearch &&
-            matchesCategory &&
-            matchesStatus
+
+            (
+              !search ||
+              text.includes(
+                search
+              )
+            )
+
+            &&
+
+            (
+              !category ||
+              product.category ===
+                category
+            )
+
+            &&
+
+            (
+              !status ||
+              product.status ===
+                status
+            )
+
           );
 
         }
@@ -2944,7 +3221,7 @@ function renderAdminProducts() {
     !products.length
   ) {
 
-    adminProductsList.innerHTML =
+    list.innerHTML =
       `
         <div class="admin-empty-state">
           No products found.
@@ -2956,75 +3233,86 @@ function renderAdminProducts() {
   }
 
 
-  adminProductsList.innerHTML =
+  list.innerHTML =
     products
       .map(
         product => {
 
-          const image =
-            product.image
-              ? `
-                  <img
-                    src="${escapeHtml(
-                      product.image
-                    )}"
-                    alt=""
-                  >
-                `
-              : `
-                  <div class="admin-product-placeholder">
-                    ${escapeHtml(
-                      String(
-                        product.name ||
-                        "K"
-                      )
-                        .charAt(0)
-                        .toUpperCase()
-                    )}
-                  </div>
-                `;
-
-
           return `
-            <article class="admin-product-row">
+            <div class="admin-product-row">
 
               <div class="admin-product-thumb">
-                ${image}
+
+                ${
+                  product.image
+
+                    ? `
+                        <img
+                          src="${escapeHtml(
+                            product.image
+                          )}"
+                          alt="${escapeHtml(
+                            product.name
+                          )}"
+                        >
+                      `
+
+                    : ""
+                }
+
               </div>
 
-              <div class="admin-product-main">
+
+              <div class="admin-product-main admin-product-info">
 
                 <strong>
                   ${escapeHtml(
                     product.name ||
-                    "Untitled Product"
+                    "Untitled"
                   )}
                 </strong>
 
                 <span>
                   ${escapeHtml(
                     product.category ||
-                    "No Category"
+                    "Uncategorized"
                   )}
                 </span>
 
               </div>
 
-              <div class="admin-product-status">
 
-                <span class="status-badge ${
+              <div
+                class="admin-product-status ${
                   product.status ===
                   "draft"
                     ? "draft"
-                    : "published"
-                }">
-                  ${escapeHtml(
-                    product.status ||
-                    "published"
-                  )}
-                </span>
+                    : ""
+                }"
+              >
+                ${escapeHtml(
+                  product.status ||
+                  "published"
+                )}
+              </div>
+
+
+              <div>
+
+                ${
+                  product.featured
+
+                    ? `
+                        <span class="status-badge published">
+                          Featured
+                        </span>
+                      `
+
+                    : ""
+                }
 
               </div>
+
 
               <div class="admin-product-actions">
 
@@ -3049,7 +3337,7 @@ function renderAdminProducts() {
 
               </div>
 
-            </article>
+            </div>
           `;
 
         }
@@ -3057,7 +3345,7 @@ function renderAdminProducts() {
       .join("");
 
 
-  adminProductsList
+  list
     .querySelectorAll(
       "[data-edit-product]"
     )
@@ -3080,7 +3368,7 @@ function renderAdminProducts() {
     );
 
 
-  adminProductsList
+  list
     .querySelectorAll(
       "[data-delete-product]"
     )
@@ -3105,22 +3393,47 @@ function renderAdminProducts() {
 }
 
 
-adminProductSearch
-  ?.addEventListener(
-    "input",
-    renderAdminProducts
-  );
+/* =========================================
+   PRODUCT FILTER EVENTS
+========================================= */
 
-adminCategoryFilter
-  ?.addEventListener(
-    "change",
-    renderAdminProducts
-  );
+[
+  "adminProductSearch",
+  "adminCategoryFilter",
+  "adminStatusFilter"
 
-adminStatusFilter
+].forEach(
+  id => {
+
+    const eventName =
+      id ===
+      "adminProductSearch"
+        ? "input"
+        : "change";
+
+
+    $(id)
+      ?.addEventListener(
+        eventName,
+        renderAdminProducts
+      );
+
+  }
+);
+
+
+$("cancelProductEditButton")
   ?.addEventListener(
-    "change",
-    renderAdminProducts
+    "click",
+    function() {
+
+      resetProductForm();
+
+      openPage(
+        "productsPage"
+      );
+
+    }
   );
 
 
@@ -3134,402 +3447,332 @@ function updateDashboard() {
     getProducts();
 
 
-  const total =
-    products.length;
+  if (
+    $("dashboardTotalProducts")
+  ) {
 
-  const featured =
-    products.filter(
-      product =>
-        product.featured
-    ).length;
+    $("dashboardTotalProducts")
+      .textContent =
+      products.length;
 
-  const published =
-    products.filter(
-      product =>
-        product.status !==
-        "draft"
-    ).length;
-
-  const drafts =
-    products.filter(
-      product =>
-        product.status ===
-        "draft"
-    ).length;
-
-
-  const totalElement =
-    document.getElementById(
-      "dashboardTotalProducts"
-    );
-
-  const featuredElement =
-    document.getElementById(
-      "dashboardFeaturedProducts"
-    );
-
-  const publishedElement =
-    document.getElementById(
-      "dashboardPublishedProducts"
-    );
-
-  const draftsElement =
-    document.getElementById(
-      "dashboardDraftProducts"
-    );
-
-
-  if (totalElement) {
-    totalElement.textContent =
-      total;
-  }
-
-  if (featuredElement) {
-    featuredElement.textContent =
-      featured;
-  }
-
-  if (publishedElement) {
-    publishedElement.textContent =
-      published;
-  }
-
-  if (draftsElement) {
-    draftsElement.textContent =
-      drafts;
   }
 
 
   if (
-    dashboardProductTable
+    $("dashboardFeaturedProducts")
   ) {
 
-    const latest =
-      products
-        .slice()
-        .sort(
-          function(a, b) {
+    $("dashboardFeaturedProducts")
+      .textContent =
+      products.filter(
+        product =>
+          product.featured
+      ).length;
 
-            return (
-              new Date(
-                b.updatedAt ||
-                b.createdAt ||
-                0
-              ) -
-              new Date(
+  }
+
+
+  if (
+    $("dashboardPublishedProducts")
+  ) {
+
+    $("dashboardPublishedProducts")
+      .textContent =
+      products.filter(
+        product =>
+          product.status !==
+          "draft"
+      ).length;
+
+  }
+
+
+  if (
+    $("dashboardDraftProducts")
+  ) {
+
+    $("dashboardDraftProducts")
+      .textContent =
+      products.filter(
+        product =>
+          product.status ===
+          "draft"
+      ).length;
+
+  }
+
+
+  const table =
+    $("dashboardProductTable");
+
+
+  if (!table) {
+    return;
+  }
+
+
+  const recent =
+    products
+
+      .slice()
+
+      .sort(
+        function(
+          a,
+          b
+        ) {
+
+          return String(
+            b.updatedAt ||
+            ""
+          )
+            .localeCompare(
+              String(
                 a.updatedAt ||
-                a.createdAt ||
-                0
+                ""
               )
             );
 
-          }
-        )
-        .slice(
-          0,
-          5
-        );
+        }
+      )
+
+      .slice(
+        0,
+        6
+      );
 
 
-    dashboardProductTable.innerHTML =
-      latest.length
-        ? latest
-            .map(
-              product => `
-                <div class="dashboard-product-row">
+  if (
+    !recent.length
+  ) {
 
-                  <strong>
-                    ${escapeHtml(
-                      product.name ||
-                      "Untitled Product"
-                    )}
-                  </strong>
+    table.innerHTML =
+      `
+        <div class="admin-empty-state">
+          No products yet.
+        </div>
+      `;
 
-                  <span>
-                    ${escapeHtml(
-                      product.category ||
-                      "No Category"
-                    )}
-                  </span>
+    return;
 
-                  <span>
-                    ${escapeHtml(
-                      product.status ||
-                      "published"
-                    )}
-                  </span>
+  }
 
-                </div>
-              `
-            )
-            .join("")
 
-        : `
-            <div class="admin-empty-state">
-              No products yet.
+  table.innerHTML =
+    recent
+      .map(
+        product => {
+
+          return `
+            <div class="dashboard-product-row">
+
+              <strong>
+                ${escapeHtml(
+                  product.name ||
+                  "Untitled"
+                )}
+              </strong>
+
+              <span>
+                ${escapeHtml(
+                  product.category ||
+                  "Uncategorized"
+                )}
+              </span>
+
+              <span>
+                ${escapeHtml(
+                  product.status ||
+                  "published"
+                )}
+              </span>
+
             </div>
           `;
 
-  }
+        }
+      )
+      .join("");
 
 }
 
 
 /* =========================================
-   META COUNTERS
-========================================= */
-
-function updateMetaCounters() {
-
-  const title =
-    getValue(
-      "productMetaTitle"
-    );
-
-  const description =
-    getValue(
-      "productMetaDescription"
-    );
-
-
-  if (
-    metaTitleCount
-  ) {
-
-    metaTitleCount.textContent =
-      title.length;
-
-  }
-
-
-  if (
-    metaDescriptionCount
-  ) {
-
-    metaDescriptionCount.textContent =
-      description.length;
-
-  }
-
-}
-
-
-document
-  .getElementById(
-    "productMetaTitle"
-  )
-  ?.addEventListener(
-    "input",
-    updateMetaCounters
-  );
-
-
-document
-  .getElementById(
-    "productMetaDescription"
-  )
-  ?.addEventListener(
-    "input",
-    updateMetaCounters
-  );
-
-
-/* =========================================
-   CATEGORY IMAGE
-========================================= */
-
-setupImageUpload(
-  categoryImageUpload,
-  categoryImageSelectButton,
-  categoryImagePreview,
-  categoryImageData,
-  categoryImageWarning,
-  "hidden"
-);
-
-/* =========================================
-   RESET CATEGORY FORM
+   CATEGORY FORM
 ========================================= */
 
 function resetCategoryForm() {
 
-  categoryForm?.reset();
+  $("categoryForm")
+    ?.reset();
+
+
+  setValue(
+    "editingCategoryId",
+    ""
+  );
+
+
+  setValue(
+    "categoryStatus",
+    "active"
+  );
+
+
+  setValue(
+    "categoryImageData",
+    ""
+  );
 
 
   if (
-    editingCategoryId
+    $("categorySlug")
   ) {
 
-    editingCategoryId.value =
-      "";
+    delete $("categorySlug")
+      .dataset.manual;
 
   }
 
 
   if (
-    categoryImageData
+    $("categoryFormHeading")
   ) {
 
-    categoryImageData.value =
-      "";
-
-  }
-
-
-  if (
-    categoryFormHeading
-  ) {
-
-    categoryFormHeading.textContent =
+    $("categoryFormHeading")
+      .textContent =
       "Add Category";
 
   }
 
 
-  if (
-    categoryStatus
-  ) {
-
-    categoryStatus.value =
-      "active";
-
-  }
+  showPreview(
+    $("categoryImagePreview"),
+    ""
+  );
 
 
-  if (
-    categoryOrder
-  ) {
-
-    const categories =
-      getCategories();
-
-
-    const highestOrder =
-      categories.reduce(
-        function(max, item) {
-
-          return Math.max(
-            max,
-            Number(
-              item.order || 0
-            )
-          );
-
-        },
-        0
-      );
-
-
-    categoryOrder.value =
-      highestOrder + 1;
-
-  }
-
-
-  if (
-    cancelCategoryEditButton
-  ) {
-
-    cancelCategoryEditButton.hidden =
-      true;
-
-  }
-
-
-  if (
-    categoryImageWarning
-  ) {
-
-    categoryImageWarning.hidden =
-      true;
-
-    categoryImageWarning.textContent =
-      "";
-
-  }
-
-
-  if (
-    categorySlug
-  ) {
-
-    delete categorySlug.dataset.manual;
-
-  }
-
-
-  showImagePreview(
-    categoryImagePreview,
-    "",
-    "No category image selected"
+  setWarning(
+    $("categoryImageWarning"),
+    ""
   );
 
 }
 
 
 /* =========================================
-   CATEGORY AUTO SLUG
+   GET CATEGORY
 ========================================= */
 
-categoryName
-  ?.addEventListener(
-    "input",
-    function() {
+function getCategoryById(
+  id
+) {
 
-      if (
-        editingCategoryId
-          ?.value
-      ) {
-        return;
-      }
+  return getCategories()
+    .find(
+      category =>
+        String(
+          category.id
+        ) ===
+        String(
+          id
+        )
+    );
 
-
-      if (
-        categorySlug &&
-        !categorySlug.dataset.manual
-      ) {
-
-        categorySlug.value =
-          createSlug(
-            categoryName.value
-          );
-
-      }
-
-    }
-  );
-
-
-categorySlug
-  ?.addEventListener(
-    "input",
-    function() {
-
-      if (
-        categorySlug.value
-      ) {
-
-        categorySlug.dataset.manual =
-          "true";
-
-      }
-
-      else {
-
-        delete categorySlug
-          .dataset.manual;
-
-      }
-
-    }
-  );
+}
 
 
 /* =========================================
-   CATEGORY SAVE
+   COLLECT CATEGORY
 ========================================= */
 
-categoryForm
+function collectCategory() {
+
+  const editingId =
+    value(
+      "editingCategoryId"
+    );
+
+
+  const old =
+    getCategoryById(
+      editingId
+    );
+
+
+  const name =
+    value(
+      "categoryName"
+    );
+
+
+  const slug =
+    value(
+      "categorySlug"
+    ) ||
+    createSlug(
+      name
+    );
+
+
+  return {
+
+    id:
+      editingId ||
+      slug ||
+      generateId(),
+
+    name:
+      name,
+
+    slug:
+      slug,
+
+    description:
+      value(
+        "categoryDescription"
+      ),
+
+    status:
+      value(
+        "categoryStatus"
+      ) ||
+      "active",
+
+    order:
+      Number(
+        value(
+          "categoryOrder"
+        ) ||
+        999
+      ),
+
+    image:
+      value(
+        "categoryImageData"
+      ) ||
+      old?.image ||
+      "",
+
+    createdAt:
+      old?.createdAt ||
+      new Date()
+        .toISOString(),
+
+    updatedAt:
+      new Date()
+        .toISOString()
+
+  };
+
+}
+
+
+/* =========================================
+   SAVE CATEGORY
+========================================= */
+
+$("categoryForm")
   ?.addEventListener(
     "submit",
     async function(event) {
@@ -3537,16 +3780,15 @@ categoryForm
       event.preventDefault();
 
 
-      const name =
-        categoryName
-          ?.value
-          .trim() ||
-        "";
+      const category =
+        collectCategory();
 
 
-      if (!name) {
+      if (
+        !category.name
+      ) {
 
-        showAdminToast(
+        toast(
           "Category name is required."
         );
 
@@ -3555,72 +3797,56 @@ categoryForm
       }
 
 
-      const categoryId =
-        editingCategoryId
-          ?.value ||
-        generateId();
+      if (
+        !category.slug
+      ) {
 
-
-      const slug =
-        categorySlug
-          ?.value
-          .trim() ||
-        createSlug(
-          name
+        toast(
+          "Category slug is required."
         );
 
+        return;
 
-      const newCategory = {
-
-        id:
-          categoryId,
-
-        name,
-
-        slug,
-
-        description:
-          categoryDescription
-            ?.value
-            .trim() ||
-          "",
-
-        image:
-          categoryImageData
-            ?.value ||
-          "",
-
-        status:
-          categoryStatus
-            ?.value ||
-          "active",
-
-        order:
-          Number(
-            categoryOrder
-              ?.value ||
-            999
-          )
-
-      };
+      }
 
 
-      let categories =
+      const categories =
         getCategories();
+
+
+      const existingCategory =
+        categories.find(
+          item =>
+            String(
+              item.id
+            ) ===
+            String(
+              category.id
+            )
+        );
 
 
       const duplicateName =
         categories.some(
           item =>
-            item.name
-              .toLowerCase() ===
-              name.toLowerCase() &&
             String(
               item.id
             ) !==
+              String(
+                category.id
+              ) &&
             String(
-              categoryId
+              item.name ||
+              ""
             )
+              .trim()
+              .toLowerCase() ===
+            String(
+              category.name ||
+              ""
+            )
+              .trim()
+              .toLowerCase()
         );
 
 
@@ -3628,7 +3854,7 @@ categoryForm
         duplicateName
       ) {
 
-        showAdminToast(
+        toast(
           "A category with this name already exists."
         );
 
@@ -3641,17 +3867,23 @@ categoryForm
         categories.some(
           item =>
             String(
+              item.id
+            ) !==
+              String(
+                category.id
+              ) &&
+            String(
               item.slug ||
               ""
             )
+              .trim()
               .toLowerCase() ===
-              slug.toLowerCase() &&
             String(
-              item.id
-            ) !==
-            String(
-              categoryId
+              category.slug ||
+              ""
             )
+              .trim()
+              .toLowerCase()
         );
 
 
@@ -3659,8 +3891,8 @@ categoryForm
         duplicateSlug
       ) {
 
-        showAdminToast(
-          "This category slug is already in use."
+        toast(
+          "A category with this slug already exists."
         );
 
         return;
@@ -3668,195 +3900,167 @@ categoryForm
       }
 
 
-      const existingIndex =
+      const oldCategoryName =
+        existingCategory?.name ||
+        "";
+
+
+      const index =
         categories.findIndex(
           item =>
             String(
               item.id
             ) ===
             String(
-              categoryId
+              category.id
             )
         );
 
 
       if (
-        existingIndex >= 0
+        index >= 0
       ) {
 
-        const oldCategory =
-          categories[
-            existingIndex
-          ];
-
-
-        const oldName =
-          oldCategory.name;
-
-
-        categories[
-          existingIndex
-        ] = {
-
-          ...oldCategory,
-          ...newCategory,
-
-          image:
-            newCategory.image ||
-            oldCategory.image ||
-            ""
-
-        };
-
-
-       if (
-  oldName !==
-  name
-) {
-
-  const updatedProducts =
-    [];
-
-
-  const products =
-    getProducts()
-      .map(
-        product => {
-
-          if (
-            product.category ===
-            oldName
-          ) {
-
-            const updatedProduct = {
-
-              ...product,
-
-              category:
-                name,
-
-              updatedAt:
-                new Date()
-                  .toISOString()
-
-            };
-
-
-            updatedProducts.push(
-              updatedProduct
-            );
-
-
-            return updatedProduct;
-
-          }
-
-
-          return product;
-
-        }
-      );
-
-
-  try {
-
-    const firebaseModule =
-      await import(
-        "./firebase-db.js"
-      );
-
-
-    for (
-      const product
-      of updatedProducts
-    ) {
-
-      await firebaseModule
-        .saveProductToFirestore(
-          product
-        );
-
-    }
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "Category product sync error:",
-      error
-    );
-
-
-    showAdminToast(
-      "Category rename failed to sync products."
-    );
-
-
-    return;
-
-  }
-
-
-  saveProducts(
-    products
-  );
-
-}
-
-
-        showAdminToast(
-          "Category updated."
-        );
+        categories[index] =
+          category;
 
       }
 
       else {
 
         categories.push(
-          newCategory
-        );
-
-
-        showAdminToast(
-          "Category added."
+          category
         );
 
       }
-try {
 
-  const firebaseModule =
-    await import(
-      "./firebase-db.js"
-    );
-
-
-  await firebaseModule
-    .saveCategoryToFirestore(
-      newCategory
-    );
-
-}
-
-catch (error) {
-
-  console.error(
-    "Category Firebase save error:",
-    error
-  );
-
-
-  showAdminToast(
-    "Category Firebase save failed."
-  );
-
-  return;
-
-}
 
       saveCategories(
         categories
       );
+
+
+      /* =====================================
+         UPDATE PRODUCTS IF CATEGORY RENAMED
+      ===================================== */
+
+      let changedProducts =
+        [];
+
+
+      if (
+        oldCategoryName &&
+        oldCategoryName !==
+          category.name
+      ) {
+
+        const products =
+          getProducts();
+
+
+        products.forEach(
+          product => {
+
+            if (
+              product.category ===
+              oldCategoryName
+            ) {
+
+              product.category =
+                category.name;
+
+
+              product.updatedAt =
+                new Date()
+                  .toISOString();
+
+
+              changedProducts.push(
+                product
+              );
+
+            }
+
+          }
+        );
+
+
+        if (
+          changedProducts.length
+        ) {
+
+          saveProducts(
+            products
+          );
+
+        }
+
+      }
+
+
+      try {
+
+        const firebase =
+          await firebaseModule();
+
+
+        if (
+          typeof firebase
+            ?.saveCategoryToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveCategoryToFirestore(
+              category
+            );
+
+        }
+
+
+        if (
+          changedProducts.length &&
+          typeof firebase
+            ?.saveProductToFirestore ===
+            "function"
+        ) {
+
+          for (
+            const product
+            of changedProducts
+          ) {
+
+            await firebase
+              .saveProductToFirestore(
+                product
+              );
+
+          }
+
+        }
+
+
+        toast(
+          index >= 0
+            ? "Category updated."
+            : "Category added."
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Category Firebase save error:",
+          error
+        );
+
+
+        toast(
+          "Saved locally, but Firebase save failed."
+        );
+
+      }
 
 
       resetCategoryForm();
@@ -3873,216 +4077,204 @@ catch (error) {
   );
 
 
-cancelCategoryEditButton
-  ?.addEventListener(
-    "click",
-    resetCategoryForm
-  );
-
+/* =========================================
+   EDIT CATEGORY
+========================================= */
 
 function editCategory(
-  categoryId
+  id
 ) {
 
   const category =
-    getCategories()
-      .find(
-        item =>
-          String(
-            item.id
-          ) ===
-          String(
-            categoryId
-          )
-      );
+    getCategoryById(
+      id
+    );
 
 
   if (!category) {
+
     return;
+
   }
 
 
-  editingCategoryId.value =
-    category.id;
+  setValue(
+    "editingCategoryId",
+    category.id
+  );
 
-  categoryFormHeading.textContent =
-    "Edit Category";
 
-  categoryName.value =
-    category.name ||
-    "";
+  setValue(
+    "categoryName",
+    category.name
+  );
 
-  categorySlug.value =
-    category.slug ||
-    "";
 
-  categorySlug.dataset.manual =
-    "true";
+  setValue(
+    "categorySlug",
+    category.slug
+  );
 
-  categoryDescription.value =
-    category.description ||
-    "";
 
-  categoryStatus.value =
+  setValue(
+    "categoryDescription",
+    category.description
+  );
+
+
+  setValue(
+    "categoryStatus",
     category.status ||
-    "active";
+    "active"
+  );
 
-  categoryOrder.value =
-    Number(
-      category.order ||
-      1
-    );
 
-  categoryImageData.value =
+  setValue(
+    "categoryOrder",
+    category.order
+  );
+
+
+  setValue(
+    "categoryImageData",
     category.image ||
-    "";
-
-
-  showImagePreview(
-    categoryImagePreview,
-    category.image ||
-    "",
-    "No category image selected"
+    ""
   );
 
 
   if (
-    cancelCategoryEditButton
+    $("categorySlug")
   ) {
 
-    cancelCategoryEditButton.hidden =
-      false;
+    $("categorySlug")
+      .dataset.manual =
+      "true";
 
   }
 
 
-  openAdminPage(
-    "categoriesPage"
+  if (
+    $("categoryFormHeading")
+  ) {
+
+    $("categoryFormHeading")
+      .textContent =
+      "Edit Category";
+
+  }
+
+
+  showPreview(
+    $("categoryImagePreview"),
+    category.image ||
+    ""
   );
 
 
-  categoryName?.focus();
+  openPage(
+    "categoriesPage"
+  );
 
 }
 
 
+/* =========================================
+   DELETE CATEGORY
+========================================= */
+
 async function deleteCategory(
-  categoryId
+  id
 ) {
 
-  const categories =
-    getCategories();
-
-
   const category =
-    categories.find(
-      item =>
-        String(
-          item.id
-        ) ===
-        String(
-          categoryId
-        )
-    );
-
-
-  if (!category) {
-
-    showAdminToast(
-      "Category not found."
-    );
-
-    return;
-
-  }
-
-
-  let firebaseModule;
-
-  let currentProducts =
-    [];
-
-
-  try {
-
-    firebaseModule =
-      await import(
-        "./firebase-db.js"
-      );
-
-
-    const firebaseProducts =
-      await firebaseModule
-        .getProductsFromFirestore();
-
-
-    currentProducts =
-      Array.isArray(
-        firebaseProducts
-      )
-        ? firebaseProducts
-        : [];
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "Category delete safety check error:",
-      error
-    );
-
-
-    showAdminToast(
-      "Could not verify category usage. Delete cancelled."
-    );
-
-
-    return;
-
-  }
-
-
-  const productsUsingCategory =
-    currentProducts.filter(
-      product =>
-        product &&
-        product.category ===
-          category.name
+    getCategoryById(
+      id
     );
 
 
   if (
-    productsUsingCategory.length
+    !category
   ) {
-
-    showAdminToast(
-      `Cannot delete. ${productsUsingCategory.length} product(s) are using this category.`
-    );
-
 
     return;
 
   }
 
 
-  const confirmed =
-    window.confirm(
-      `Delete "${category.name}" category?`
+  const categoryInUse =
+    getProducts()
+      .some(
+        product =>
+          product.category ===
+          category.name
+      );
+
+
+  if (
+    categoryInUse
+  ) {
+
+    toast(
+      "This category is being used by one or more products. Move those products first."
     );
 
-
-  if (!confirmed) {
     return;
+
+  }
+
+
+  if (
+    !confirm(
+      `Delete "${category.name}"?`
+    )
+  ) {
+
+    return;
+
   }
 
 
   try {
 
-    await firebaseModule
-      .deleteCategoryFromFirestore(
-        categoryId
-      );
+    const firebase =
+      await firebaseModule();
+
+
+    if (
+      typeof firebase
+        ?.deleteCategoryFromFirestore ===
+        "function"
+    ) {
+
+      await firebase
+        .deleteCategoryFromFirestore(
+          id
+        );
+
+    }
+
+
+    const categories =
+      getCategories()
+        .filter(
+          item =>
+            String(
+              item.id
+            ) !==
+            String(
+              id
+            )
+        );
+
+
+    saveCategories(
+      categories
+    );
+
+
+    toast(
+      "Category deleted."
+    );
 
   }
 
@@ -4094,8 +4286,8 @@ async function deleteCategory(
     );
 
 
-    showAdminToast(
-      "Category delete failed."
+    toast(
+      "Category could not be deleted."
     );
 
 
@@ -4104,46 +4296,97 @@ async function deleteCategory(
   }
 
 
-  const updated =
-    categories.filter(
-      item =>
-        String(
-          item.id
-        ) !==
-        String(
-          categoryId
-        )
-    );
-
-
-  saveCategories(
-    updated
-  );
-
+  resetCategoryForm();
 
   renderCategories();
 
   renderCategorySelects();
 
-  resetCategoryForm();
-
-
-  showAdminToast(
-    "Category deleted."
-  );
-
 }
 
+
 /* =========================================
-   CATEGORY LIST
+   CATEGORY AUTO SLUG
+========================================= */
+
+$("categoryName")
+  ?.addEventListener(
+    "input",
+    function() {
+
+      const slug =
+        $("categorySlug");
+
+
+      if (
+        slug &&
+        slug.dataset.manual !==
+          "true"
+      ) {
+
+        slug.value =
+          createSlug(
+            value(
+              "categoryName"
+            )
+          );
+
+      }
+
+    }
+  );
+
+
+$("categorySlug")
+  ?.addEventListener(
+    "input",
+    function() {
+
+      const node =
+        $("categorySlug");
+
+
+      if (!node) {
+
+        return;
+
+      }
+
+
+      if (
+        node.value.trim()
+      ) {
+
+        node.dataset.manual =
+          "true";
+
+      }
+
+      else {
+
+        delete node.dataset
+          .manual;
+
+      }
+
+    }
+  );
+
+
+/* =========================================
+   RENDER CATEGORIES
 ========================================= */
 
 function renderCategories() {
 
-  if (
-    !adminCategoriesList
-  ) {
+  const list =
+    $("adminCategoriesList");
+
+
+  if (!list) {
+
     return;
+
   }
 
 
@@ -4155,10 +4398,10 @@ function renderCategories() {
     !categories.length
   ) {
 
-    adminCategoriesList.innerHTML =
+    list.innerHTML =
       `
         <div class="admin-empty-state">
-          No categories found.
+          No categories yet.
         </div>
       `;
 
@@ -4167,43 +4410,46 @@ function renderCategories() {
   }
 
 
-  adminCategoriesList.innerHTML =
+  list.innerHTML =
     categories
       .map(
         category => {
-
-          const image =
-            category.image
-              ? `
-                  <img
-                    src="${escapeHtml(
-                      category.image
-                    )}"
-                    alt="${escapeHtml(
-                      category.name
-                    )}"
-                  >
-                `
-              : `
-                  <div class="category-admin-placeholder">
-                    ${escapeHtml(
-                      String(
-                        category.name ||
-                        "C"
-                      )
-                        .charAt(0)
-                        .toUpperCase()
-                    )}
-                  </div>
-                `;
-
 
           return `
             <article class="admin-category-card">
 
               <div class="admin-category-card-image">
-                ${image}
+
+                ${
+                  category.image
+
+                    ? `
+                        <img
+                          src="${escapeHtml(
+                            category.image
+                          )}"
+                          alt="${escapeHtml(
+                            category.name
+                          )}"
+                        >
+                      `
+
+                    : `
+                        <div class="category-admin-placeholder">
+                          ${escapeHtml(
+                            (
+                              category.name ||
+                              "C"
+                            )
+                              .charAt(0)
+                              .toUpperCase()
+                          )}
+                        </div>
+                      `
+                }
+
               </div>
+
 
               <div class="admin-category-card-content">
 
@@ -4215,12 +4461,14 @@ function renderCategories() {
                     )}
                   </strong>
 
-                  <span class="status-badge ${
-                    category.status ===
-                    "inactive"
-                      ? "draft"
-                      : "published"
-                  }">
+                  <span
+                    class="status-badge ${
+                      category.status ===
+                      "inactive"
+                        ? "inactive"
+                        : "active"
+                    }"
+                  >
                     ${escapeHtml(
                       category.status ||
                       "active"
@@ -4229,12 +4477,14 @@ function renderCategories() {
 
                 </div>
 
+
                 <p>
                   ${escapeHtml(
                     category.description ||
-                    "No description added."
+                    "No description."
                   )}
                 </p>
+
 
                 <small>
                   Order:
@@ -4242,14 +4492,10 @@ function renderCategories() {
                     category.order ||
                     ""
                   )}
-                  ·
-                  ${escapeHtml(
-                    category.slug ||
-                    ""
-                  )}
                 </small>
 
               </div>
+
 
               <div class="admin-category-card-actions">
 
@@ -4282,7 +4528,7 @@ function renderCategories() {
       .join("");
 
 
-  adminCategoriesList
+  list
     .querySelectorAll(
       "[data-edit-category]"
     )
@@ -4305,7 +4551,7 @@ function renderCategories() {
     );
 
 
-  adminCategoriesList
+  list
     .querySelectorAll(
       "[data-delete-category]"
     )
@@ -4330,46 +4576,24 @@ function renderCategories() {
 }
 
 
-/* =========================================
-   HOMEPAGE IMAGE UPLOADS
-========================================= */
+$("cancelCategoryEditButton")
+  ?.addEventListener(
+    "click",
+    function() {
 
-setupImageUpload(
-  homepagePromo1ImageUpload,
-  homepagePromo1ImageButton,
-  homepagePromo1ImagePreview,
-  homepagePromo1ImageData,
-  homepagePromo1ImageWarning,
-  "hidden"
-);
+      resetCategoryForm();
 
-setupImageUpload(
-  homepagePromo2ImageUpload,
-  homepagePromo2ImageButton,
-  homepagePromo2ImagePreview,
-  homepagePromo2ImageData,
-  homepagePromo2ImageWarning,
-  "hidden"
-);
-
-setupImageUpload(
-  homepagePromo3ImageUpload,
-  homepagePromo3ImageButton,
-  homepagePromo3ImagePreview,
-  homepagePromo3ImageData,
-  homepagePromo3ImageWarning,
-  "hidden"
-);
-
+    }
+  );
 
 /* =========================================
-   HOMEPAGE CONTENT MERGE
+   HOMEPAGE CONTENT HELPERS
 ========================================= */
 
 function getHomepageContent() {
 
   const stored =
-    getStoredData(
+    readStore(
       HOMEPAGE_CONTENT_KEY,
       null
     );
@@ -4393,6 +4617,7 @@ function getHomepageContent() {
   return {
 
     ...DEFAULT_HOMEPAGE_CONTENT,
+
     ...stored,
 
 
@@ -4401,18 +4626,21 @@ function getHomepageContent() {
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .topInfo[0],
+
         ...(stored.topInfo?.[0] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .topInfo[1],
+
         ...(stored.topInfo?.[1] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .topInfo[2],
+
         ...(stored.topInfo?.[2] || {})
       }
 
@@ -4424,18 +4652,21 @@ function getHomepageContent() {
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .utilityItems[0],
+
         ...(stored.utilityItems?.[0] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .utilityItems[1],
+
         ...(stored.utilityItems?.[1] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .utilityItems[2],
+
         ...(stored.utilityItems?.[2] || {})
       }
 
@@ -4447,18 +4678,21 @@ function getHomepageContent() {
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .promos[0],
+
         ...(stored.promos?.[0] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .promos[1],
+
         ...(stored.promos?.[1] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .promos[2],
+
         ...(stored.promos?.[2] || {})
       }
 
@@ -4477,18 +4711,21 @@ function getHomepageContent() {
         {
           ...DEFAULT_HOMEPAGE_CONTENT
             .why.cards[0],
+
           ...(stored.why?.cards?.[0] || {})
         },
 
         {
           ...DEFAULT_HOMEPAGE_CONTENT
             .why.cards[1],
+
           ...(stored.why?.cards?.[1] || {})
         },
 
         {
           ...DEFAULT_HOMEPAGE_CONTENT
             .why.cards[2],
+
           ...(stored.why?.cards?.[2] || {})
         }
 
@@ -4512,24 +4749,28 @@ function getHomepageContent() {
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .trustItems[0],
+
         ...(stored.trustItems?.[0] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .trustItems[1],
+
         ...(stored.trustItems?.[1] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .trustItems[2],
+
         ...(stored.trustItems?.[2] || {})
       },
 
       {
         ...DEFAULT_HOMEPAGE_CONTENT
           .trustItems[3],
+
         ...(stored.trustItems?.[3] || {})
       }
 
@@ -4558,6 +4799,7 @@ function getHomepageContent() {
 
 }
 
+
 /* =========================================
    LOAD HOMEPAGE CONTENT
 ========================================= */
@@ -4567,8 +4809,6 @@ function loadHomepageContent() {
   const data =
     getHomepageContent();
 
-
-  /* TOP INFO */
 
   setValue(
     "homepageTopInfo1Icon",
@@ -4601,8 +4841,6 @@ function loadHomepageContent() {
   );
 
 
-  /* UTILITY */
-
   setValue(
     "homepageUtility1Icon",
     data.utilityItems[0].icon
@@ -4618,6 +4856,7 @@ function loadHomepageContent() {
     data.utilityItems[0].subtitle
   );
 
+
   setValue(
     "homepageUtility2Icon",
     data.utilityItems[1].icon
@@ -4632,6 +4871,7 @@ function loadHomepageContent() {
     "homepageUtility2Subtitle",
     data.utilityItems[1].subtitle
   );
+
 
   setValue(
     "homepageUtility3Icon",
@@ -4649,8 +4889,6 @@ function loadHomepageContent() {
   );
 
 
-  /* HEADINGS */
-
   setValue(
     "homepageCategoriesTitle",
     data.categoriesTitle
@@ -4661,6 +4899,7 @@ function loadHomepageContent() {
     data.categoriesSubtitle
   );
 
+
   setValue(
     "homepageFeaturedTitle",
     data.featuredTitle
@@ -4670,6 +4909,7 @@ function loadHomepageContent() {
     "homepageFeaturedSubtitle",
     data.featuredSubtitle
   );
+
 
   setValue(
     "homepageRecommendedTitle",
@@ -4682,139 +4922,99 @@ function loadHomepageContent() {
   );
 
 
-  /* PROMOS */
-
-  const promo1 =
-    data.promos[0];
-
-  const promo2 =
-    data.promos[1];
-
-  const promo3 =
-    data.promos[2];
-
+  setValue(
+    "homepagePromo1ImageData",
+    data.promos[0].image
+  );
 
   setValue(
     "homepagePromo1Title",
-    promo1.title
+    data.promos[0].title
   );
 
   setValue(
     "homepagePromo1Subtitle",
-    promo1.subtitle
+    data.promos[0].subtitle
   );
 
   setValue(
     "homepagePromo1ButtonText",
-    promo1.buttonText
+    data.promos[0].buttonText
   );
 
   setValue(
     "homepagePromo1Link",
-    promo1.link
-  );
-
-
-  if (
-    homepagePromo1ImageData
-  ) {
-
-    homepagePromo1ImageData.value =
-      promo1.image ||
-      "";
-
-  }
-
-
-  showImagePreview(
-    homepagePromo1ImagePreview,
-    promo1.image ||
-    "",
-    "No image selected"
+    data.promos[0].link
   );
 
 
   setValue(
+    "homepagePromo2ImageData",
+    data.promos[1].image
+  );
+
+  setValue(
     "homepagePromo2Title",
-    promo2.title
+    data.promos[1].title
   );
 
   setValue(
     "homepagePromo2Subtitle",
-    promo2.subtitle
+    data.promos[1].subtitle
   );
 
   setValue(
     "homepagePromo2ButtonText",
-    promo2.buttonText
+    data.promos[1].buttonText
   );
 
   setValue(
     "homepagePromo2Link",
-    promo2.link
-  );
-
-
-  if (
-    homepagePromo2ImageData
-  ) {
-
-    homepagePromo2ImageData.value =
-      promo2.image ||
-      "";
-
-  }
-
-
-  showImagePreview(
-    homepagePromo2ImagePreview,
-    promo2.image ||
-    "",
-    "No image selected"
+    data.promos[1].link
   );
 
 
   setValue(
+    "homepagePromo3ImageData",
+    data.promos[2].image
+  );
+
+  setValue(
     "homepagePromo3Title",
-    promo3.title
+    data.promos[2].title
   );
 
   setValue(
     "homepagePromo3Subtitle",
-    promo3.subtitle
+    data.promos[2].subtitle
   );
 
   setValue(
     "homepagePromo3ButtonText",
-    promo3.buttonText
+    data.promos[2].buttonText
   );
 
   setValue(
     "homepagePromo3Link",
-    promo3.link
+    data.promos[2].link
   );
 
 
-  if (
-    homepagePromo3ImageData
-  ) {
-
-    homepagePromo3ImageData.value =
-      promo3.image ||
-      "";
-
-  }
-
-
-  showImagePreview(
-    homepagePromo3ImagePreview,
-    promo3.image ||
-    "",
-    "No image selected"
+  showPreview(
+    $("homepagePromo1ImagePreview"),
+    data.promos[0].image
   );
 
+  showPreview(
+    $("homepagePromo2ImagePreview"),
+    data.promos[1].image
+  );
 
-  /* WHY */
+  showPreview(
+    $("homepagePromo3ImagePreview"),
+    data.promos[2].image
+  );
+
 
   setValue(
     "homepageWhyTitle",
@@ -4825,6 +5025,7 @@ function loadHomepageContent() {
     "homepageWhySubtitle",
     data.why.subtitle
   );
+
 
   setValue(
     "homepageWhy1Icon",
@@ -4841,6 +5042,7 @@ function loadHomepageContent() {
     data.why.cards[0].description
   );
 
+
   setValue(
     "homepageWhy2Icon",
     data.why.cards[1].icon
@@ -4855,6 +5057,7 @@ function loadHomepageContent() {
     "homepageWhy2Description",
     data.why.cards[1].description
   );
+
 
   setValue(
     "homepageWhy3Icon",
@@ -4871,8 +5074,6 @@ function loadHomepageContent() {
     data.why.cards[2].description
   );
 
-
-  /* NEWSLETTER */
 
   setValue(
     "homepageNewsletterOverline",
@@ -4904,8 +5105,6 @@ function loadHomepageContent() {
     data.newsletter.note
   );
 
-
-  /* TRUST */
 
   setValue(
     "homepageTrust1Title",
@@ -4948,15 +5147,11 @@ function loadHomepageContent() {
   );
 
 
-  /* DISCLOSURE */
-
   setValue(
     "homepageAffiliateDisclosure",
     data.affiliateDisclosure
   );
 
-
-  /* FOOTER */
 
   setValue(
     "homepageFooterDescription",
@@ -4977,6 +5172,7 @@ function loadHomepageContent() {
     "homepageFooterTagline",
     data.footer.tagline
   );
+
 
   setValue(
     "homepageFacebookUrl",
@@ -5006,782 +5202,686 @@ function loadHomepageContent() {
 }
 
 /* =========================================
+   COLLECT HOMEPAGE CONTENT
+========================================= */
+
+function collectHomepageContent() {
+
+  const old =
+    getHomepageContent();
+
+
+  return {
+
+    topInfo: [
+
+      {
+        icon:
+          value(
+            "homepageTopInfo1Icon"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .topInfo[0].icon,
+
+        text:
+          value(
+            "homepageTopInfo1Text"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .topInfo[0].text
+      },
+
+      {
+        icon:
+          value(
+            "homepageTopInfo2Icon"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .topInfo[1].icon,
+
+        text:
+          value(
+            "homepageTopInfo2Text"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .topInfo[1].text
+      },
+
+      {
+        icon:
+          value(
+            "homepageTopInfo3Icon"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .topInfo[2].icon,
+
+        text:
+          value(
+            "homepageTopInfo3Text"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .topInfo[2].text
+      }
+
+    ],
+
+
+    utilityItems: [
+
+      {
+        icon:
+          value(
+            "homepageUtility1Icon"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[0].icon,
+
+        title:
+          value(
+            "homepageUtility1Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[0].title,
+
+        subtitle:
+          value(
+            "homepageUtility1Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[0].subtitle
+      },
+
+      {
+        icon:
+          value(
+            "homepageUtility2Icon"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[1].icon,
+
+        title:
+          value(
+            "homepageUtility2Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[1].title,
+
+        subtitle:
+          value(
+            "homepageUtility2Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[1].subtitle
+      },
+
+      {
+        icon:
+          value(
+            "homepageUtility3Icon"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[2].icon,
+
+        title:
+          value(
+            "homepageUtility3Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[2].title,
+
+        subtitle:
+          value(
+            "homepageUtility3Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .utilityItems[2].subtitle
+      }
+
+    ],
+
+
+    categoriesTitle:
+      value(
+        "homepageCategoriesTitle"
+      ) ||
+      DEFAULT_HOMEPAGE_CONTENT
+        .categoriesTitle,
+
+
+    categoriesSubtitle:
+      value(
+        "homepageCategoriesSubtitle"
+      ) ||
+      DEFAULT_HOMEPAGE_CONTENT
+        .categoriesSubtitle,
+
+
+    featuredTitle:
+      value(
+        "homepageFeaturedTitle"
+      ) ||
+      DEFAULT_HOMEPAGE_CONTENT
+        .featuredTitle,
+
+
+    featuredSubtitle:
+      value(
+        "homepageFeaturedSubtitle"
+      ) ||
+      DEFAULT_HOMEPAGE_CONTENT
+        .featuredSubtitle,
+
+
+    recommendedTitle:
+      value(
+        "homepageRecommendedTitle"
+      ) ||
+      DEFAULT_HOMEPAGE_CONTENT
+        .recommendedTitle,
+
+
+    recommendedSubtitle:
+      value(
+        "homepageRecommendedSubtitle"
+      ) ||
+      DEFAULT_HOMEPAGE_CONTENT
+        .recommendedSubtitle,
+
+
+    promos: [
+
+      {
+        image:
+          value(
+            "homepagePromo1ImageData"
+          ) ||
+          old.promos[0].image ||
+          "",
+
+        title:
+          value(
+            "homepagePromo1Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[0].title,
+
+        subtitle:
+          value(
+            "homepagePromo1Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[0].subtitle,
+
+        buttonText:
+          value(
+            "homepagePromo1ButtonText"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[0].buttonText,
+
+        link:
+          value(
+            "homepagePromo1Link"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[0].link
+      },
+
+      {
+        image:
+          value(
+            "homepagePromo2ImageData"
+          ) ||
+          old.promos[1].image ||
+          "",
+
+        title:
+          value(
+            "homepagePromo2Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[1].title,
+
+        subtitle:
+          value(
+            "homepagePromo2Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[1].subtitle,
+
+        buttonText:
+          value(
+            "homepagePromo2ButtonText"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[1].buttonText,
+
+        link:
+          value(
+            "homepagePromo2Link"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[1].link
+      },
+
+      {
+        image:
+          value(
+            "homepagePromo3ImageData"
+          ) ||
+          old.promos[2].image ||
+          "",
+
+        title:
+          value(
+            "homepagePromo3Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[2].title,
+
+        subtitle:
+          value(
+            "homepagePromo3Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[2].subtitle,
+
+        buttonText:
+          value(
+            "homepagePromo3ButtonText"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[2].buttonText,
+
+        link:
+          value(
+            "homepagePromo3Link"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .promos[2].link
+      }
+
+    ],
+
+
+    why: {
+
+      title:
+        value(
+          "homepageWhyTitle"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .why.title,
+
+      subtitle:
+        value(
+          "homepageWhySubtitle"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .why.subtitle,
+
+      cards: [
+
+        {
+          icon:
+            value(
+              "homepageWhy1Icon"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[0].icon,
+
+          title:
+            value(
+              "homepageWhy1Title"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[0].title,
+
+          description:
+            value(
+              "homepageWhy1Description"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[0].description
+        },
+
+        {
+          icon:
+            value(
+              "homepageWhy2Icon"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[1].icon,
+
+          title:
+            value(
+              "homepageWhy2Title"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[1].title,
+
+          description:
+            value(
+              "homepageWhy2Description"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[1].description
+        },
+
+        {
+          icon:
+            value(
+              "homepageWhy3Icon"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[2].icon,
+
+          title:
+            value(
+              "homepageWhy3Title"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[2].title,
+
+          description:
+            value(
+              "homepageWhy3Description"
+            ) ||
+            DEFAULT_HOMEPAGE_CONTENT
+              .why.cards[2].description
+        }
+
+      ]
+
+    },
+
+
+    newsletter: {
+
+      overline:
+        value(
+          "homepageNewsletterOverline"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .newsletter.overline,
+
+      title:
+        value(
+          "homepageNewsletterTitle"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .newsletter.title,
+
+      description:
+        value(
+          "homepageNewsletterDescription"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .newsletter.description,
+
+      placeholder:
+        value(
+          "homepageNewsletterPlaceholder"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .newsletter.placeholder,
+
+      buttonText:
+        value(
+          "homepageNewsletterButtonText"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .newsletter.buttonText,
+
+      note:
+        value(
+          "homepageNewsletterNote"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .newsletter.note
+
+    },
+
+
+    trustItems: [
+
+      {
+        title:
+          value(
+            "homepageTrust1Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[0].title,
+
+        subtitle:
+          value(
+            "homepageTrust1Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[0].subtitle
+      },
+
+      {
+        title:
+          value(
+            "homepageTrust2Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[1].title,
+
+        subtitle:
+          value(
+            "homepageTrust2Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[1].subtitle
+      },
+
+      {
+        title:
+          value(
+            "homepageTrust3Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[2].title,
+
+        subtitle:
+          value(
+            "homepageTrust3Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[2].subtitle
+      },
+
+      {
+        title:
+          value(
+            "homepageTrust4Title"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[3].title,
+
+        subtitle:
+          value(
+            "homepageTrust4Subtitle"
+          ) ||
+          DEFAULT_HOMEPAGE_CONTENT
+            .trustItems[3].subtitle
+      }
+
+    ],
+
+
+    affiliateDisclosure:
+      value(
+        "homepageAffiliateDisclosure"
+      ) ||
+      DEFAULT_HOMEPAGE_CONTENT
+        .affiliateDisclosure,
+
+
+    footer: {
+
+      description:
+        value(
+          "homepageFooterDescription"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .footer.description,
+
+      communityTitle:
+        value(
+          "homepageFooterCommunityTitle"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .footer.communityTitle,
+
+      communityText:
+        value(
+          "homepageFooterCommunityText"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .footer.communityText,
+
+      tagline:
+        value(
+          "homepageFooterTagline"
+        ) ||
+        DEFAULT_HOMEPAGE_CONTENT
+          .footer.tagline,
+
+      social: {
+
+        facebook:
+          value(
+            "homepageFacebookUrl"
+          ),
+
+        instagram:
+          value(
+            "homepageInstagramUrl"
+          ),
+
+        youtube:
+          value(
+            "homepageYoutubeUrl"
+          ),
+
+        x:
+          value(
+            "homepageXUrl"
+          ),
+
+        pinterest:
+          value(
+            "homepagePinterestUrl"
+          )
+
+      }
+
+    },
+
+
+    updatedAt:
+      new Date()
+        .toISOString()
+
+  };
+
+}
+
+
+/* =========================================
    SAVE HOMEPAGE CONTENT
 ========================================= */
 
-homepageContentForm
+$("homepageContentForm")
   ?.addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
       event.preventDefault();
 
 
-      const oldData =
-        getHomepageContent();
+      const button =
+        $("saveHomepageContentButton");
 
 
-      const data = {
+      const data =
+        collectHomepageContent();
 
-        topInfo: [
 
-          {
-            icon:
-              getValue(
-                "homepageTopInfo1Icon"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .topInfo[0].icon,
-
-            text:
-              getValue(
-                "homepageTopInfo1Text"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .topInfo[0].text
-          },
-
-          {
-            icon:
-              getValue(
-                "homepageTopInfo2Icon"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .topInfo[1].icon,
-
-            text:
-              getValue(
-                "homepageTopInfo2Text"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .topInfo[1].text
-          },
-
-          {
-            icon:
-              getValue(
-                "homepageTopInfo3Icon"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .topInfo[2].icon,
-
-            text:
-              getValue(
-                "homepageTopInfo3Text"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .topInfo[2].text
-          }
-
-        ],
-
-
-        utilityItems: [
-
-          {
-            icon:
-              getValue(
-                "homepageUtility1Icon"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[0].icon,
-
-            title:
-              getValue(
-                "homepageUtility1Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[0].title,
-
-            subtitle:
-              getValue(
-                "homepageUtility1Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[0].subtitle
-          },
-
-          {
-            icon:
-              getValue(
-                "homepageUtility2Icon"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[1].icon,
-
-            title:
-              getValue(
-                "homepageUtility2Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[1].title,
-
-            subtitle:
-              getValue(
-                "homepageUtility2Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[1].subtitle
-          },
-
-          {
-            icon:
-              getValue(
-                "homepageUtility3Icon"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[2].icon,
-
-            title:
-              getValue(
-                "homepageUtility3Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[2].title,
-
-            subtitle:
-              getValue(
-                "homepageUtility3Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .utilityItems[2].subtitle
-          }
-
-        ],
-
-
-        categoriesTitle:
-          getValue(
-            "homepageCategoriesTitle"
-          ) ||
-          DEFAULT_HOMEPAGE_CONTENT
-            .categoriesTitle,
-
-        categoriesSubtitle:
-          getValue(
-            "homepageCategoriesSubtitle"
-          ) ||
-          DEFAULT_HOMEPAGE_CONTENT
-            .categoriesSubtitle,
-
-        featuredTitle:
-          getValue(
-            "homepageFeaturedTitle"
-          ) ||
-          DEFAULT_HOMEPAGE_CONTENT
-            .featuredTitle,
-
-        featuredSubtitle:
-          getValue(
-            "homepageFeaturedSubtitle"
-          ) ||
-          DEFAULT_HOMEPAGE_CONTENT
-            .featuredSubtitle,
-
-        recommendedTitle:
-          getValue(
-            "homepageRecommendedTitle"
-          ) ||
-          DEFAULT_HOMEPAGE_CONTENT
-            .recommendedTitle,
-
-        recommendedSubtitle:
-          getValue(
-            "homepageRecommendedSubtitle"
-          ) ||
-          DEFAULT_HOMEPAGE_CONTENT
-            .recommendedSubtitle,
-
-
-        promos: [
-
-          {
-            image:
-              homepagePromo1ImageData
-                ?.value ||
-              oldData.promos[0].image ||
-              "",
-
-            title:
-              getValue(
-                "homepagePromo1Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[0].title,
-
-            subtitle:
-              getValue(
-                "homepagePromo1Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[0].subtitle,
-
-            buttonText:
-              getValue(
-                "homepagePromo1ButtonText"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[0].buttonText,
-
-            link:
-              getValue(
-                "homepagePromo1Link"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[0].link
-          },
-
-          {
-            image:
-              homepagePromo2ImageData
-                ?.value ||
-              oldData.promos[1].image ||
-              "",
-
-            title:
-              getValue(
-                "homepagePromo2Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[1].title,
-
-            subtitle:
-              getValue(
-                "homepagePromo2Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[1].subtitle,
-
-            buttonText:
-              getValue(
-                "homepagePromo2ButtonText"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[1].buttonText,
-
-            link:
-              getValue(
-                "homepagePromo2Link"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[1].link
-          },
-
-          {
-            image:
-              homepagePromo3ImageData
-                ?.value ||
-              oldData.promos[2].image ||
-              "",
-
-            title:
-              getValue(
-                "homepagePromo3Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[2].title,
-
-            subtitle:
-              getValue(
-                "homepagePromo3Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[2].subtitle,
-
-            buttonText:
-              getValue(
-                "homepagePromo3ButtonText"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[2].buttonText,
-
-            link:
-              getValue(
-                "homepagePromo3Link"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .promos[2].link
-          }
-
-        ],
-
-
-        why: {
-
-          title:
-            getValue(
-              "homepageWhyTitle"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .why.title,
-
-          subtitle:
-            getValue(
-              "homepageWhySubtitle"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .why.subtitle,
-
-          cards: [
-
-            {
-              icon:
-                getValue(
-                  "homepageWhy1Icon"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[0].icon,
-
-              title:
-                getValue(
-                  "homepageWhy1Title"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[0].title,
-
-              description:
-                getValue(
-                  "homepageWhy1Description"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[0].description
-            },
-
-            {
-              icon:
-                getValue(
-                  "homepageWhy2Icon"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[1].icon,
-
-              title:
-                getValue(
-                  "homepageWhy2Title"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[1].title,
-
-              description:
-                getValue(
-                  "homepageWhy2Description"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[1].description
-            },
-
-            {
-              icon:
-                getValue(
-                  "homepageWhy3Icon"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[2].icon,
-
-              title:
-                getValue(
-                  "homepageWhy3Title"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[2].title,
-
-              description:
-                getValue(
-                  "homepageWhy3Description"
-                ) ||
-                DEFAULT_HOMEPAGE_CONTENT
-                  .why.cards[2].description
-            }
-
-          ]
-
-        },
-
-
-        newsletter: {
-
-          overline:
-            getValue(
-              "homepageNewsletterOverline"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .newsletter.overline,
-
-          title:
-            getValue(
-              "homepageNewsletterTitle"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .newsletter.title,
-
-          description:
-            getValue(
-              "homepageNewsletterDescription"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .newsletter.description,
-
-          placeholder:
-            getValue(
-              "homepageNewsletterPlaceholder"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .newsletter.placeholder,
-
-          buttonText:
-            getValue(
-              "homepageNewsletterButtonText"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .newsletter.buttonText,
-
-          note:
-            getValue(
-              "homepageNewsletterNote"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .newsletter.note
-
-        },
-
-
-        trustItems: [
-
-          {
-            title:
-              getValue(
-                "homepageTrust1Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[0].title,
-
-            subtitle:
-              getValue(
-                "homepageTrust1Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[0].subtitle
-          },
-
-          {
-            title:
-              getValue(
-                "homepageTrust2Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[1].title,
-
-            subtitle:
-              getValue(
-                "homepageTrust2Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[1].subtitle
-          },
-
-          {
-            title:
-              getValue(
-                "homepageTrust3Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[2].title,
-
-            subtitle:
-              getValue(
-                "homepageTrust3Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[2].subtitle
-          },
-
-          {
-            title:
-              getValue(
-                "homepageTrust4Title"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[3].title,
-
-            subtitle:
-              getValue(
-                "homepageTrust4Subtitle"
-              ) ||
-              DEFAULT_HOMEPAGE_CONTENT
-                .trustItems[3].subtitle
-          }
-
-        ],
-
-
-        affiliateDisclosure:
-          getValue(
-            "homepageAffiliateDisclosure"
-          ) ||
-          DEFAULT_HOMEPAGE_CONTENT
-            .affiliateDisclosure,
-
-
-        footer: {
-
-          description:
-            getValue(
-              "homepageFooterDescription"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .footer.description,
-
-          communityTitle:
-            getValue(
-              "homepageFooterCommunityTitle"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .footer.communityTitle,
-
-          communityText:
-            getValue(
-              "homepageFooterCommunityText"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .footer.communityText,
-
-          tagline:
-            getValue(
-              "homepageFooterTagline"
-            ) ||
-            DEFAULT_HOMEPAGE_CONTENT
-              .footer.tagline,
-
-          social: {
-
-            facebook:
-              getValue(
-                "homepageFacebookUrl"
-              ),
-
-            instagram:
-              getValue(
-                "homepageInstagramUrl"
-              ),
-
-            youtube:
-              getValue(
-                "homepageYoutubeUrl"
-              ),
-
-            x:
-              getValue(
-                "homepageXUrl"
-              ),
-
-            pinterest:
-              getValue(
-                "homepagePinterestUrl"
-              )
-
-          }
-
-        },
-
-
-        updatedAt:
-          new Date()
-            .toISOString()
-
-      };
-
-
-      saveStoredData(
+      writeStore(
         HOMEPAGE_CONTENT_KEY,
         data
       );
 
 
-      showAdminToast(
-        "Homepage content saved."
-      );
-
-    }
-  );
-
-
-/* =========================================
-   BANNER UPLOADS
-========================================= */
-
-heroBannerSelectButton
-  ?.addEventListener(
-    "click",
-    function() {
-
-      heroBannerUpload?.click();
-
-    }
-  );
-
-
-heroBannerUpload
-  ?.addEventListener(
-    "change",
-    async function() {
-
-      const file =
-        heroBannerUpload.files?.[0];
-
-
-      if (!file) {
-        return;
-      }
-
-
-      if (
-        !file.type.startsWith(
-          "image/"
-        )
-      ) {
-
-        if (heroBannerWarning) {
-
-          heroBannerWarning.textContent =
-            "Please select a valid image file.";
-
-          heroBannerWarning.style.display =
-            "block";
-
-        }
-
-        heroBannerUpload.value =
-          "";
-
-        return;
-
-      }
-
-
-      if (
-        file.size >
-        2 * 1024 * 1024
-      ) {
-
-        if (heroBannerWarning) {
-
-          heroBannerWarning.textContent =
-            "Image must be 2 MB or smaller.";
-
-          heroBannerWarning.style.display =
-            "block";
-
-        }
-
-        heroBannerUpload.value =
-          "";
-
-        return;
-
-      }
-
-
-      if (heroBannerWarning) {
-
-        heroBannerWarning.textContent =
-          "";
-
-        heroBannerWarning.style.display =
-          "none";
-
-      }
-
-
       try {
 
-        heroBannerSelectButton.disabled =
-          true;
+        if (button) {
+
+          button.disabled =
+            true;
+
+        }
 
 
-        showAdminToast(
-          "Uploading banner..."
-        );
+        const firebase =
+          await firebaseModule();
 
 
-        const cloudinaryModule =
-          await import(
-            "./cloudinary-upload.js"
-          );
+        if (
+          firebase &&
+          typeof firebase
+            .saveHomepageContentToFirestore ===
+            "function"
+        ) {
 
-
-        const result =
-          await cloudinaryModule
-            .uploadImageToCloudinary(
-              file
+          await firebase
+            .saveHomepageContentToFirestore(
+              data
             );
 
 
-        if (
-          !result?.url
-        ) {
-
-          throw new Error(
-            "Cloudinary did not return an image URL."
+          toast(
+            "Homepage content saved."
           );
 
         }
 
+        else {
 
-        if (
-          heroBannerData
-        ) {
-
-          heroBannerData.value =
-            result.url;
+          toast(
+            "Homepage content saved locally."
+          );
 
         }
-
-
-        showImagePreview(
-          heroBannerPreview,
-          result.url
-        );
-
-
-        showAdminToast(
-          "Banner uploaded successfully."
-        );
 
       }
 
       catch (error) {
 
         console.error(
-          "Cloudinary banner upload error:",
+          "Homepage Firebase save error:",
           error
         );
 
 
-        if (heroBannerWarning) {
-
-          heroBannerWarning.textContent =
-            error.message ||
-            "Banner upload failed.";
-
-          heroBannerWarning.style.display =
-            "block";
-
-        }
-
-
-        showAdminToast(
-          "Banner upload failed."
+        toast(
+          "Saved locally, but Firebase save failed."
         );
 
       }
 
       finally {
 
-        heroBannerSelectButton.disabled =
-          false;
+        if (button) {
 
-        heroBannerUpload.value =
-          "";
+          button.disabled =
+            false;
+
+        }
 
       }
 
@@ -5789,90 +5889,208 @@ heroBannerUpload
   );
 
 
-setupImageUpload(
-  promoBannerUpload,
-  promoBannerSelectButton,
-  promoBannerPreview,
-  promoBannerData,
-  promoBannerWarning,
-  "style"
-);
-
-
 /* =========================================
-   SAVE BANNERS
+   BANNERS
 ========================================= */
 
-saveBannerSettingsButton
+function getBannerSettings() {
+
+  const data =
+    readStore(
+      BANNER_SETTINGS_KEY,
+      {}
+    );
+
+
+  return {
+
+    hero: {
+
+      image:
+        data.hero?.image ||
+        "",
+
+      overline:
+        data.hero?.overline ||
+        "A SMARTER WAY TO SHOP",
+
+      title:
+        data.hero?.title ||
+        "Know More. Choose Better.",
+
+      subtitle:
+        data.hero?.subtitle ||
+        "In-depth reviews, buying guides and selected product recommendations for better everyday decisions.",
+
+      buttonText:
+        data.hero?.buttonText ||
+        "Explore Top Picks",
+
+      buttonLink:
+        data.hero?.buttonLink ||
+        "#featured",
+
+      point1:
+        data.hero?.point1 ||
+        "Curated Shortlists",
+
+      point2:
+        data.hero?.point2 ||
+        "Buying Context",
+
+      point3:
+        data.hero?.point3 ||
+        "Merchant Links"
+
+    },
+
+
+    promo: {
+
+      image:
+        data.promo?.image ||
+        ""
+
+    }
+
+  };
+
+}
+
+
+function loadBannerSettings() {
+
+  const data =
+    getBannerSettings();
+
+
+  setValue(
+    "heroBannerData",
+    data.hero.image
+  );
+
+  setValue(
+    "heroBannerOverline",
+    data.hero.overline
+  );
+
+  setValue(
+    "heroBannerTitle",
+    data.hero.title
+  );
+
+  setValue(
+    "heroBannerSubtitle",
+    data.hero.subtitle
+  );
+
+  setValue(
+    "heroBannerButtonText",
+    data.hero.buttonText
+  );
+
+  setValue(
+    "heroBannerButtonLink",
+    data.hero.buttonLink
+  );
+
+  setValue(
+    "heroPoint1",
+    data.hero.point1
+  );
+
+  setValue(
+    "heroPoint2",
+    data.hero.point2
+  );
+
+  setValue(
+    "heroPoint3",
+    data.hero.point3
+  );
+
+
+  setValue(
+    "promoBannerData",
+    data.promo.image
+  );
+
+
+  showPreview(
+    $("heroBannerPreview"),
+    data.hero.image
+  );
+
+
+  showPreview(
+    $("promoBannerPreview"),
+    data.promo.image
+  );
+
+}
+
+
+$("saveBannerSettingsButton")
   ?.addEventListener(
     "click",
     async function() {
 
-      const previous =
-        getStoredData(
-          BANNER_SETTINGS_KEY,
-          {}
-        );
+      const button =
+        $("saveBannerSettingsButton");
 
 
       const data = {
 
-        ...previous,
-
         hero: {
 
-          ...(previous.hero || {}),
-
           image:
-            heroBannerData
-              ?.value ||
-            previous.hero?.image ||
-            "",
+            value(
+              "heroBannerData"
+            ),
 
           overline:
-            getValue(
+            value(
               "heroBannerOverline"
             ) ||
             "A SMARTER WAY TO SHOP",
 
           title:
-            getValue(
+            value(
               "heroBannerTitle"
             ) ||
             "Know More. Choose Better.",
 
           subtitle:
-            getValue(
+            value(
               "heroBannerSubtitle"
-            ) ||
-            "In-depth reviews, buying guides and selected product recommendations for better everyday decisions.",
+            ),
 
           buttonText:
-            getValue(
+            value(
               "heroBannerButtonText"
             ) ||
             "Explore Top Picks",
 
           buttonLink:
-            getValue(
+            value(
               "heroBannerButtonLink"
             ) ||
             "#featured",
 
           point1:
-            getValue(
+            value(
               "heroPoint1"
             ) ||
             "Curated Shortlists",
 
           point2:
-            getValue(
+            value(
               "heroPoint2"
             ) ||
             "Buying Context",
 
           point3:
-            getValue(
+            value(
               "heroPoint3"
             ) ||
             "Merchant Links"
@@ -5882,13 +6100,10 @@ saveBannerSettingsButton
 
         promo: {
 
-          ...(previous.promo || {}),
-
           image:
-            promoBannerData
-              ?.value ||
-            previous.promo?.image ||
-            ""
+            value(
+              "promoBannerData"
+            )
 
         },
 
@@ -5900,85 +6115,64 @@ saveBannerSettingsButton
       };
 
 
-      saveStoredData(
+      writeStore(
         BANNER_SETTINGS_KEY,
         data
       );
 
 
-      const firebaseData = {
-
-        hero: {
-
-          image:
-            data.hero.image ||
-            "",
-
-          overline:
-            data.hero.overline,
-
-          title:
-            data.hero.title,
-
-          subtitle:
-            data.hero.subtitle,
-
-          buttonText:
-            data.hero.buttonText,
-
-          buttonLink:
-            data.hero.buttonLink,
-
-          point1:
-            data.hero.point1,
-
-          point2:
-            data.hero.point2,
-
-          point3:
-            data.hero.point3
-
-        },
-
-        updatedAt:
-          data.updatedAt
-
-      };
-
-
       try {
 
-        saveBannerSettingsButton.disabled =
-          true;
+        if (button) {
+
+          button.disabled =
+            true;
+
+        }
 
 
-        const firebaseModule =
-          await import(
-            "./firebase-db.js"
+        const firebase =
+          await firebaseModule();
+
+
+        if (
+          firebase &&
+          typeof firebase
+            .saveBannerSettingsToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveBannerSettingsToFirestore(
+              data
+            );
+
+
+          toast(
+            "Banner settings saved."
           );
 
+        }
 
-        await firebaseModule
-          .saveBannerSettingsToFirestore(
-            firebaseData
+        else {
+
+          toast(
+            "Banner settings saved locally."
           );
 
-
-        showAdminToast(
-          "Banner settings saved to Firebase."
-        );
+        }
 
       }
 
       catch (error) {
 
         console.error(
-          "Firebase banner save error:",
+          "Banner save error:",
           error
         );
 
 
-        showAdminToast(
+        toast(
           "Saved locally, but Firebase save failed."
         );
 
@@ -5986,287 +6180,26 @@ saveBannerSettingsButton
 
       finally {
 
-        saveBannerSettingsButton.disabled =
-          false;
+        if (button) {
+
+          button.disabled =
+            false;
+
+        }
 
       }
 
     }
   );
 
-  /* =========================================
-   LOAD BANNERS
-========================================= */
-
-async function loadBannerSettings() {
-
-  const localData =
-    getStoredData(
-      BANNER_SETTINGS_KEY,
-      {}
-    );
-
-
-  let firebaseData = null;
-
-
-  try {
-
-    const firebaseModule =
-      await import(
-        "./firebase-db.js"
-      );
-
-
-    firebaseData =
-      await firebaseModule
-        .getBannerSettingsFromFirestore();
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "Firebase banner load error:",
-      error
-    );
-
-  }
-
-
-  const localHero =
-    localData.hero ||
-    {};
-
-
-  const firebaseHero =
-    firebaseData?.hero ||
-    {};
-
-
-  const hero = {
-
-    ...localHero,
-    ...firebaseHero,
-
-    image:
-      firebaseHero.image ||
-      localHero.image ||
-      ""
-
-  };
-
-
-  const promo =
-    localData.promo ||
-    {};
-
-
-  const mergedData = {
-
-    ...localData,
-
-    hero,
-
-    promo,
-
-    updatedAt:
-      firebaseData?.updatedAt ||
-      localData.updatedAt ||
-      ""
-
-  };
-
-
-  saveStoredData(
-    BANNER_SETTINGS_KEY,
-    mergedData
-  );
-
-
-  if (
-    heroBannerData
-  ) {
-
-    heroBannerData.value =
-      hero.image ||
-      "";
-
-  }
-
-
-  showImagePreview(
-    heroBannerPreview,
-    hero.image ||
-    "",
-    "No banner selected"
-  );
-
-
-  setValue(
-    "heroBannerOverline",
-    hero.overline ||
-    "A SMARTER WAY TO SHOP"
-  );
-
-
-  setValue(
-    "heroBannerTitle",
-    hero.title ||
-    "Know More. Choose Better."
-  );
-
-
-  setValue(
-    "heroBannerSubtitle",
-    hero.subtitle ||
-    "In-depth reviews, buying guides and selected product recommendations for better everyday decisions."
-  );
-
-
-  setValue(
-    "heroBannerButtonText",
-    hero.buttonText ||
-    "Explore Top Picks"
-  );
-
-
-  setValue(
-    "heroBannerButtonLink",
-    hero.buttonLink ||
-    "#featured"
-  );
-
-
-  setValue(
-    "heroPoint1",
-    hero.point1 ||
-    "Curated Shortlists"
-  );
-
-
-  setValue(
-    "heroPoint2",
-    hero.point2 ||
-    "Buying Context"
-  );
-
-
-  setValue(
-    "heroPoint3",
-    hero.point3 ||
-    "Merchant Links"
-  );
-
-
-  if (
-    promoBannerData
-  ) {
-
-    promoBannerData.value =
-      promo.image ||
-      "";
-
-  }
-
-
-  showImagePreview(
-    promoBannerPreview,
-    promo.image ||
-    "",
-    "No banner selected"
-  );
-
-}
-
-
-/* =========================================
+ /* =========================================
    SITE SEO
 ========================================= */
-
-const siteSeoForm =
-  document.getElementById(
-    "siteSeoForm"
-  );
-
-
-siteSeoForm
-  ?.addEventListener(
-    "submit",
-    function(event) {
-
-      event.preventDefault();
-
-
-      const data = {
-
-        title:
-          getValue(
-            "siteSeoTitle"
-          ),
-
-        description:
-          getValue(
-            "siteSeoDescription"
-          ),
-
-        url:
-          getValue(
-            "siteSeoUrl"
-          ),
-
-        language:
-          getValue(
-            "siteSeoLanguage"
-          ),
-
-        keywords:
-          tagsToArray(
-            getValue(
-              "siteSeoKeywords"
-            )
-          ),
-
-        ogImage:
-          getValue(
-            "siteSeoOgImage"
-          ),
-
-        twitterHandle:
-          getValue(
-            "siteSeoTwitterHandle"
-          ),
-
-        schema:
-          getValue(
-            "siteSeoSchema"
-          ),
-
-        updatedAt:
-          new Date()
-            .toISOString()
-
-      };
-
-
-      saveStoredData(
-        SITE_SEO_KEY,
-        data
-      );
-
-
-      showAdminToast(
-        "SEO settings saved."
-      );
-
-    }
-  );
-
 
 function loadSiteSeo() {
 
   const data =
-    getStoredData(
+    readStore(
       SITE_SEO_KEY,
       null
     );
@@ -6322,39 +6255,204 @@ function loadSiteSeo() {
 }
 
 
-/* =========================================
-   SITE SETTINGS
-========================================= */
-
-const siteSettingsForm =
-  document.getElementById(
-    "siteSettingsForm"
-  );
-
-
-siteSettingsForm
+$("siteSeoForm")
   ?.addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
       event.preventDefault();
 
 
-      const settings = {
+      const data = {
+
+        title:
+          value(
+            "siteSeoTitle"
+          ),
+
+        description:
+          value(
+            "siteSeoDescription"
+          ),
+
+        url:
+          value(
+            "siteSeoUrl"
+          ),
+
+        language:
+          value(
+            "siteSeoLanguage"
+          ),
+
+        keywords:
+          tagsToArray(
+            value(
+              "siteSeoKeywords"
+            )
+          ),
+
+        ogImage:
+          value(
+            "siteSeoOgImage"
+          ),
+
+        twitterHandle:
+          value(
+            "siteSeoTwitterHandle"
+          ),
+
+        schema:
+          value(
+            "siteSeoSchema"
+          ),
+
+        updatedAt:
+          new Date()
+            .toISOString()
+
+      };
+
+
+      writeStore(
+        SITE_SEO_KEY,
+        data
+      );
+
+
+      try {
+
+        const firebase =
+          await firebaseModule();
+
+
+        if (
+          firebase &&
+          typeof firebase
+            .saveSiteSeoToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveSiteSeoToFirestore(
+              data
+            );
+
+
+          toast(
+            "SEO settings saved."
+          );
+
+        }
+
+        else {
+
+          toast(
+            "SEO settings saved locally."
+          );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "SEO Firebase save error:",
+          error
+        );
+
+
+        toast(
+          "Saved locally, but Firebase save failed."
+        );
+
+      }
+
+    }
+  );
+
+
+
+  /* =========================================
+   SITE SETTINGS
+========================================= */
+
+function loadSiteSettings() {
+
+  const data =
+    readStore(
+      SITE_SETTINGS_KEY,
+      null
+    );
+
+
+  if (!data) {
+    return;
+  }
+
+
+  setValue(
+    "siteName",
+    data.siteName
+  );
+
+
+  setValue(
+    "siteTagline",
+    data.tagline
+  );
+
+
+  setValue(
+    "siteLogoData",
+    data.logoUrl
+  );
+
+
+  showPreview(
+    $("siteLogoPreview"),
+    data.logoUrl || "",
+    "No logo selected"
+  );
+
+
+  setValue(
+    "siteAffiliateDisclosure",
+    data.affiliateDisclosure
+  );
+
+}
+
+
+$("siteSettingsForm")
+  ?.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const data = {
 
         siteName:
-          getValue(
+          value(
             "siteName"
           ) ||
           "Kinar Aage",
 
         tagline:
-          getValue(
+          value(
             "siteTagline"
           ),
 
+        logoUrl:
+          value(
+            "siteLogoData"
+          ),
+
         affiliateDisclosure:
-          getValue(
+          value(
             "siteAffiliateDisclosure"
           ),
 
@@ -6365,139 +6463,315 @@ siteSettingsForm
       };
 
 
-      saveStoredData(
+      writeStore(
         SITE_SETTINGS_KEY,
-        settings
+        data
       );
 
 
-      showAdminToast(
-        "Website settings saved."
-      );
+      try {
+
+        const firebase =
+          await firebaseModule();
+
+
+        if (
+          firebase &&
+          typeof firebase
+            .saveSiteSettingsToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveSiteSettingsToFirestore(
+              data
+            );
+
+
+          toast(
+            "Website settings saved."
+          );
+
+        }
+
+        else {
+
+          toast(
+            "Website settings saved locally."
+          );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Site settings Firebase save error:",
+          error
+        );
+
+
+        toast(
+          "Saved locally, but Firebase save failed."
+        );
+
+      }
 
     }
   );
 
 
-function loadSiteSettings() {
+/* =========================================
+   LOGOUT
+========================================= */
 
-  const settings =
-    getStoredData(
-      SITE_SETTINGS_KEY,
-      null
-    );
+/*
+  Secure Firebase logout is handled by
+  admin-auth.js.
 
-
-  if (!settings) {
-    return;
-  }
-
-
-  setValue(
-    "siteName",
-    settings.siteName
-  );
-
-  setValue(
-    "siteTagline",
-    settings.tagline
-  );
-
-  setValue(
-    "siteAffiliateDisclosure",
-    settings.affiliateDisclosure
-  );
-
-}
+  No second logout handler is needed here.
+*/
 
 
 /* =========================================
-   ESCAPE KEY
+   LOAD FIREBASE DATA
 ========================================= */
 
-document.addEventListener(
-  "keydown",
-  function(event) {
-
-    if (
-      event.key ===
-      "Escape"
-    ) {
-
-      closeAdminSidebar();
-
-    }
-
-  }
-);
-
-
-/* =========================================
-   START
-========================================= */
-
-async function startAdmin() {
-
-  const savedAdminPage =
-  localStorage.getItem(
-    "kinarAageAdminActivePage"
-  );
-
-const initialAdminPage =
-  savedAdminPage &&
-  PAGE_CONFIG[
-    savedAdminPage
-  ]
-    ? savedAdminPage
-    : "dashboardPage";
-
-openAdminPage(
-  initialAdminPage
-);
+async function syncFromFirebase() {
 
   try {
 
-    const firebaseModule =
-      await import(
-        "./firebase-db.js"
-      );
+    const firebase =
+      await firebaseModule();
 
-    const firebaseCategories =
-      await firebaseModule
-        .getCategoriesFromFirestore();
 
-    saveCategories(
-      Array.isArray(
-        firebaseCategories
-      )
-        ? firebaseCategories
-        : []
-    );
+    if (!firebase) {
+      return;
+    }
 
-     const firebaseProducts =
-  await firebaseModule
-    .getProductsFromFirestore();
 
-saveProducts(
-  Array.isArray(
-    firebaseProducts
-  )
-    ? firebaseProducts
-    : []
-);
+    /* -------------------------
+       CATEGORIES
+    ------------------------- */
+
+    if (
+      typeof firebase
+        .getCategoriesFromFirestore ===
+        "function"
+    ) {
+
+      const categories =
+        await firebase
+          .getCategoriesFromFirestore();
+
+
+      if (
+        Array.isArray(
+          categories
+        )
+      ) {
+
+        saveCategories(
+          categories
+        );
+
+      }
+
+    }
+
+
+    /* -------------------------
+       PRODUCTS
+    ------------------------- */
+
+    if (
+      typeof firebase
+        .getProductsFromFirestore ===
+        "function"
+    ) {
+
+      const products =
+        await firebase
+          .getProductsFromFirestore();
+
+
+      if (
+        Array.isArray(
+          products
+        )
+      ) {
+
+        saveProducts(
+          products
+        );
+
+      }
+
+    }
+
+
+    /* -------------------------
+       HOMEPAGE
+    ------------------------- */
+
+    if (
+      typeof firebase
+        .getHomepageContentFromFirestore ===
+        "function"
+    ) {
+
+      const homepage =
+        await firebase
+          .getHomepageContentFromFirestore();
+
+
+      if (
+        homepage &&
+        typeof homepage ===
+          "object"
+      ) {
+
+        writeStore(
+          HOMEPAGE_CONTENT_KEY,
+          homepage
+        );
+
+      }
+
+    }
+
+
+    /* -------------------------
+       BANNERS
+    ------------------------- */
+
+    if (
+      typeof firebase
+        .getBannerSettingsFromFirestore ===
+        "function"
+    ) {
+
+      const banners =
+        await firebase
+          .getBannerSettingsFromFirestore();
+
+
+      if (
+        banners &&
+        typeof banners ===
+          "object"
+      ) {
+
+        writeStore(
+          BANNER_SETTINGS_KEY,
+          banners
+        );
+
+      }
+
+    }
+
+
+    /* -------------------------
+       SITE SEO
+    ------------------------- */
+
+    if (
+      typeof firebase
+        .getSiteSeoFromFirestore ===
+        "function"
+    ) {
+
+      const seo =
+        await firebase
+          .getSiteSeoFromFirestore();
+
+
+      if (
+        seo &&
+        typeof seo ===
+          "object"
+      ) {
+
+        writeStore(
+          SITE_SEO_KEY,
+          seo
+        );
+
+      }
+
+    }
+
+
+    /* -------------------------
+       SITE SETTINGS
+    ------------------------- */
+
+    if (
+      typeof firebase
+        .getSiteSettingsFromFirestore ===
+        "function"
+    ) {
+
+      const settings =
+        await firebase
+          .getSiteSettingsFromFirestore();
+
+
+      if (
+        settings &&
+        typeof settings ===
+          "object"
+      ) {
+
+        writeStore(
+          SITE_SETTINGS_KEY,
+          settings
+        );
+
+      }
+
+    }
 
   }
+
   catch (error) {
 
     console.error(
-      "Admin category Firebase load error:",
+      "Firebase initial sync error:",
       error
     );
 
   }
 
+}
 
-  getProducts();
+
+/* =========================================
+   START ADMIN
+========================================= */
+
+async function startAdmin() {
+
+  const savedPage =
+    localStorage.getItem(
+      ACTIVE_PAGE_KEY
+    );
+
+
+  openPage(
+    savedPage &&
+    PAGE_CONFIG[
+      savedPage
+    ]
+      ? savedPage
+      : "dashboardPage"
+  );
+
+
+  await syncFromFirebase();
+
 
   renderCategorySelects();
 
@@ -6521,18 +6795,9 @@ saveProducts(
 
   updateMetaCounters();
 
-
-
-  if (
-    typeof lucide !==
-    "undefined"
-  ) {
-
-    lucide.createIcons();
-
-  }
+  refreshIcons();
 
 }
 
 
-startAdmin();
+startAdmin(); 

@@ -1,4 +1,11 @@
-import { app } from "./firebase-config.js";
+/* =========================================
+   KINAR AAGE - FIREBASE DATABASE
+========================================= */
+
+import {
+  app
+} from "./firebase-config.js";
+
 
 import {
   getFirestore,
@@ -12,49 +19,51 @@ import {
 
 
 export const db =
-  getFirestore(app);
+  getFirestore(
+    app
+  );
 
 
 /* =========================================
-   BANNER SETTINGS
+   GENERAL HELPERS
 ========================================= */
 
-export async function saveBannerSettingsToFirestore(
-  bannerSettings
+function ensureObject(
+  value,
+  fallback = {}
 ) {
 
-  const bannerRef =
-    doc(
-      db,
-      "siteSettings",
-      "banner"
-    );
+  if (
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value)
+  ) {
+
+    return value;
+
+  }
 
 
-  await setDoc(
-    bannerRef,
-    bannerSettings,
-    {
-      merge: true
-    }
-  );
+  return fallback;
 
 }
 
 
-export async function getBannerSettingsFromFirestore() {
+async function getSiteSettingsDocument(
+  documentName
+) {
 
-  const bannerRef =
+  const settingsRef =
     doc(
       db,
       "siteSettings",
-      "banner"
+      documentName
     );
 
 
   const snapshot =
     await getDocFromServer(
-      bannerRef
+      settingsRef
     );
 
 
@@ -68,6 +77,174 @@ export async function getBannerSettingsFromFirestore() {
 
 
   return snapshot.data();
+
+}
+
+
+/* =========================================
+   BANNER SETTINGS
+========================================= */
+
+export async function saveBannerSettingsToFirestore(
+  bannerSettings
+) {
+
+  const data =
+    ensureObject(
+      bannerSettings
+    );
+
+
+  const bannerRef =
+    doc(
+      db,
+      "siteSettings",
+      "banner"
+    );
+
+
+  await setDoc(
+    bannerRef,
+    data,
+    {
+      merge: true
+    }
+  );
+
+}
+
+
+export async function getBannerSettingsFromFirestore() {
+
+  return await getSiteSettingsDocument(
+    "banner"
+  );
+
+}
+
+
+/* =========================================
+   HOMEPAGE CONTENT
+========================================= */
+
+export async function saveHomepageContentToFirestore(
+  homepageContent
+) {
+
+  const data =
+    ensureObject(
+      homepageContent
+    );
+
+
+  const homepageRef =
+    doc(
+      db,
+      "siteSettings",
+      "homepage"
+    );
+
+
+  await setDoc(
+    homepageRef,
+    data,
+    {
+      merge: false
+    }
+  );
+
+}
+
+
+export async function getHomepageContentFromFirestore() {
+
+  return await getSiteSettingsDocument(
+    "homepage"
+  );
+
+}
+
+
+/* =========================================
+   GENERAL SITE SETTINGS
+========================================= */
+
+export async function saveSiteSettingsToFirestore(
+  siteSettings
+) {
+
+  const data =
+    ensureObject(
+      siteSettings
+    );
+
+
+  const settingsRef =
+    doc(
+      db,
+      "siteSettings",
+      "general"
+    );
+
+
+  await setDoc(
+    settingsRef,
+    data,
+    {
+      merge: true
+    }
+  );
+
+}
+
+
+export async function getSiteSettingsFromFirestore() {
+
+  return await getSiteSettingsDocument(
+    "general"
+  );
+
+}
+
+
+/* =========================================
+   SITE SEO SETTINGS
+========================================= */
+
+export async function saveSiteSeoToFirestore(
+  seoSettings
+) {
+
+  const data =
+    ensureObject(
+      seoSettings
+    );
+
+
+  const seoRef =
+    doc(
+      db,
+      "siteSettings",
+      "seo"
+    );
+
+
+  await setDoc(
+    seoRef,
+    data,
+    {
+      merge: true
+    }
+  );
+
+}
+
+
+export async function getSiteSeoFromFirestore() {
+
+  return await getSiteSettingsDocument(
+    "seo"
+  );
 
 }
 
@@ -132,11 +309,14 @@ export async function getProductsFromFirestore() {
 
 
   snapshot.forEach(
-    function(documentSnapshot) {
+    function(
+      documentSnapshot
+    ) {
 
       products.push({
         id:
           documentSnapshot.id,
+
         ...documentSnapshot.data()
       });
 
@@ -241,11 +421,14 @@ export async function getCategoriesFromFirestore() {
 
 
   snapshot.forEach(
-    function(documentSnapshot) {
+    function(
+      documentSnapshot
+    ) {
 
       categories.push({
         id:
           documentSnapshot.id,
+
         ...documentSnapshot.data()
       });
 

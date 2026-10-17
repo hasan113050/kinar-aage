@@ -2,6 +2,88 @@
    KINAR AAGE - SHARED HEADER
 ========================================= */
 
+
+/* =========================================
+   FIREBASE MODULE CACHE
+========================================= */
+
+let headerFirebaseModulePromise = null;
+
+
+function getHeaderFirebaseModule() {
+
+  if (!headerFirebaseModulePromise) {
+
+    headerFirebaseModulePromise =
+      import("./firebase-db.js")
+        .catch(
+          error => {
+
+            console.error(
+              "Header Firebase module load error:",
+              error
+            );
+
+            headerFirebaseModulePromise =
+              null;
+
+            return null;
+
+          }
+        );
+
+  }
+
+
+  return headerFirebaseModulePromise;
+
+}
+
+
+/* =========================================
+   HTML ESCAPE
+========================================= */
+
+function escapeHeaderSearchHtml(
+  value = ""
+) {
+
+  return String(
+    value
+  )
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================
+   SHARED HEADER
+========================================= */
+
 function loadSharedHeader() {
 
   const header =
@@ -24,6 +106,13 @@ function loadSharedHeader() {
         href="index.html"
         class="site-logo"
         aria-label="Kinar Aage Home"
+        style="
+          visibility:hidden;
+          min-width:120px;
+          min-height:40px;
+          display:flex;
+          align-items:center;
+        "
       >
 
         <span class="logo-main">
@@ -66,30 +155,29 @@ function loadSharedHeader() {
 
 
       <form
-  id="headerSearchForm"
-  class="top-search-form"
-  autocomplete="off"
->
+        id="headerSearchForm"
+        class="top-search-form"
+        autocomplete="off"
+      >
 
-  <input
-    id="headerSearchInput"
-    type="search"
-    placeholder="Search products..."
-    autocomplete="off"
-    aria-label="Search products"
-  >
+        <input
+          id="headerSearchInput"
+          type="search"
+          placeholder="Search products..."
+          autocomplete="off"
+          aria-label="Search products"
+        >
 
-  <div
-    id="headerSearchSuggestions"
-    class="header-search-suggestions"
-    hidden
-  ></div>
+        <div
+          id="headerSearchSuggestions"
+          class="header-search-suggestions"
+          hidden
+        ></div>
 
-</form>
+      </form>
 
 
       <div class="header-actions">
-
 
         <a
           href="wishlist.html"
@@ -120,7 +208,6 @@ function loadSharedHeader() {
           <span></span>
 
         </button>
-
 
       </div>
 
@@ -329,19 +416,304 @@ function loadSharedHeader() {
   `;
 
 
-setupCategoryDropdown();
+  loadSharedLogo();
 
-setupMobileMenu();
+  setupCategoryDropdown();
 
-setupHeaderSearch();
+  setupMobileMenu();
 
-updateSharedWishlistCount();
+  setupHeaderSearch();
+
+  updateSharedWishlistCount();
 
 }
 
 
-loadSharedHeader();
+/* =========================================
+   SHARED WEBSITE LOGO
+========================================= */
 
+async function loadSharedLogo() {
+
+  const logos =
+    document.querySelectorAll(
+      ".site-logo"
+    );
+
+
+  if (!logos.length) {
+    return;
+  }
+
+
+  const fallbackContent =
+    `
+      <span class="logo-main">
+        Kinar
+      </span>
+
+      <span class="logo-accent">
+        Aage
+      </span>
+    `;
+
+
+  logos.forEach(
+    logo => {
+
+      logo.style.visibility =
+        "hidden";
+
+    }
+  );
+
+
+  let settings = null;
+
+
+  /* =====================================
+     LOCAL FALLBACK
+  ===================================== */
+
+  try {
+
+    const stored =
+      localStorage.getItem(
+        "kinarAageSiteSettings"
+      );
+
+
+    if (stored) {
+
+      settings =
+        JSON.parse(
+          stored
+        );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Local site settings load error:",
+      error
+    );
+
+  }
+
+
+  /* =====================================
+     FIRESTORE LATEST SETTINGS
+  ===================================== */
+
+  try {
+
+    const firebaseModule =
+      await getHeaderFirebaseModule();
+
+
+    if (
+      firebaseModule &&
+      typeof firebaseModule
+        .getSiteSettingsFromFirestore ===
+        "function"
+    ) {
+
+      const firebaseSettings =
+        await firebaseModule
+          .getSiteSettingsFromFirestore();
+
+
+      if (
+        firebaseSettings &&
+        typeof firebaseSettings ===
+          "object"
+      ) {
+
+        settings =
+          firebaseSettings;
+
+
+        localStorage.setItem(
+          "kinarAageSiteSettings",
+          JSON.stringify(
+            firebaseSettings
+          )
+        );
+
+      }
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Shared logo Firestore load error:",
+      error
+    );
+
+  }
+
+
+  const siteName =
+    settings?.siteName ||
+    "Kinar Aage";
+
+
+  const imageUrl =
+    String(
+      settings?.logoUrl ||
+      ""
+    )
+      .trim();
+
+
+  /* =====================================
+     FALLBACK TEXT LOGO
+  ===================================== */
+
+  if (!imageUrl) {
+
+    logos.forEach(
+      logo => {
+
+        logo.innerHTML =
+          fallbackContent;
+
+
+        logo.setAttribute(
+          "aria-label",
+          `${siteName} Home`
+        );
+
+
+        logo.style.visibility =
+          "visible";
+
+      }
+    );
+
+
+    return;
+
+  }
+
+
+  /* =====================================
+     PRELOAD IMAGE
+  ===================================== */
+
+  const preloadImage =
+    new Image();
+
+
+  preloadImage.onload =
+    function() {
+
+      logos.forEach(
+        logo => {
+
+          logo.setAttribute(
+            "aria-label",
+            `${siteName} Home`
+          );
+
+
+          logo.innerHTML =
+            `
+              <img
+                class="site-logo-image"
+                src="${escapeHeaderSearchHtml(
+                  imageUrl
+                )}"
+                alt="${escapeHeaderSearchHtml(
+                  siteName
+                )}"
+              >
+            `;
+
+
+          const image =
+            logo.querySelector(
+              ".site-logo-image"
+            );
+
+
+          if (image) {
+
+            image.style.display =
+              "block";
+
+            image.style.width =
+              "auto";
+
+            image.style.objectFit =
+              "contain";
+
+
+            if (
+              logo.classList.contains(
+                "footer-logo"
+              )
+            ) {
+
+              image.style.maxWidth =
+                "180px";
+
+              image.style.maxHeight =
+                "55px";
+
+            }
+
+            else {
+
+              image.style.maxWidth =
+                "180px";
+
+              image.style.maxHeight =
+                "48px";
+
+            }
+
+          }
+
+
+          logo.style.visibility =
+            "visible";
+
+        }
+      );
+
+    };
+
+
+  preloadImage.onerror =
+    function() {
+
+      logos.forEach(
+        logo => {
+
+          logo.innerHTML =
+            fallbackContent;
+
+
+          logo.style.visibility =
+            "visible";
+
+        }
+      );
+
+    };
+
+
+  preloadImage.src =
+    imageUrl;
+
+}
 
 
 /* =========================================
@@ -355,6 +727,7 @@ function setupCategoryDropdown() {
       "allCategoriesButton"
     );
 
+
   const menu =
     document.getElementById(
       "categoryDropdownMenu"
@@ -365,7 +738,9 @@ function setupCategoryDropdown() {
     !button ||
     !menu
   ) {
+
     return;
+
   }
 
 
@@ -451,7 +826,6 @@ function setupCategoryDropdown() {
 }
 
 
-
 /* =========================================
    MOBILE MENU
 ========================================= */
@@ -463,10 +837,12 @@ function setupMobileMenu() {
       "mobileMenuButton"
     );
 
+
   const menu =
     document.getElementById(
       "mobileMenu"
     );
+
 
   const closeButton =
     document.getElementById(
@@ -479,7 +855,9 @@ function setupMobileMenu() {
     !menu ||
     !closeButton
   ) {
+
     return;
+
   }
 
 
@@ -573,7 +951,6 @@ function setupMobileMenu() {
 }
 
 
-
 /* =========================================
    LOAD FIREBASE CATEGORIES
 ========================================= */
@@ -594,9 +971,21 @@ async function loadHeaderCategories() {
   try {
 
     const firebaseModule =
-      await import(
-        "./firebase-db.js"
+      await getHeaderFirebaseModule();
+
+
+    if (
+      !firebaseModule ||
+      typeof firebaseModule
+        .getCategoriesFromFirestore !==
+        "function"
+    ) {
+
+      throw new Error(
+        "Category loader unavailable."
       );
+
+    }
 
 
     const firebaseCategories =
@@ -608,11 +997,13 @@ async function loadHeaderCategories() {
       Array.isArray(
         firebaseCategories
       )
+
         ? firebaseCategories
             .filter(
               category =>
+                category &&
                 category.status !==
-                "inactive"
+                  "inactive"
             )
             .sort(
               (a, b) =>
@@ -623,6 +1014,7 @@ async function loadHeaderCategories() {
                   b.order || 0
                 )
             )
+
         : [];
 
 
@@ -726,6 +1118,7 @@ async function loadHeaderCategories() {
 
 }
 
+
 /* =========================================
    HEADER LIVE SEARCH
 ========================================= */
@@ -737,10 +1130,12 @@ function setupHeaderSearch() {
       "headerSearchForm"
     );
 
+
   const input =
     document.getElementById(
       "headerSearchInput"
     );
+
 
   const suggestions =
     document.getElementById(
@@ -767,9 +1162,22 @@ function setupHeaderSearch() {
     try {
 
       const firebaseModule =
-        await import(
-          "./firebase-db.js"
-        );
+        await getHeaderFirebaseModule();
+
+
+      if (
+        !firebaseModule ||
+        typeof firebaseModule
+          .getProductsFromFirestore !==
+          "function"
+      ) {
+
+        products =
+          [];
+
+        return;
+
+      }
 
 
       const firebaseProducts =
@@ -781,6 +1189,7 @@ function setupHeaderSearch() {
         Array.isArray(
           firebaseProducts
         )
+
           ? firebaseProducts.filter(
               function(product) {
 
@@ -792,9 +1201,11 @@ function setupHeaderSearch() {
 
               }
             )
+
           : [];
 
     }
+
 
     catch (error) {
 
@@ -804,7 +1215,8 @@ function setupHeaderSearch() {
       );
 
 
-      products = [];
+      products =
+        [];
 
     }
 
@@ -815,6 +1227,7 @@ function setupHeaderSearch() {
 
     suggestions.hidden =
       true;
+
 
     suggestions.innerHTML =
       "";
@@ -853,13 +1266,15 @@ function setupHeaderSearch() {
             const name =
               String(
                 product.name || ""
-              ).toLowerCase();
+              )
+                .toLowerCase();
 
 
             const category =
               String(
                 product.category || ""
-              ).toLowerCase();
+              )
+                .toLowerCase();
 
 
             const shortDescription =
@@ -867,16 +1282,19 @@ function setupHeaderSearch() {
                 product.shortDescription ||
                 product.summary ||
                 ""
-              ).toLowerCase();
+              )
+                .toLowerCase();
 
 
             return (
               name.includes(
                 searchTerm
               ) ||
+
               category.includes(
                 searchTerm
               ) ||
+
               shortDescription.includes(
                 searchTerm
               )
@@ -884,6 +1302,7 @@ function setupHeaderSearch() {
 
           }
         )
+
         .slice(
           0,
           6
@@ -905,6 +1324,7 @@ function setupHeaderSearch() {
       suggestions.hidden =
         false;
 
+
       return;
 
     }
@@ -915,22 +1335,35 @@ function setupHeaderSearch() {
         .map(
           function(product) {
 
+            const productSlug =
+              product.slug ||
+              product.id ||
+              "";
+
+
             const image =
               product.image
+
                 ? `
                     <img
-                      src="${product.image}"
+                      src="${escapeHeaderSearchHtml(
+                        product.image
+                      )}"
                       alt=""
                     >
                   `
+
                 : `
                     <div class="header-search-placeholder">
-                      ${String(
-                        product.name || "K"
-                      )
-                        .trim()
-                        .charAt(0)
-                        .toUpperCase()}
+                      ${escapeHeaderSearchHtml(
+                        String(
+                          product.name ||
+                          "K"
+                        )
+                          .trim()
+                          .charAt(0)
+                          .toUpperCase()
+                      )}
                     </div>
                   `;
 
@@ -938,8 +1371,8 @@ function setupHeaderSearch() {
             return `
               <a
                 class="header-search-result"
-                href="product.html?slug=${encodeURIComponent(
-                  product.slug || ""
+                href="product.html?product=${encodeURIComponent(
+                  productSlug
                 )}"
               >
 
@@ -997,6 +1430,22 @@ function setupHeaderSearch() {
 
       event.preventDefault();
 
+
+      const query =
+        input.value
+          .trim();
+
+
+      if (!query) {
+        return;
+      }
+
+
+      window.location.href =
+        `search.html?q=${encodeURIComponent(
+          query
+        )}`;
+
     }
   );
 
@@ -1044,45 +1493,6 @@ function setupHeaderSearch() {
 
 
 /* =========================================
-   SEARCH HTML ESCAPE
-========================================= */
-
-function escapeHeaderSearchHtml(
-  value = ""
-) {
-
-  return String(
-    value
-  )
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-/* =========================================
    SHARED WISHLIST COUNT
 ========================================= */
 
@@ -1118,6 +1528,7 @@ function updateSharedWishlistCount() {
 
   }
 
+
   catch (error) {
 
     console.error(
@@ -1133,6 +1544,11 @@ function updateSharedWishlistCount() {
 
 }
 
+
+/* =========================================
+   STORAGE SYNC
+========================================= */
+
 window.addEventListener(
   "storage",
   function(event) {
@@ -1146,5 +1562,141 @@ window.addEventListener(
 
     }
 
+
+    if (
+      event.key ===
+      "kinarAageSiteSettings"
+    ) {
+
+      loadSharedLogo();
+
+    }
+
   }
 );
+
+
+/* =========================================
+   START HEADER
+========================================= */
+/* =========================================
+   SHARED FOOTER CATEGORIES
+========================================= */
+
+async function loadSharedFooterCategories() {
+
+  const footerCategoryColumn =
+    document.getElementById(
+      "footerCategoryColumn"
+    );
+
+
+  if (!footerCategoryColumn) {
+    return;
+  }
+
+
+  try {
+
+    const firebaseModule =
+      await getHeaderFirebaseModule();
+
+
+    if (
+      !firebaseModule ||
+      typeof firebaseModule
+        .getCategoriesFromFirestore !==
+        "function"
+    ) {
+
+      return;
+
+    }
+
+
+    const firebaseCategories =
+      await firebaseModule
+        .getCategoriesFromFirestore();
+
+
+    const categories =
+      Array.isArray(
+        firebaseCategories
+      )
+        ? firebaseCategories
+            .filter(
+              category =>
+                category &&
+                category.status !==
+                  "inactive"
+            )
+            .sort(
+              (a, b) =>
+                Number(
+                  a.order || 0
+                ) -
+                Number(
+                  b.order || 0
+                )
+            )
+        : [];
+
+
+    footerCategoryColumn.innerHTML =
+      `
+        <strong>
+          Shop by Category
+        </strong>
+
+        ${
+          categories.length
+
+            ? categories
+                .map(
+                  category => {
+
+                    const name =
+                      category.name ||
+                      "Category";
+
+
+                    return `
+                      <a
+                        href="category.html?category=${encodeURIComponent(
+                          name
+                        )}"
+                      >
+                        ${escapeHeaderSearchHtml(
+                          name
+                        )}
+                      </a>
+                    `;
+
+                  }
+                )
+                .join("")
+
+            : `
+                <span>
+                  No categories available.
+                </span>
+              `
+        }
+      `;
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Footer category load error:",
+      error
+    );
+
+  }
+
+}
+
+loadSharedHeader();
+
+loadSharedFooterCategories();
