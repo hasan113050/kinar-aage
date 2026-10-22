@@ -9,14 +9,16 @@ import {
 
 import {
   getFirestore,
+  collection,
+  addDoc,
   doc,
   getDocFromServer,
   setDoc,
-  collection,
+  deleteDoc,
   getDocsFromServer,
-  deleteDoc
-} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
-
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
 export const db =
   getFirestore(
@@ -469,5 +471,73 @@ export async function deleteCategoryFromFirestore(
   await deleteDoc(
     categoryRef
   );
+
+}
+
+/* =========================================
+   AFFILIATE CLICK TRACKING
+========================================= */
+
+export async function trackAffiliateClick(
+  {
+    productId,
+    productSlug = "",
+    source
+  }
+) {
+
+  if (
+    !productId ||
+    !source
+  ) {
+    return false;
+  }
+
+
+  try {
+
+    await addDoc(
+      collection(
+        db,
+        "affiliateClicks"
+      ),
+      {
+        productId:
+          String(
+            productId
+          ),
+
+        productSlug:
+          String(
+            productSlug ||
+            ""
+          ),
+
+        source:
+          String(
+            source
+          ),
+
+        clickedAt:
+          serverTimestamp()
+      }
+    );
+
+
+    return true;
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Affiliate click tracking failed:",
+      error
+    );
+
+
+    return false;
+
+  }
 
 }

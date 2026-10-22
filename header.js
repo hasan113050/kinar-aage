@@ -221,129 +221,153 @@ function loadSharedHeader() {
 
     <section class="utility-row-section">
 
-      <div class="container utility-row">
+  <div class="container utility-row">
 
 
-        <div class="category-dropdown">
+    <div class="category-dropdown">
 
 
-          <button
-            id="allCategoriesButton"
-            class="all-category-button"
-            type="button"
-            aria-expanded="false"
-          >
+      <button
+        id="allCategoriesButton"
+        class="all-category-button"
+        type="button"
+        aria-expanded="false"
+      >
 
-            <span class="all-category-icon">
-              ☰
-            </span>
+        <span class="all-category-icon">
+          ☰
+        </span>
 
-            <span>
-              All Categories
-            </span>
+        <span>
+          All Categories
+        </span>
 
-            <span class="category-dropdown-arrow">
-              ▾
-            </span>
+        <span class="category-dropdown-arrow">
+          ▾
+        </span>
 
-          </button>
+      </button>
 
 
-          <div
-            id="categoryDropdownMenu"
-            class="category-dropdown-menu"
-            hidden
-          >
+      <div
+        id="categoryDropdownMenu"
+        class="category-dropdown-menu"
+        hidden
+      >
 
-            <div
-              id="categoryDropdownList"
-              class="category-dropdown-list"
-            >
+        <div
+          id="categoryDropdownList"
+          class="category-dropdown-list"
+        >
 
-              <div class="category-dropdown-loading">
-                Loading categories...
-              </div>
-
-            </div>
-
+          <div class="category-dropdown-loading">
+            Loading categories...
           </div>
-
 
         </div>
-
-
-        <div class="utility-features">
-
-
-          <div class="utility-feature">
-
-            <span class="utility-feature-icon">
-              ✦
-            </span>
-
-            <div>
-
-              <strong>
-                Focused Product Shortlists
-              </strong>
-
-              <small>
-                Less clutter, easier browsing
-              </small>
-
-            </div>
-
-          </div>
-
-
-          <div class="utility-feature">
-
-            <span class="utility-feature-icon">
-              ✓
-            </span>
-
-            <div>
-
-              <strong>
-                Useful Buying Context
-              </strong>
-
-              <small>
-                Key details before you decide
-              </small>
-
-            </div>
-
-          </div>
-
-
-          <div class="utility-feature">
-
-            <span class="utility-feature-icon">
-              ↗
-            </span>
-
-            <div>
-
-              <strong>
-                External Merchant Links
-              </strong>
-
-              <small>
-                Compare here, buy from merchants
-              </small>
-
-            </div>
-
-          </div>
-
-
-        </div>
-
 
       </div>
 
-    </section>
+
+    </div>
+
+
+
+    <div class="utility-features">
+
+
+      <!-- =========================
+           UTILITY ITEM 1
+      ========================== -->
+
+      <div class="utility-feature">
+
+        <span
+          id="utility1Icon"
+          class="utility-feature-icon"
+        >
+          ✦
+        </span>
+
+        <div>
+
+          <strong id="utility1Title">
+            Focused Product Shortlists
+          </strong>
+
+          <small id="utility1Subtitle">
+            Less clutter, easier browsing
+          </small>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =========================
+           UTILITY ITEM 2
+      ========================== -->
+
+      <div class="utility-feature">
+
+        <span
+          id="utility2Icon"
+          class="utility-feature-icon"
+        >
+          ✓
+        </span>
+
+        <div>
+
+          <strong id="utility2Title">
+            Useful Buying Context
+          </strong>
+
+          <small id="utility2Subtitle">
+            Key details before you decide
+          </small>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =========================
+           UTILITY ITEM 3
+      ========================== -->
+
+      <div class="utility-feature">
+
+        <span
+          id="utility3Icon"
+          class="utility-feature-icon"
+        >
+          ↗
+        </span>
+
+        <div>
+
+          <strong id="utility3Title">
+            External Merchant Links
+          </strong>
+
+          <small id="utility3Subtitle">
+            Compare here, buy from merchants
+          </small>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+</section>
 
 
     <!-- =========================================
@@ -715,6 +739,142 @@ async function loadSharedLogo() {
 
 }
 
+
+/* =========================================
+   SHARED WEBSITE FAVICON
+========================================= */
+
+async function loadSharedFavicon() {
+
+  let settings = null;
+
+
+  /* LOCAL FALLBACK */
+
+  try {
+
+    const stored =
+      localStorage.getItem(
+        "kinarAageSiteSettings"
+      );
+
+
+    if (stored) {
+
+      settings =
+        JSON.parse(
+          stored
+        );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Local favicon settings load error:",
+      error
+    );
+
+  }
+
+
+  /* FIRESTORE LATEST SETTINGS */
+
+  try {
+
+    const firebaseModule =
+      await getHeaderFirebaseModule();
+
+
+    if (
+      firebaseModule &&
+      typeof firebaseModule
+        .getSiteSettingsFromFirestore ===
+        "function"
+    ) {
+
+      const firebaseSettings =
+        await firebaseModule
+          .getSiteSettingsFromFirestore();
+
+
+      if (
+        firebaseSettings &&
+        typeof firebaseSettings ===
+          "object"
+      ) {
+
+        settings =
+          firebaseSettings;
+
+
+        localStorage.setItem(
+          "kinarAageSiteSettings",
+          JSON.stringify(
+            firebaseSettings
+          )
+        );
+
+      }
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Shared favicon Firestore load error:",
+      error
+    );
+
+  }
+
+
+  const faviconUrl =
+    String(
+      settings?.faviconUrl ||
+      ""
+    )
+      .trim();
+
+
+  if (!faviconUrl) {
+    return;
+  }
+
+
+  let favicon =
+    document.querySelector(
+      'link[rel="icon"]'
+    );
+
+
+  if (!favicon) {
+
+    favicon =
+      document.createElement(
+        "link"
+      );
+
+
+    favicon.rel =
+      "icon";
+
+
+    document.head.appendChild(
+      favicon
+    );
+
+  }
+
+
+  favicon.href =
+    faviconUrl;
+
+}
 
 /* =========================================
    CATEGORY DROPDOWN
@@ -1698,5 +1858,5 @@ async function loadSharedFooterCategories() {
 }
 
 loadSharedHeader();
-
+loadSharedFavicon();
 loadSharedFooterCategories();

@@ -1825,17 +1825,30 @@ function createProductCard(
 
 
           <a
-            class="product-buy-link"
-            href="${escapeHtml(
-              affiliateUrl
-            )}"
-            target="_blank"
-            rel="nofollow sponsored noopener"
-          >
-            ${escapeHtml(
-              ctaLabel
-            )}
-          </a>
+  class="product-buy-link"
+
+  href="${escapeHtml(
+    product.affiliateUrl ||
+    "#"
+  )}"
+
+  data-product-id="${escapeHtml(
+    productId
+  )}"
+
+  data-product-slug="${escapeHtml(
+    productSlug
+  )}"
+
+  target="_blank"
+
+  rel="sponsored nofollow noopener"
+>
+  ${escapeHtml(
+    product.ctaLabel ||
+    "Buy Now"
+  )}
+</a>
 
         </div>
 
@@ -1862,6 +1875,10 @@ function bindProductCardEvents(
   }
 
 
+  /* =====================================
+     WISHLIST
+  ===================================== */
+
   container
     .querySelectorAll(
       "[data-save-product]"
@@ -1878,6 +1895,109 @@ function bindProductCardEvents(
                 .saveProduct,
               button
             );
+
+          }
+        );
+
+      }
+    );
+
+
+  /* =====================================
+     AFFILIATE CLICK TRACKING
+  ===================================== */
+
+  container
+    .querySelectorAll(
+      ".product-buy-link"
+    )
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            const affiliateUrl =
+              button.getAttribute(
+                "href"
+              );
+
+
+            if (
+              !affiliateUrl ||
+              affiliateUrl === "#"
+            ) {
+
+              return;
+
+            }
+
+
+            let source =
+              "homepage_product";
+
+
+            if (
+              container.id ===
+              "featuredProductsGrid"
+            ) {
+
+              source =
+                "homepage_featured";
+
+            }
+
+
+            else if (
+              container.id ===
+              "recommendedProductsGrid"
+            ) {
+
+              source =
+                "homepage_recommended";
+
+            }
+
+
+            import(
+              "./firebase-db.js"
+            )
+              .then(
+                function(
+                  firebaseModule
+                ) {
+
+                  return firebaseModule
+                    .trackAffiliateClick({
+
+                      productId:
+                        button.dataset
+                          .productId ||
+                        "",
+
+                      productSlug:
+                        button.dataset
+                          .productSlug ||
+                        "",
+
+                      source:
+                        source
+
+                    });
+
+                }
+              )
+              .catch(
+                function(error) {
+
+                  console.error(
+                    "Homepage Buy Now tracking error:",
+                    error
+                  );
+
+                }
+              );
 
           }
         );
@@ -2769,57 +2889,74 @@ async function loadHomepageContent() {
   );
 
 
-  /* =====================================
-     UTILITY ROW
-  ===================================== */
+ /* =====================================
+   UTILITY ROW
+===================================== */
 
-  setText(
-    utility1Icon,
-    data.utilityItems[0].icon
-  );
+setText(
+  document.getElementById(
+    "utility1Icon"
+  ),
+  data.utilityItems[0].icon
+);
 
-  setText(
-    utility1Title,
-    data.utilityItems[0].title
-  );
+setText(
+  document.getElementById(
+    "utility1Title"
+  ),
+  data.utilityItems[0].title
+);
 
-  setText(
-    utility1Subtitle,
-    data.utilityItems[0].subtitle
-  );
-
-
-  setText(
-    utility2Icon,
-    data.utilityItems[1].icon
-  );
-
-  setText(
-    utility2Title,
-    data.utilityItems[1].title
-  );
-
-  setText(
-    utility2Subtitle,
-    data.utilityItems[1].subtitle
-  );
+setText(
+  document.getElementById(
+    "utility1Subtitle"
+  ),
+  data.utilityItems[0].subtitle
+);
 
 
-  setText(
-    utility3Icon,
-    data.utilityItems[2].icon
-  );
+setText(
+  document.getElementById(
+    "utility2Icon"
+  ),
+  data.utilityItems[1].icon
+);
 
-  setText(
-    utility3Title,
-    data.utilityItems[2].title
-  );
+setText(
+  document.getElementById(
+    "utility2Title"
+  ),
+  data.utilityItems[1].title
+);
 
-  setText(
-    utility3Subtitle,
-    data.utilityItems[2].subtitle
-  );
+setText(
+  document.getElementById(
+    "utility2Subtitle"
+  ),
+  data.utilityItems[1].subtitle
+);
 
+
+setText(
+  document.getElementById(
+    "utility3Icon"
+  ),
+  data.utilityItems[2].icon
+);
+
+setText(
+  document.getElementById(
+    "utility3Title"
+  ),
+  data.utilityItems[2].title
+);
+
+setText(
+  document.getElementById(
+    "utility3Subtitle"
+  ),
+  data.utilityItems[2].subtitle
+);
 
   /* =====================================
      SECTION HEADINGS
@@ -3201,30 +3338,53 @@ function setupPromoTile(
 
 
   if (
-    imageElement
+  imageElement
+) {
+
+  const imageUrl =
+    String(
+      data.image || ""
+    ).trim();
+
+
+  tile
+    ?.classList.toggle(
+      "has-promo-image",
+      Boolean(imageUrl)
+    );
+
+
+  if (
+    imageUrl
   ) {
 
-    if (
-      data.image
-    ) {
+    imageElement.style
+      .backgroundImage =
+      `url("${imageUrl}")`;
 
-      imageElement.style
-        .backgroundImage =
-        `
-          url("${data.image}")
-        `;
+    imageElement.style
+      .backgroundSize =
+      "cover";
 
-    }
+    imageElement.style
+      .backgroundPosition =
+      "center center";
 
-    else {
-
-      imageElement.style
-        .backgroundImage =
-        "";
-
-    }
+    imageElement.style
+      .backgroundRepeat =
+      "no-repeat";
 
   }
+
+  else {
+
+    imageElement.style
+      .backgroundImage =
+      "";
+
+  }
+
+}
 
 }
 

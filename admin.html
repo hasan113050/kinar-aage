@@ -791,7 +791,63 @@
               id="productImageData"
               type="hidden"
             >
+<!-- PRODUCT GALLERY -->
 
+<div class="admin-field full-width product-gallery-admin">
+
+  <label>
+    Product Gallery
+  </label>
+
+  <p class="admin-field-help">
+    Add up to 5 additional product images.
+  </p>
+
+
+  <input
+    id="productGalleryUpload"
+    type="file"
+    accept="image/*"
+    multiple
+    hidden
+  >
+
+
+  <input
+    id="productGalleryData"
+    type="hidden"
+    value="[]"
+  >
+
+
+  <button
+    id="productGallerySelectButton"
+    class="admin-secondary-button"
+    type="button"
+  >
+    <i data-lucide="images"></i>
+    Add Gallery Images
+  </button>
+
+
+  <small
+    id="productGalleryWarning"
+    class="admin-image-warning"
+  ></small>
+
+
+  <div
+    id="productGalleryPreview"
+    class="admin-product-gallery-preview"
+  >
+
+    <span class="admin-gallery-empty">
+      No gallery images added
+    </span>
+
+  </div>
+
+</div>
 
           </section>
 
@@ -3980,6 +4036,60 @@
   <small
     class="admin-image-warning"
     id="siteLogoWarning"
+  ></small>
+
+</div>
+
+<div class="admin-field full-width">
+
+  <label>
+    Website Favicon
+  </label>
+
+  <p class="admin-field-help">
+    Upload the small icon shown in the browser tab.
+    Recommended: square PNG, JPG or WebP.
+  </p>
+
+  <input
+    id="siteFaviconUpload"
+    type="file"
+    accept="image/*"
+    hidden
+  >
+
+  <input
+    id="siteFaviconData"
+    type="hidden"
+  >
+
+  <div
+    class="admin-image-preview"
+    id="siteFaviconPreview"
+  >
+    <i data-lucide="image"></i>
+
+    <span>
+      No favicon selected
+    </span>
+  </div>
+
+  <div class="admin-upload-actions">
+
+    <button
+      class="admin-secondary-button"
+      id="siteFaviconSelectButton"
+      type="button"
+    >
+      <i data-lucide="upload"></i>
+      Choose Favicon
+    </button>
+
+  </div>
+
+  <small
+    class="admin-image-warning"
+    id="siteFaviconWarning"
   ></small>
 
 </div>

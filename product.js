@@ -23,6 +23,11 @@ const productDetailImage =
     "productDetailImage"
   );
 
+  const productGalleryThumbnails =
+  document.getElementById(
+    "productGalleryThumbnails"
+  );
+
 const productCategoryLink =
   document.getElementById(
     "productCategoryLink"
@@ -578,28 +583,29 @@ function renderProductImage(
   }
 
 
+  const galleryImages =
+    Array.isArray(
+      product.gallery
+    )
+      ? product.gallery.filter(
+          Boolean
+        )
+      : [];
+
+
+  const allImages =
+    [
+      product.image,
+      ...galleryImages
+    ]
+      .filter(
+        Boolean
+      );
+
+
   if (
-    product.image
+    !allImages.length
   ) {
-
-    productDetailImage.innerHTML =
-      `
-
-        <img
-          src="${escapeHtml(
-            product.image
-          )}"
-          alt="${escapeHtml(
-            product.name ||
-            "Product image"
-          )}"
-        >
-
-      `;
-
-  }
-
-  else {
 
     const firstLetter =
       String(
@@ -613,16 +619,164 @@ function renderProductImage(
 
     productDetailImage.innerHTML =
       `
-
         <div class="product-detail-placeholder">
           ${escapeHtml(
             firstLetter
           )}
         </div>
+      `;
 
+
+    if (
+      productGalleryThumbnails
+    ) {
+
+      productGalleryThumbnails.innerHTML =
+        "";
+
+    }
+
+    return;
+
+  }
+
+
+  function showMainImage(
+    imageUrl
+  ) {
+
+    productDetailImage.innerHTML =
+      `
+        <img
+          src="${escapeHtml(
+            imageUrl
+          )}"
+          alt="${escapeHtml(
+            product.name ||
+            "Product image"
+          )}"
+        >
       `;
 
   }
+
+
+  showMainImage(
+    allImages[0]
+  );
+
+
+  if (
+    !productGalleryThumbnails
+  ) {
+    return;
+  }
+
+
+  if (
+    allImages.length <= 1
+  ) {
+
+    productGalleryThumbnails.innerHTML =
+      "";
+
+    return;
+
+  }
+
+
+  productGalleryThumbnails.innerHTML =
+    allImages
+      .map(
+        function(
+          imageUrl,
+          index
+        ) {
+
+          return `
+            <button
+              type="button"
+              class="product-gallery-thumbnail ${
+                index === 0
+                  ? "active"
+                  : ""
+              }"
+              data-product-gallery-index="${index}"
+              aria-label="View product image ${index + 1}"
+            >
+              <img
+                src="${escapeHtml(
+                  imageUrl
+                )}"
+                alt="${escapeHtml(
+                  product.name ||
+                  "Product"
+                )} image ${index + 1}"
+              >
+            </button>
+          `;
+
+        }
+      )
+      .join("");
+
+
+  productGalleryThumbnails
+    .querySelectorAll(
+      "[data-product-gallery-index]"
+    )
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            const index =
+              Number(
+                button.dataset
+                  .productGalleryIndex
+              );
+
+
+            const imageUrl =
+              allImages[index];
+
+
+            if (!imageUrl) {
+              return;
+            }
+
+
+            showMainImage(
+              imageUrl
+            );
+
+
+            productGalleryThumbnails
+              .querySelectorAll(
+                ".product-gallery-thumbnail"
+              )
+              .forEach(
+                function(item) {
+
+                  item.classList.remove(
+                    "active"
+                  );
+
+                }
+              );
+
+
+            button.classList.add(
+              "active"
+            );
+
+          }
+        );
+
+      }
+    );
 
 }
 
@@ -931,29 +1085,129 @@ async function loadProduct() {
 
 
   if (
-    productAffiliateButton
-  ) {
+  productAffiliateButton
+) {
 
-    productAffiliateButton.href =
-      affiliateUrl;
+  productAffiliateButton.href =
+    affiliateUrl;
 
-    productAffiliateButton.textContent =
-      ctaLabel;
-
-  }
+  productAffiliateButton.textContent =
+    ctaLabel;
 
 
-  if (
-    productSideAffiliateButton
-  ) {
+  productAffiliateButton.addEventListener(
+    "click",
+    function() {
 
-    productSideAffiliateButton.href =
-      affiliateUrl;
+      if (
+        !affiliateUrl ||
+        affiliateUrl === "#"
+      ) {
+        return;
+      }
 
-    productSideAffiliateButton.textContent =
-      ctaLabel;
 
-  }
+      import(
+        "./firebase-db.js"
+      )
+        .then(
+          function(
+            firebaseModule
+          ) {
+
+            return firebaseModule
+              .trackAffiliateClick({
+                productId:
+                  productId,
+
+                productSlug:
+                  product.slug ||
+                  "",
+
+                source:
+                  "product_page_main"
+              });
+
+          }
+        )
+        .catch(
+          function(error) {
+
+            console.error(
+              "Main Buy Now tracking error:",
+              error
+            );
+
+          }
+        );
+
+    }
+  );
+
+}
+
+
+ if (
+  productSideAffiliateButton
+) {
+
+  productSideAffiliateButton.href =
+    affiliateUrl;
+
+  productSideAffiliateButton.textContent =
+    ctaLabel;
+
+
+  productSideAffiliateButton.addEventListener(
+    "click",
+    function() {
+
+      if (
+        !affiliateUrl ||
+        affiliateUrl === "#"
+      ) {
+        return;
+      }
+
+
+      import(
+        "./firebase-db.js"
+      )
+        .then(
+          function(
+            firebaseModule
+          ) {
+
+            return firebaseModule
+              .trackAffiliateClick({
+                productId:
+                  productId,
+
+                productSlug:
+                  product.slug ||
+                  "",
+
+                source:
+                  "product_page_side"
+              });
+
+          }
+        )
+        .catch(
+          function(error) {
+
+            console.error(
+              "Side Buy Now tracking error:",
+              error
+            );
+
+          }
+        );
+
+    }
+  );
+
+}
 
 
   if (
@@ -1221,20 +1475,32 @@ function createRelatedCard(
 </a>
 
 
-          <a
-            class="product-buy-link"
-            href="${escapeHtml(
-              product.affiliateUrl ||
-              "#"
-            )}"
-            target="_blank"
-            rel="sponsored nofollow noopener"
-          >
-            ${escapeHtml(
-              product.ctaLabel ||
-              "Buy Now"
-            )}
-          </a>
+     <a
+  class="product-buy-link"
+
+  href="${escapeHtml(
+    product.affiliateUrl ||
+    "#"
+  )}"
+
+  data-product-id="${escapeHtml(
+    productId
+  )}"
+
+  data-product-slug="${escapeHtml(
+    product.slug ||
+    ""
+  )}"
+
+  target="_blank"
+
+  rel="sponsored nofollow noopener"
+>
+  ${escapeHtml(
+    product.ctaLabel ||
+    "Buy Now"
+  )}
+</a>    
 
         </div>
 
@@ -1347,13 +1613,82 @@ async function renderRelatedProducts(
 
 
   relatedProductsGrid.innerHTML =
-    related
-      .map(
-        createRelatedCard
-      )
-      .join(
-        ""
+  related
+    .map(
+      createRelatedCard
+    )
+    .join(
+      ""
+    );
+
+
+relatedProductsGrid
+  .querySelectorAll(
+    ".product-buy-link"
+  )
+  .forEach(
+    function(button) {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          const affiliateUrl =
+            button.getAttribute(
+              "href"
+            );
+
+
+          if (
+            !affiliateUrl ||
+            affiliateUrl === "#"
+          ) {
+            return;
+          }
+
+
+          import(
+            "./firebase-db.js"
+          )
+            .then(
+              function(
+                firebaseModule
+              ) {
+
+                return firebaseModule
+                  .trackAffiliateClick({
+                    productId:
+                      button.dataset
+                        .productId ||
+                      "",
+
+                    productSlug:
+                      button.dataset
+                        .productSlug ||
+                      "",
+
+                    source:
+                      "related_product"
+                  });
+
+              }
+            )
+            .catch(
+              function(error) {
+
+                console.error(
+                  "Related Product Buy Now tracking error:",
+                  error
+                );
+
+              }
+            );
+
+        }
       );
+
+    }
+  );
 
 }
 

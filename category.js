@@ -117,6 +117,16 @@ const categoryPageDescription =
     "categoryPageDescription"
   );
 
+  const categoryHeroVisual =
+  document.getElementById(
+    "categoryHeroVisual"
+  );
+
+const categoryHeroFallback =
+  document.getElementById(
+    "categoryHeroFallback"
+  );
+
 const categoryProductCount =
   document.getElementById(
     "categoryProductCount"
@@ -895,6 +905,70 @@ async function renderCategoryPage() {
     categoryPageDescription.textContent =
       currentCategory.description ||
       "Explore recommendations and useful product insights.";
+
+  }
+
+  if (
+    categoryHeroVisual
+  ) {
+
+    const categoryImage =
+      String(
+        currentCategory.image ||
+        ""
+      ).trim();
+
+
+    if (categoryImage) {
+
+      categoryHeroVisual.style.backgroundImage =
+        `url("${categoryImage}")`;
+
+      categoryHeroVisual.classList.add(
+        "has-image"
+      );
+
+
+      if (
+        categoryHeroFallback
+      ) {
+
+        categoryHeroFallback.style.display =
+          "none";
+
+      }
+
+    }
+
+    else {
+
+      categoryHeroVisual.style.backgroundImage =
+        "";
+
+      categoryHeroVisual.classList.remove(
+        "has-image"
+      );
+
+
+      if (
+        categoryHeroFallback
+      ) {
+
+        categoryHeroFallback.style.display =
+          "flex";
+
+        categoryHeroFallback.textContent =
+          String(
+            currentCategory.name ||
+            "K"
+          )
+            .trim()
+            .charAt(0)
+            .toUpperCase();
+
+      }
+
+    }
 
   }
 

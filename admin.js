@@ -1956,6 +1956,184 @@ function setupCloudinaryImage({
 
 }
 
+const productGalleryUpload =
+  document.getElementById(
+    "productGalleryUpload"
+  );
+
+const productGallerySelectButton =
+  document.getElementById(
+    "productGallerySelectButton"
+  );
+
+const productGalleryData =
+  document.getElementById(
+    "productGalleryData"
+  );
+
+const productGalleryPreview =
+  document.getElementById(
+    "productGalleryPreview"
+  );
+
+const productGalleryWarning =
+  document.getElementById(
+    "productGalleryWarning"
+  );
+
+/* =========================================
+   PRODUCT GALLERY HELPERS
+========================================= */
+
+function getProductGalleryUrls() {
+
+  if (!productGalleryData) {
+    return [];
+  }
+
+  try {
+
+    const parsed =
+      JSON.parse(
+        productGalleryData.value ||
+        "[]"
+      );
+
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Gallery parse error:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+function saveProductGalleryUrls(
+  urls
+) {
+
+  if (!productGalleryData) {
+    return;
+  }
+
+  productGalleryData.value =
+    JSON.stringify(
+      Array.isArray(urls)
+        ? urls
+        : []
+    );
+
+}
+
+
+function renderProductGalleryPreview() {
+
+  if (!productGalleryPreview) {
+    return;
+  }
+
+
+  const urls =
+    getProductGalleryUrls();
+
+
+  if (!urls.length) {
+
+    productGalleryPreview.innerHTML =
+      `
+        <span class="admin-gallery-empty">
+          No gallery images added
+        </span>
+      `;
+
+    return;
+
+  }
+
+
+  productGalleryPreview.innerHTML =
+    urls
+      .map(
+        function(url, index) {
+
+          return `
+            <div class="admin-gallery-item">
+
+              <img
+                src="${url}"
+                alt="Gallery image ${index + 1}"
+              >
+
+              <button
+                type="button"
+                class="admin-gallery-remove"
+                data-gallery-remove="${index}"
+                aria-label="Remove gallery image"
+              >
+                ×
+              </button>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+
+  productGalleryPreview
+    .querySelectorAll(
+      "[data-gallery-remove]"
+    )
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            const index =
+              Number(
+                button.dataset
+                  .galleryRemove
+              );
+
+
+            const current =
+              getProductGalleryUrls();
+
+
+            current.splice(
+              index,
+              1
+            );
+
+
+            saveProductGalleryUrls(
+              current
+            );
+
+
+            renderProductGalleryPreview();
+
+          }
+        );
+
+      }
+    );
+
+}
 
 /* =========================================
    ALL CLOUDINARY UPLOADS
@@ -1980,6 +2158,235 @@ setupCloudinaryImage({
 
 });
 
+/* =========================================
+   PRODUCT GALLERY CLOUDINARY UPLOAD
+========================================= */
+
+productGallerySelectButton
+  ?.addEventListener(
+    "click",
+    function() {
+
+      productGalleryUpload
+        ?.click();
+
+    }
+  );
+
+
+productGalleryUpload
+  ?.addEventListener(
+    "change",
+    async function() {
+
+      const files =
+        Array.from(
+          productGalleryUpload.files ||
+          []
+        );
+
+
+      if (!files.length) {
+        return;
+      }
+
+
+      const currentGallery =
+        getProductGalleryUrls();
+
+
+      const availableSlots =
+        5 -
+        currentGallery.length;
+
+
+      if (
+        availableSlots <= 0
+      ) {
+
+        toast(
+          "Maximum 5 gallery images are allowed."
+        );
+
+        productGalleryUpload.value =
+          "";
+
+        return;
+
+      }
+
+
+      const selectedFiles =
+        files.slice(
+          0,
+          availableSlots
+        );
+
+
+      if (
+        files.length >
+        availableSlots
+      ) {
+
+        toast(
+          `Only ${availableSlots} more gallery image(s) can be added.`
+        );
+
+      }
+
+
+      const validFiles =
+        selectedFiles.filter(
+          function(file) {
+
+            return (
+              file.type.startsWith(
+                "image/"
+              ) &&
+              file.size <=
+                2 * 1024 * 1024
+            );
+
+          }
+        );
+
+
+      if (!validFiles.length) {
+
+        toast(
+          "Please select valid images under 2 MB."
+        );
+
+        productGalleryUpload.value =
+          "";
+
+        return;
+
+      }
+
+
+      try {
+
+        productGallerySelectButton.disabled =
+          true;
+
+
+        if (
+          productGalleryWarning
+        ) {
+
+          productGalleryWarning.textContent =
+            "Uploading gallery images...";
+
+        }
+
+
+        const cloudinary =
+          await import(
+            "./cloudinary-upload.js"
+          );
+
+
+        const uploadedUrls = [];
+
+
+        for (
+          const file of validFiles
+        ) {
+
+          const result =
+            await cloudinary
+              .uploadImageToCloudinary(
+                file
+              );
+
+
+          if (
+            result?.url
+          ) {
+
+            uploadedUrls.push(
+              result.url
+            );
+
+          }
+
+        }
+
+
+        const finalGallery =
+          [
+            ...currentGallery,
+            ...uploadedUrls
+          ]
+            .slice(
+              0,
+              5
+            );
+
+
+        saveProductGalleryUrls(
+          finalGallery
+        );
+
+
+        renderProductGalleryPreview();
+
+
+        if (
+          productGalleryWarning
+        ) {
+
+          productGalleryWarning.textContent =
+            "";
+
+        }
+
+
+        toast(
+          uploadedUrls.length
+            ? "Gallery images uploaded."
+            : "No gallery image uploaded."
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Product gallery upload error:",
+          error
+        );
+
+
+        if (
+          productGalleryWarning
+        ) {
+
+          productGalleryWarning.textContent =
+            "Gallery upload failed.";
+
+        }
+
+
+        toast(
+          "Gallery upload failed."
+        );
+
+      }
+
+      finally {
+
+        productGallerySelectButton.disabled =
+          false;
+
+        productGalleryUpload.value =
+          "";
+
+      }
+
+    }
+  );
 
 setupCloudinaryImage({
 
@@ -2022,6 +2429,28 @@ setupCloudinaryImage({
 
   label:
     "Website logo"
+
+});
+
+setupCloudinaryImage({
+
+  inputId:
+    "siteFaviconUpload",
+
+  buttonId:
+    "siteFaviconSelectButton",
+
+  previewId:
+    "siteFaviconPreview",
+
+  dataId:
+    "siteFaviconData",
+
+  warningId:
+    "siteFaviconWarning",
+
+  label:
+    "Website favicon"
 
 });
 
@@ -2420,6 +2849,17 @@ function resetProductForm() {
     ""
   );
 
+  if (
+  productGalleryData
+) {
+
+  productGalleryData.value =
+    "[]";
+
+}
+
+
+renderProductGalleryPreview();
 
   setValue(
     "productStatus",
@@ -2535,6 +2975,8 @@ function collectProduct() {
       ) ||
       old?.image ||
       "",
+gallery:
+  getProductGalleryUrls(),
 
     shortDescription:
       value(
@@ -2870,7 +3312,23 @@ function editProduct(
     product.image ||
     ""
   );
+if (
+  productGalleryData
+) {
 
+  productGalleryData.value =
+    JSON.stringify(
+      Array.isArray(
+        product.gallery
+      )
+        ? product.gallery
+        : []
+    );
+
+}
+
+
+renderProductGalleryPreview();
 
   setValue(
     "productShortDescription",
@@ -6416,6 +6874,17 @@ function loadSiteSettings() {
     "No logo selected"
   );
 
+  setValue(
+    "siteFaviconData",
+    data.faviconUrl
+  );
+
+
+  showPreview(
+    $("siteFaviconPreview"),
+    data.faviconUrl || "",
+    "No favicon selected"
+  );
 
   setValue(
     "siteAffiliateDisclosure",
@@ -6449,6 +6918,11 @@ $("siteSettingsForm")
         logoUrl:
           value(
             "siteLogoData"
+          ),
+
+          faviconUrl:
+          value(
+            "siteFaviconData"
           ),
 
         affiliateDisclosure:
@@ -6547,43 +7021,15 @@ async function syncFromFirebase() {
 
 
     if (!firebase) {
+
       return;
-    }
-
-
-    /* -------------------------
-       CATEGORIES
-    ------------------------- */
-
-    if (
-      typeof firebase
-        .getCategoriesFromFirestore ===
-        "function"
-    ) {
-
-      const categories =
-        await firebase
-          .getCategoriesFromFirestore();
-
-
-      if (
-        Array.isArray(
-          categories
-        )
-      ) {
-
-        saveCategories(
-          categories
-        );
-
-      }
 
     }
 
 
-    /* -------------------------
+    /* =====================================
        PRODUCTS
-    ------------------------- */
+    ===================================== */
 
     if (
       typeof firebase
@@ -6591,29 +7037,125 @@ async function syncFromFirebase() {
         "function"
     ) {
 
-      const products =
+      const firebaseProducts =
         await firebase
           .getProductsFromFirestore();
 
 
       if (
         Array.isArray(
-          products
-        )
+          firebaseProducts
+        ) &&
+        firebaseProducts.length
       ) {
 
         saveProducts(
-          products
+          firebaseProducts
         );
+
+      }
+
+      else {
+
+        const localProducts =
+          getProducts();
+
+
+        if (
+          Array.isArray(
+            localProducts
+          ) &&
+          localProducts.length &&
+          typeof firebase
+            .saveProductToFirestore ===
+            "function"
+        ) {
+
+          for (
+            const product
+            of localProducts
+          ) {
+
+            await firebase
+              .saveProductToFirestore(
+                product
+              );
+
+          }
+
+        }
 
       }
 
     }
 
 
-    /* -------------------------
-       HOMEPAGE
-    ------------------------- */
+    /* =====================================
+       CATEGORIES
+    ===================================== */
+
+    if (
+      typeof firebase
+        .getCategoriesFromFirestore ===
+        "function"
+    ) {
+
+      const firebaseCategories =
+        await firebase
+          .getCategoriesFromFirestore();
+
+
+      if (
+        Array.isArray(
+          firebaseCategories
+        ) &&
+        firebaseCategories.length
+      ) {
+
+        saveCategories(
+          firebaseCategories
+        );
+
+      }
+
+      else {
+
+        const localCategories =
+          getCategories();
+
+
+        if (
+          Array.isArray(
+            localCategories
+          ) &&
+          localCategories.length &&
+          typeof firebase
+            .saveCategoryToFirestore ===
+            "function"
+        ) {
+
+          for (
+            const category
+            of localCategories
+          ) {
+
+            await firebase
+              .saveCategoryToFirestore(
+                category
+              );
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    /* =====================================
+       HOMEPAGE CONTENT
+    ===================================== */
 
     if (
       typeof firebase
@@ -6621,30 +7163,55 @@ async function syncFromFirebase() {
         "function"
     ) {
 
-      const homepage =
+      const firebaseHomepage =
         await firebase
           .getHomepageContentFromFirestore();
 
 
       if (
-        homepage &&
-        typeof homepage ===
+        firebaseHomepage &&
+        typeof firebaseHomepage ===
           "object"
       ) {
 
         writeStore(
           HOMEPAGE_CONTENT_KEY,
-          homepage
+          firebaseHomepage
         );
+
+      }
+
+      else {
+
+        const localHomepage =
+          readStore(
+            HOMEPAGE_CONTENT_KEY,
+            null
+          );
+
+
+        if (
+          localHomepage &&
+          typeof firebase
+            .saveHomepageContentToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveHomepageContentToFirestore(
+              localHomepage
+            );
+
+        }
 
       }
 
     }
 
 
-    /* -------------------------
-       BANNERS
-    ------------------------- */
+    /* =====================================
+       BANNER SETTINGS
+    ===================================== */
 
     if (
       typeof firebase
@@ -6652,30 +7219,55 @@ async function syncFromFirebase() {
         "function"
     ) {
 
-      const banners =
+      const firebaseBanners =
         await firebase
           .getBannerSettingsFromFirestore();
 
 
       if (
-        banners &&
-        typeof banners ===
+        firebaseBanners &&
+        typeof firebaseBanners ===
           "object"
       ) {
 
         writeStore(
           BANNER_SETTINGS_KEY,
-          banners
+          firebaseBanners
         );
+
+      }
+
+      else {
+
+        const localBanners =
+          readStore(
+            BANNER_SETTINGS_KEY,
+            null
+          );
+
+
+        if (
+          localBanners &&
+          typeof firebase
+            .saveBannerSettingsToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveBannerSettingsToFirestore(
+              localBanners
+            );
+
+        }
 
       }
 
     }
 
 
-    /* -------------------------
+    /* =====================================
        SITE SEO
-    ------------------------- */
+    ===================================== */
 
     if (
       typeof firebase
@@ -6683,30 +7275,55 @@ async function syncFromFirebase() {
         "function"
     ) {
 
-      const seo =
+      const firebaseSeo =
         await firebase
           .getSiteSeoFromFirestore();
 
 
       if (
-        seo &&
-        typeof seo ===
+        firebaseSeo &&
+        typeof firebaseSeo ===
           "object"
       ) {
 
         writeStore(
           SITE_SEO_KEY,
-          seo
+          firebaseSeo
         );
+
+      }
+
+      else {
+
+        const localSeo =
+          readStore(
+            SITE_SEO_KEY,
+            null
+          );
+
+
+        if (
+          localSeo &&
+          typeof firebase
+            .saveSiteSeoToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveSiteSeoToFirestore(
+              localSeo
+            );
+
+        }
 
       }
 
     }
 
 
-    /* -------------------------
+    /* =====================================
        SITE SETTINGS
-    ------------------------- */
+    ===================================== */
 
     if (
       typeof firebase
@@ -6714,25 +7331,55 @@ async function syncFromFirebase() {
         "function"
     ) {
 
-      const settings =
+      const firebaseSettings =
         await firebase
           .getSiteSettingsFromFirestore();
 
 
       if (
-        settings &&
-        typeof settings ===
+        firebaseSettings &&
+        typeof firebaseSettings ===
           "object"
       ) {
 
         writeStore(
           SITE_SETTINGS_KEY,
-          settings
+          firebaseSettings
         );
 
       }
 
+      else {
+
+        const localSettings =
+          readStore(
+            SITE_SETTINGS_KEY,
+            null
+          );
+
+
+        if (
+          localSettings &&
+          typeof firebase
+            .saveSiteSettingsToFirestore ===
+            "function"
+        ) {
+
+          await firebase
+            .saveSiteSettingsToFirestore(
+              localSettings
+            );
+
+        }
+
+      }
+
     }
+
+
+    console.log(
+      "Firebase sync completed."
+    );
 
   }
 
