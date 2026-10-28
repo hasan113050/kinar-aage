@@ -432,20 +432,26 @@ function createProductCard(
           </a>
 
 
-          <a
-            class="product-buy-link"
-            href="${escapeHtml(
-              product.affiliateUrl ||
-              "#"
-            )}"
-            target="_blank"
-            rel="sponsored nofollow noopener"
-          >
-            ${escapeHtml(
-              product.ctaLabel ||
-              "Buy Now"
-            )}
-          </a>
+     <a
+  class="product-buy-link"
+  href="${escapeHtml(
+    product.affiliateUrl ||
+    "#"
+  )}"
+  target="_blank"
+  rel="sponsored nofollow noopener"
+  data-product-id="${escapeHtml(
+    productId
+  )}"
+  data-product-slug="${escapeHtml(
+    productSlug
+  )}"
+>
+  ${escapeHtml(
+    product.ctaLabel ||
+    "Buy Now"
+  )}
+</a>    
 
         </div>
 
@@ -458,10 +464,212 @@ function createProductCard(
 
 
 /* =========================================
+   WISHLIST SEO
+========================================= */
+
+function applyWishlistSeo() {
+
+  const title =
+    "Saved Products | Kinar Aage";
+
+
+  const description =
+    "View products you have saved on Kinar Aage for later comparison and consideration.";
+
+
+  const canonicalUrl =
+    `${window.location.origin}${window.location.pathname}`;
+
+
+  function setMeta(
+    selector,
+    attributes,
+    content
+  ) {
+
+    let element =
+      document.head.querySelector(
+        selector
+      );
+
+
+    if (!element) {
+
+      element =
+        document.createElement(
+          "meta"
+        );
+
+
+      Object.entries(
+        attributes
+      )
+        .forEach(
+          function([
+            attribute,
+            value
+          ]) {
+
+            element.setAttribute(
+              attribute,
+              value
+            );
+
+          }
+        );
+
+
+      document.head.appendChild(
+        element
+      );
+
+    }
+
+
+    element.setAttribute(
+      "content",
+      String(
+        content ||
+        ""
+      )
+    );
+
+  }
+
+
+  document.title =
+    title;
+
+
+  setMeta(
+    'meta[name="description"]',
+    {
+      name:
+        "description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[name="robots"]',
+    {
+      name:
+        "robots"
+    },
+    "noindex, follow"
+  );
+
+
+  let canonical =
+    document.head.querySelector(
+      'link[rel="canonical"]'
+    );
+
+
+  if (!canonical) {
+
+    canonical =
+      document.createElement(
+        "link"
+      );
+
+
+    canonical.rel =
+      "canonical";
+
+
+    document.head.appendChild(
+      canonical
+    );
+
+  }
+
+
+  canonical.href =
+    canonicalUrl;
+
+
+  setMeta(
+    'meta[property="og:title"]',
+    {
+      property:
+        "og:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[property="og:description"]',
+    {
+      property:
+        "og:description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[property="og:type"]',
+    {
+      property:
+        "og:type"
+    },
+    "website"
+  );
+
+
+  setMeta(
+    'meta[property="og:url"]',
+    {
+      property:
+        "og:url"
+    },
+    canonicalUrl
+  );
+
+
+  setMeta(
+    'meta[name="twitter:card"]',
+    {
+      name:
+        "twitter:card"
+    },
+    "summary"
+  );
+
+
+  setMeta(
+    'meta[name="twitter:title"]',
+    {
+      name:
+        "twitter:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[name="twitter:description"]',
+    {
+      name:
+        "twitter:description"
+    },
+    description
+  );
+
+}
+
+
+/* =========================================
    RENDER WISHLIST
 ========================================= */
 
 async function renderWishlistPage() {
+
+  applyWishlistSeo();
+
 
   const wishlist =
     getWishlist();
@@ -555,7 +763,9 @@ async function renderWishlistPage() {
       );
 
 
-  bindRemoveButtons();
+bindRemoveButtons();
+
+bindAffiliateTracking();
 
 }
 
@@ -587,6 +797,99 @@ function bindRemoveButtons() {
             removeFromWishlist(
               productId
             );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+/* =========================================
+   AFFILIATE CLICK TRACKING
+========================================= */
+
+function bindAffiliateTracking() {
+
+  if (
+    !wishlistProductsGrid
+  ) {
+
+    return;
+
+  }
+
+
+  wishlistProductsGrid
+
+    .querySelectorAll(
+      ".product-buy-link"
+    )
+
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            const affiliateUrl =
+              button.getAttribute(
+                "href"
+              );
+
+
+            if (
+              !affiliateUrl ||
+              affiliateUrl === "#"
+            ) {
+
+              return;
+
+            }
+
+
+            import(
+              "./firebase-db.js"
+            )
+
+              .then(
+                function(
+                  firebaseModule
+                ) {
+
+                  return firebaseModule
+                    .trackAffiliateClick({
+
+                      productId:
+                        button.dataset
+                          .productId ||
+                        "",
+
+                      productSlug:
+                        button.dataset
+                          .productSlug ||
+                        "",
+
+                      source:
+                        "wishlist_page"
+
+                    });
+
+                }
+              )
+
+              .catch(
+                function(error) {
+
+                  console.error(
+                    "Wishlist Buy Now tracking error:",
+                    error
+                  );
+
+                }
+              );
 
           }
         );

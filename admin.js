@@ -976,9 +976,24 @@ const PAGE_CONFIG = {
     "Manage homepage hero and promotional visuals."
   ],
 
-  seoPage: [
+   seoPage: [
     "Site SEO",
     "Manage default search and social metadata."
+  ],
+
+   affiliateAnalyticsPage: [
+    "Affiliate Analytics",
+    "Track affiliate clicks, traffic sources and product performance."
+  ],
+
+   newsletterSubscribersPage: [
+    "Newsletter Subscribers",
+    "View newsletter subscribers, growth and email audience data."
+  ],
+
+  contactInboxPage: [
+    "Contact Inbox",
+    "View and manage messages submitted through the contact page."
   ],
 
   settingsPage: [
@@ -7007,6 +7022,3096 @@ $("siteSettingsForm")
   No second logout handler is needed here.
 */
 
+/* =========================================
+   AFFILIATE ANALYTICS
+========================================= */
+
+function affiliateClickDate(
+  click
+) {
+
+  const clickedAt =
+    click?.clickedAt;
+
+
+  if (!clickedAt) {
+    return null;
+  }
+
+
+  if (
+    typeof clickedAt.toDate ===
+    "function"
+  ) {
+
+    const date =
+      clickedAt.toDate();
+
+    return Number.isNaN(
+      date.getTime()
+    )
+      ? null
+      : date;
+
+  }
+
+
+  if (
+    typeof clickedAt.seconds ===
+    "number"
+  ) {
+
+    const date =
+      new Date(
+        clickedAt.seconds *
+        1000
+      );
+
+    return Number.isNaN(
+      date.getTime()
+    )
+      ? null
+      : date;
+
+  }
+
+
+  const date =
+    new Date(
+      clickedAt
+    );
+
+
+  return Number.isNaN(
+    date.getTime()
+  )
+    ? null
+    : date;
+
+}
+
+
+function subtractCalendarMonths(
+  date,
+  months
+) {
+
+  const result =
+    new Date(
+      date
+    );
+
+
+  const originalDay =
+    result.getDate();
+
+
+  result.setDate(
+    1
+  );
+
+
+  result.setMonth(
+    result.getMonth() -
+    months
+  );
+
+
+  const lastDayOfTargetMonth =
+    new Date(
+      result.getFullYear(),
+      result.getMonth() + 1,
+      0
+    )
+      .getDate();
+
+
+  result.setDate(
+    Math.min(
+      originalDay,
+      lastDayOfTargetMonth
+    )
+  );
+
+
+  return result;
+
+}
+
+
+function countAffiliateClicksSince(
+  clicks,
+  cutoff
+) {
+
+  return clicks.filter(
+    function(click) {
+
+      const date =
+        affiliateClickDate(
+          click
+        );
+
+
+      return (
+        date &&
+        date >= cutoff
+      );
+
+    }
+  )
+    .length;
+
+}
+
+
+function affiliateSourceLabel(
+  source
+) {
+
+  const cleanSource =
+    String(
+      source ||
+      "unknown"
+    )
+      .trim();
+
+
+  const knownLabels = {
+
+    category_page:
+      "Category Page",
+
+    search_page:
+      "Search Page",
+
+    wishlist_page:
+      "Wishlist Page",
+
+    featured_page:
+      "Featured Page",
+
+    recommendations_page:
+      "Recommendations Page",
+
+    product_page:
+      "Product Page",
+
+    related_products:
+      "Related Products",
+
+    homepage_featured:
+      "Homepage Featured",
+
+    homepage_recommended:
+      "Homepage Recommendations",
+
+    homepage:
+      "Homepage"
+
+  };
+
+
+  if (
+    knownLabels[
+      cleanSource
+    ]
+  ) {
+
+    return knownLabels[
+      cleanSource
+    ];
+
+  }
+
+
+  return cleanSource
+    .replace(
+      /[_-]+/g,
+      " "
+    )
+    .replace(
+      /\b\w/g,
+      function(character) {
+
+        return character
+          .toUpperCase();
+
+      }
+    );
+
+}
+
+
+function findAffiliateProduct(
+  click,
+  products
+) {
+
+  const productId =
+    String(
+      click?.productId ||
+      ""
+    );
+
+
+  const productSlug =
+    String(
+      click?.productSlug ||
+      ""
+    );
+
+
+  return (
+    products.find(
+      function(product) {
+
+        return (
+          productId &&
+          String(
+            product.id ||
+            ""
+          ) ===
+          productId
+        );
+
+      }
+    ) ||
+
+    products.find(
+      function(product) {
+
+        return (
+          productSlug &&
+          String(
+            product.slug ||
+            ""
+          ) ===
+          productSlug
+        );
+
+      }
+    ) ||
+
+    null
+  );
+
+}
+
+
+function getAffiliateProductName(
+  click,
+  products
+) {
+
+  const product =
+    findAffiliateProduct(
+      click,
+      products
+    );
+
+
+  if (
+    product?.name
+  ) {
+
+    return product.name;
+
+  }
+
+
+  if (
+    click?.productSlug
+  ) {
+
+    return String(
+      click.productSlug
+    )
+      .replace(
+        /[-_]+/g,
+        " "
+      )
+      .replace(
+        /\b\w/g,
+        function(character) {
+
+          return character
+            .toUpperCase();
+
+        }
+      );
+
+  }
+
+
+  return (
+    String(
+      click?.productId ||
+      ""
+    ) ||
+    "Unknown Product"
+  );
+
+}
+
+
+function getAffiliateProductKey(
+  click
+) {
+
+  return (
+    String(
+      click?.productId ||
+      ""
+    ) ||
+
+    String(
+      click?.productSlug ||
+      ""
+    ) ||
+
+    "unknown-product"
+  );
+
+}
+
+
+function renderAffiliateSourceBreakdown(
+  clicks
+) {
+
+  const container =
+    $(
+      "affiliateSourceBreakdown"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  if (
+    !clicks.length
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="admin-empty-state">
+          No affiliate click data yet.
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  const sources =
+    {};
+
+
+  clicks.forEach(
+    function(click) {
+
+      const source =
+        String(
+          click.source ||
+          "unknown"
+        );
+
+
+      sources[source] =
+        (
+          sources[source] ||
+          0
+        ) + 1;
+
+    }
+  );
+
+
+  const rows =
+    Object.entries(
+      sources
+    )
+      .sort(
+        function(a, b) {
+
+          return (
+            b[1] -
+            a[1]
+          );
+
+        }
+      );
+
+
+  container.innerHTML =
+    rows
+      .map(
+        function(
+          [source, count]
+        ) {
+
+          const percentage =
+            clicks.length
+              ? (
+                  count /
+                  clicks.length *
+                  100
+                )
+                  .toFixed(
+                    1
+                  )
+              : "0.0";
+
+
+          return `
+            <div class="dashboard-product-row">
+
+              <strong>
+                ${escapeHtml(
+                  affiliateSourceLabel(
+                    source
+                  )
+                )}
+              </strong>
+
+              <span>
+                ${count} ${
+                  count === 1
+                    ? "Click"
+                    : "Clicks"
+                }
+              </span>
+
+              <span>
+                ${percentage}%
+              </span>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+function renderAffiliateProductPerformance(
+  clicks
+) {
+
+  const container =
+    $(
+      "affiliateProductTable"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  if (
+    !clicks.length
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="admin-empty-state">
+          No product click data yet.
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  const products =
+    getProducts();
+
+
+  const grouped =
+    {};
+
+
+  clicks.forEach(
+    function(click) {
+
+      const key =
+        getAffiliateProductKey(
+          click
+        );
+
+
+      if (
+        !grouped[key]
+      ) {
+
+        grouped[key] = {
+
+          click:
+            click,
+
+          count:
+            0
+
+        };
+
+      }
+
+
+      grouped[key].count +=
+        1;
+
+    }
+  );
+
+
+  const rows =
+    Object.values(
+      grouped
+    )
+      .sort(
+        function(a, b) {
+
+          return (
+            b.count -
+            a.count
+          );
+
+        }
+      );
+
+
+  container.innerHTML =
+    rows
+      .map(
+        function(item) {
+
+          const productName =
+            getAffiliateProductName(
+              item.click,
+              products
+            );
+
+
+          const productSlug =
+            String(
+              item.click
+                ?.productSlug ||
+              ""
+            );
+
+
+          return `
+            <div class="dashboard-product-row">
+
+              <strong>
+                ${escapeHtml(
+                  productName
+                )}
+              </strong>
+
+              <span>
+                ${
+                  productSlug
+                    ? escapeHtml(
+                        productSlug
+                      )
+                    : "—"
+                }
+              </span>
+
+              <span>
+                ${item.count} ${
+                  item.count === 1
+                    ? "Click"
+                    : "Clicks"
+                }
+              </span>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+function renderAffiliateTopProduct(
+  clicks
+) {
+
+  const node =
+    $(
+      "affiliateTopProduct"
+    );
+
+
+  if (!node) {
+    return;
+  }
+
+
+  if (
+    !clicks.length
+  ) {
+
+    node.textContent =
+      "—";
+
+    return;
+
+  }
+
+
+  const grouped =
+    {};
+
+
+  clicks.forEach(
+    function(click) {
+
+      const key =
+        getAffiliateProductKey(
+          click
+        );
+
+
+      if (
+        !grouped[key]
+      ) {
+
+        grouped[key] = {
+
+          click:
+            click,
+
+          count:
+            0
+
+        };
+
+      }
+
+
+      grouped[key].count +=
+        1;
+
+    }
+  );
+
+
+  const top =
+    Object.values(
+      grouped
+    )
+      .sort(
+        function(a, b) {
+
+          return (
+            b.count -
+            a.count
+          );
+
+        }
+      )[0];
+
+
+  if (!top) {
+
+    node.textContent =
+      "—";
+
+    return;
+
+  }
+
+
+  const productName =
+    getAffiliateProductName(
+      top.click,
+      getProducts()
+    );
+
+
+  node.textContent =
+    `${productName} (${top.count})`;
+
+}
+
+
+async function loadAffiliateAnalytics() {
+
+  const status =
+    $(
+      "affiliateAnalyticsStatus"
+    );
+
+
+  const refreshButton =
+    $(
+      "affiliateAnalyticsRefresh"
+    );
+
+
+  if (
+    refreshButton
+  ) {
+
+    refreshButton.disabled =
+      true;
+
+  }
+
+
+  if (
+    status
+  ) {
+
+    status.textContent =
+      "Loading affiliate analytics...";
+
+  }
+
+
+  try {
+
+    const firebase =
+      await firebaseModule();
+
+
+    if (
+      !firebase ||
+      typeof firebase
+        .getAffiliateClicksFromFirestore !==
+        "function"
+    ) {
+
+      throw new Error(
+        "Affiliate analytics service is unavailable."
+      );
+
+    }
+
+
+    const result =
+      await firebase
+        .getAffiliateClicksFromFirestore();
+
+
+    const clicks =
+      Array.isArray(
+        result
+      )
+        ? result
+        : [];
+
+
+    const now =
+      new Date();
+
+
+    const todayStart =
+      new Date(
+        now
+      );
+
+
+    todayStart.setHours(
+      0,
+      0,
+      0,
+      0
+    );
+
+
+    const sevenDaysAgo =
+      new Date(
+        now.getTime() -
+        (
+          7 *
+          24 *
+          60 *
+          60 *
+          1000
+        )
+      );
+
+
+    const oneMonthAgo =
+      subtractCalendarMonths(
+        now,
+        1
+      );
+
+
+    const threeMonthsAgo =
+      subtractCalendarMonths(
+        now,
+        3
+      );
+
+
+    const sixMonthsAgo =
+      subtractCalendarMonths(
+        now,
+        6
+      );
+
+
+    const twelveMonthsAgo =
+      subtractCalendarMonths(
+        now,
+        12
+      );
+
+
+    const twentyFourMonthsAgo =
+      subtractCalendarMonths(
+        now,
+        24
+      );
+
+
+    if (
+      $("affiliateTotalClicks")
+    ) {
+
+      $("affiliateTotalClicks")
+        .textContent =
+        clicks.length;
+
+    }
+
+
+    if (
+      $("affiliateTodayClicks")
+    ) {
+
+      $("affiliateTodayClicks")
+        .textContent =
+        countAffiliateClicksSince(
+          clicks,
+          todayStart
+        );
+
+    }
+
+
+    if (
+      $("affiliateLast7DaysClicks")
+    ) {
+
+      $("affiliateLast7DaysClicks")
+        .textContent =
+        countAffiliateClicksSince(
+          clicks,
+          sevenDaysAgo
+        );
+
+    }
+
+
+    if (
+      $("affiliateLast1MonthClicks")
+    ) {
+
+      $("affiliateLast1MonthClicks")
+        .textContent =
+        countAffiliateClicksSince(
+          clicks,
+          oneMonthAgo
+        );
+
+    }
+
+
+    if (
+      $("affiliateLast3MonthsClicks")
+    ) {
+
+      $("affiliateLast3MonthsClicks")
+        .textContent =
+        countAffiliateClicksSince(
+          clicks,
+          threeMonthsAgo
+        );
+
+    }
+
+
+    if (
+      $("affiliateLast6MonthsClicks")
+    ) {
+
+      $("affiliateLast6MonthsClicks")
+        .textContent =
+        countAffiliateClicksSince(
+          clicks,
+          sixMonthsAgo
+        );
+
+    }
+
+
+    if (
+      $("affiliateLast12MonthsClicks")
+    ) {
+
+      $("affiliateLast12MonthsClicks")
+        .textContent =
+        countAffiliateClicksSince(
+          clicks,
+          twelveMonthsAgo
+        );
+
+    }
+
+
+    if (
+      $("affiliateLast24MonthsClicks")
+    ) {
+
+      $("affiliateLast24MonthsClicks")
+        .textContent =
+        countAffiliateClicksSince(
+          clicks,
+          twentyFourMonthsAgo
+        );
+
+    }
+
+
+    renderAffiliateTopProduct(
+      clicks
+    );
+
+
+    renderAffiliateSourceBreakdown(
+      clicks
+    );
+
+
+    renderAffiliateProductPerformance(
+      clicks
+    );
+
+
+    if (
+      status
+    ) {
+
+      status.textContent =
+        clicks.length
+          ? `Showing ${clicks.length} recorded affiliate click${
+              clicks.length === 1
+                ? ""
+                : "s"
+            }. Last updated ${now.toLocaleString()}.`
+          : "No affiliate clicks have been recorded yet.";
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Affiliate analytics load error:",
+      error
+    );
+
+
+    if (
+      status
+    ) {
+
+      status.textContent =
+        "Affiliate analytics could not be loaded.";
+
+    }
+
+
+    if (
+      $("affiliateSourceBreakdown")
+    ) {
+
+      $("affiliateSourceBreakdown")
+        .innerHTML =
+        `
+          <div class="admin-empty-state">
+            Analytics data could not be loaded.
+          </div>
+        `;
+
+    }
+
+
+    if (
+      $("affiliateProductTable")
+    ) {
+
+      $("affiliateProductTable")
+        .innerHTML =
+        `
+          <div class="admin-empty-state">
+            Analytics data could not be loaded.
+          </div>
+        `;
+
+    }
+
+  }
+
+  finally {
+
+    if (
+      refreshButton
+    ) {
+
+      refreshButton.disabled =
+        false;
+
+    }
+
+  }
+
+}
+
+
+/* =========================================
+   AFFILIATE ANALYTICS EVENTS
+========================================= */
+
+$(
+  "affiliateAnalyticsRefresh"
+)
+  ?.addEventListener(
+    "click",
+    function() {
+
+      loadAffiliateAnalytics();
+
+    }
+  );
+
+
+document
+  .querySelector(
+    '[data-page="affiliateAnalyticsPage"]'
+  )
+  ?.addEventListener(
+    "click",
+    function() {
+
+      loadAffiliateAnalytics();
+
+    }
+  );
+
+/* =========================================
+   NEWSLETTER SUBSCRIBERS
+========================================= */
+
+let newsletterSubscribersCache =
+  [];
+
+let newsletterSubscribersRawCount =
+  0;
+
+
+/* =========================================
+   NEWSLETTER DATE HELPER
+========================================= */
+
+function newsletterSubscriberDate(
+  subscriber
+) {
+
+  const subscribedAt =
+    subscriber?.subscribedAt;
+
+
+  if (!subscribedAt) {
+
+    return null;
+
+  }
+
+
+  if (
+    typeof subscribedAt.toDate ===
+    "function"
+  ) {
+
+    const date =
+      subscribedAt.toDate();
+
+
+    return Number.isNaN(
+      date.getTime()
+    )
+      ? null
+      : date;
+
+  }
+
+
+  if (
+    typeof subscribedAt.seconds ===
+    "number"
+  ) {
+
+    const date =
+      new Date(
+        subscribedAt.seconds *
+        1000
+      );
+
+
+    return Number.isNaN(
+      date.getTime()
+    )
+      ? null
+      : date;
+
+  }
+
+
+  const date =
+    new Date(
+      subscribedAt
+    );
+
+
+  return Number.isNaN(
+    date.getTime()
+  )
+    ? null
+    : date;
+
+}
+
+
+/* =========================================
+   DHAKA DATE KEY
+========================================= */
+
+function dhakaDateKey(
+  date
+) {
+
+  if (
+    !(date instanceof Date) ||
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return "";
+
+  }
+
+
+  const parts =
+    new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone:
+          "Asia/Dhaka",
+
+        year:
+          "numeric",
+
+        month:
+          "2-digit",
+
+        day:
+          "2-digit"
+      }
+    )
+      .formatToParts(
+        date
+      );
+
+
+  const values =
+    {};
+
+
+  parts.forEach(
+    function(part) {
+
+      if (
+        part.type !==
+        "literal"
+      ) {
+
+        values[
+          part.type
+        ] =
+          part.value;
+
+      }
+
+    }
+  );
+
+
+  return [
+    values.year,
+    values.month,
+    values.day
+  ]
+    .join("-");
+
+}
+
+
+/* =========================================
+   NEWSLETTER DATE DISPLAY
+========================================= */
+
+function formatNewsletterDate(
+  date
+) {
+
+  if (
+    !(date instanceof Date) ||
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return "—";
+
+  }
+
+
+  return new Intl.DateTimeFormat(
+    "en-GB",
+    {
+      timeZone:
+        "Asia/Dhaka",
+
+      day:
+        "2-digit",
+
+      month:
+        "2-digit",
+
+      year:
+        "numeric",
+
+      hour:
+        "2-digit",
+
+      minute:
+        "2-digit",
+
+      hour12:
+        true
+    }
+  )
+    .format(
+      date
+    );
+
+}
+
+
+/* =========================================
+   REMOVE DUPLICATE SUBSCRIBERS
+========================================= */
+
+function normalizeNewsletterSubscribers(
+  subscribers
+) {
+
+  const unique =
+    new Map();
+
+
+  (
+    Array.isArray(
+      subscribers
+    )
+      ? subscribers
+      : []
+  )
+    .forEach(
+      function(subscriber) {
+
+        const email =
+          String(
+            subscriber?.email ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
+
+
+        if (!email) {
+
+          return;
+
+        }
+
+
+        const date =
+          newsletterSubscriberDate(
+            subscriber
+          );
+
+
+        const existing =
+          unique.get(
+            email
+          );
+
+
+        /*
+         * If the same email was submitted
+         * more than once, keep its earliest
+         * subscription record.
+         */
+
+        if (
+          !existing ||
+          (
+            date &&
+            (
+              !existing.subscriptionDate ||
+              date <
+                existing.subscriptionDate
+            )
+          )
+        ) {
+
+          unique.set(
+            email,
+            {
+              ...subscriber,
+
+              email:
+                email,
+
+              subscriptionDate:
+                date
+            }
+          );
+
+        }
+
+      }
+    );
+
+
+  return Array.from(
+    unique.values()
+  )
+    .sort(
+      function(a, b) {
+
+        const aTime =
+          a.subscriptionDate
+            ?.getTime() ||
+          0;
+
+        const bTime =
+          b.subscriptionDate
+            ?.getTime() ||
+          0;
+
+
+        return (
+          bTime -
+          aTime
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================
+   NEWSLETTER STATS
+========================================= */
+
+function updateNewsletterSubscriberStats(
+  subscribers
+) {
+
+  const now =
+    new Date();
+
+
+  const todayKey =
+    dhakaDateKey(
+      now
+    );
+
+
+  const sevenDaysAgo =
+    new Date(
+      now.getTime() -
+      (
+        7 *
+        24 *
+        60 *
+        60 *
+        1000
+      )
+    );
+
+
+  const thirtyDaysAgo =
+    new Date(
+      now.getTime() -
+      (
+        30 *
+        24 *
+        60 *
+        60 *
+        1000
+      )
+    );
+
+
+  const todayCount =
+    subscribers.filter(
+      function(subscriber) {
+
+        const date =
+          subscriber
+            .subscriptionDate;
+
+
+        return (
+          date &&
+          dhakaDateKey(
+            date
+          ) ===
+            todayKey
+        );
+
+      }
+    )
+      .length;
+
+
+  const last7Days =
+    subscribers.filter(
+      function(subscriber) {
+
+        const date =
+          subscriber
+            .subscriptionDate;
+
+
+        return (
+          date &&
+          date >=
+            sevenDaysAgo &&
+          date <=
+            now
+        );
+
+      }
+    )
+      .length;
+
+
+  const last30Days =
+    subscribers.filter(
+      function(subscriber) {
+
+        const date =
+          subscriber
+            .subscriptionDate;
+
+
+        return (
+          date &&
+          date >=
+            thirtyDaysAgo &&
+          date <=
+            now
+        );
+
+      }
+    )
+      .length;
+
+
+  if (
+    $("newsletterTotalSubscribers")
+  ) {
+
+    $("newsletterTotalSubscribers")
+      .textContent =
+      subscribers.length;
+
+  }
+
+
+  if (
+    $("newsletterTodaySubscribers")
+  ) {
+
+    $("newsletterTodaySubscribers")
+      .textContent =
+      todayCount;
+
+  }
+
+
+  if (
+    $("newsletterLast7DaysSubscribers")
+  ) {
+
+    $("newsletterLast7DaysSubscribers")
+      .textContent =
+      last7Days;
+
+  }
+
+
+  if (
+    $("newsletterLast30DaysSubscribers")
+  ) {
+
+    $("newsletterLast30DaysSubscribers")
+      .textContent =
+      last30Days;
+
+  }
+
+}
+
+
+/* =========================================
+   NEWSLETTER LIST
+========================================= */
+
+function renderNewsletterSubscribers() {
+
+  const container =
+    $(
+      "newsletterSubscribersTable"
+    );
+
+
+  if (!container) {
+
+    return;
+
+  }
+
+
+  const searchValue =
+    String(
+      $(
+        "newsletterSubscriberSearch"
+      )
+        ?.value ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const filtered =
+    newsletterSubscribersCache
+      .filter(
+        function(subscriber) {
+
+          const email =
+            String(
+              subscriber.email ||
+              ""
+            )
+              .toLowerCase();
+
+
+          const source =
+            String(
+              subscriber.source ||
+              ""
+            )
+              .toLowerCase();
+
+
+          return (
+            !searchValue ||
+            email.includes(
+              searchValue
+            ) ||
+            source.includes(
+              searchValue
+            )
+          );
+
+        }
+      );
+
+
+  if (
+    !filtered.length
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="admin-empty-state">
+          ${
+            searchValue
+              ? "No subscriber matched your search."
+              : "No newsletter subscribers yet."
+          }
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    filtered
+      .map(
+        function(subscriber) {
+
+          const source =
+            String(
+              subscriber.source ||
+              "homepage"
+            );
+
+
+          const sourceLabel =
+            source ===
+              "homepage"
+              ? "Homepage"
+              : source
+                  .replace(
+                    /_/g,
+                    " "
+                  )
+                  .replace(
+                    /\b\w/g,
+                    function(letter) {
+
+                      return letter
+                        .toUpperCase();
+
+                    }
+                  );
+
+
+          return `
+            <div class="dashboard-product-row">
+
+              <strong>
+                ${escapeHtml(
+                  subscriber.email
+                )}
+              </strong>
+
+              <span>
+                ${escapeHtml(
+                  sourceLabel
+                )}
+              </span>
+
+              <span>
+                ${escapeHtml(
+                  formatNewsletterDate(
+                    subscriber
+                      .subscriptionDate
+                  )
+                )}
+              </span>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================
+   LOAD NEWSLETTER SUBSCRIBERS
+========================================= */
+
+async function loadNewsletterSubscribers() {
+
+  const status =
+    $(
+      "newsletterSubscribersStatus"
+    );
+
+
+  const refreshButton =
+    $(
+      "newsletterSubscribersRefresh"
+    );
+
+
+  if (
+    refreshButton
+  ) {
+
+    refreshButton.disabled =
+      true;
+
+  }
+
+
+  if (
+    status
+  ) {
+
+    status.textContent =
+      "Loading newsletter subscribers...";
+
+  }
+
+
+  try {
+
+    const firebase =
+      await firebaseModule();
+
+
+    if (
+      !firebase ||
+      typeof firebase
+        .getNewsletterSubscribersFromFirestore !==
+        "function"
+    ) {
+
+      throw new Error(
+        "Newsletter subscriber service is unavailable."
+      );
+
+    }
+
+
+    const result =
+      await firebase
+        .getNewsletterSubscribersFromFirestore();
+
+
+    const rawSubscribers =
+      Array.isArray(
+        result
+      )
+        ? result
+        : [];
+
+
+    newsletterSubscribersRawCount =
+      rawSubscribers.length;
+
+
+    newsletterSubscribersCache =
+      normalizeNewsletterSubscribers(
+        rawSubscribers
+      );
+
+
+    updateNewsletterSubscriberStats(
+      newsletterSubscribersCache
+    );
+
+
+    renderNewsletterSubscribers();
+
+
+    if (
+      status
+    ) {
+
+      const duplicateCount =
+        Math.max(
+          0,
+          newsletterSubscribersRawCount -
+          newsletterSubscribersCache.length
+        );
+
+
+      status.textContent =
+        newsletterSubscribersCache.length
+          ? `${
+              newsletterSubscribersCache.length
+            } unique subscriber${
+              newsletterSubscribersCache.length ===
+              1
+                ? ""
+                : "s"
+            }${
+              duplicateCount
+                ? ` · ${duplicateCount} duplicate submission${
+                    duplicateCount ===
+                    1
+                      ? ""
+                      : "s"
+                  } hidden`
+                : ""
+            }. Last updated ${
+              new Intl.DateTimeFormat(
+                "en-GB",
+                {
+                  timeZone:
+                    "Asia/Dhaka",
+
+                  day:
+                    "2-digit",
+
+                  month:
+                    "2-digit",
+
+                  year:
+                    "numeric",
+
+                  hour:
+                    "2-digit",
+
+                  minute:
+                    "2-digit",
+
+                  second:
+                    "2-digit",
+
+                  hour12:
+                    true
+                }
+              )
+                .format(
+                  new Date()
+                )
+            }.`
+          : "No newsletter subscribers have been recorded yet.";
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Newsletter subscribers load error:",
+      error
+    );
+
+
+    newsletterSubscribersCache =
+      [];
+
+
+    newsletterSubscribersRawCount =
+      0;
+
+
+    updateNewsletterSubscriberStats(
+      []
+    );
+
+
+    renderNewsletterSubscribers();
+
+
+    if (
+      status
+    ) {
+
+      status.textContent =
+        "Newsletter subscribers could not be loaded.";
+
+    }
+
+  }
+
+  finally {
+
+    if (
+      refreshButton
+    ) {
+
+      refreshButton.disabled =
+        false;
+
+    }
+
+  }
+
+}
+
+
+/* =========================================
+   NEWSLETTER CSV EXPORT
+========================================= */
+
+function newsletterCsvValue(
+  value
+) {
+
+  const text =
+    String(
+      value ??
+      ""
+    );
+
+
+  return (
+    '"' +
+    text.replace(
+      /"/g,
+      '""'
+    ) +
+    '"'
+  );
+
+}
+
+
+function exportNewsletterSubscribersCsv() {
+
+  if (
+    !newsletterSubscribersCache.length
+  ) {
+
+    toast(
+      "No newsletter subscribers to export."
+    );
+
+    return;
+
+  }
+
+
+  const rows =
+    [
+      [
+        "Email",
+        "Source",
+        "Subscribed At"
+      ],
+
+      ...newsletterSubscribersCache
+        .map(
+          function(subscriber) {
+
+            return [
+
+              subscriber.email,
+
+              subscriber.source ||
+                "homepage",
+
+              formatNewsletterDate(
+                subscriber
+                  .subscriptionDate
+              )
+
+            ];
+
+          }
+        )
+    ];
+
+
+  const csv =
+    rows
+      .map(
+        function(row) {
+
+          return row
+            .map(
+              newsletterCsvValue
+            )
+            .join(",");
+
+        }
+      )
+      .join("\n");
+
+
+  const blob =
+    new Blob(
+      [
+        "\uFEFF",
+        csv
+      ],
+      {
+        type:
+          "text/csv;charset=utf-8;"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.href =
+    url;
+
+
+  link.download =
+    `kinar-aage-newsletter-subscribers-${
+      dhakaDateKey(
+        new Date()
+      )
+    }.csv`;
+
+
+  document.body.appendChild(
+    link
+  );
+
+
+  link.click();
+
+
+  link.remove();
+
+
+  URL.revokeObjectURL(
+    url
+  );
+
+
+  toast(
+    "Newsletter subscribers exported."
+  );
+
+}
+
+
+/* =========================================
+   NEWSLETTER EVENTS
+========================================= */
+
+$(
+  "newsletterSubscribersRefresh"
+)
+  ?.addEventListener(
+    "click",
+    function() {
+
+      loadNewsletterSubscribers();
+
+    }
+  );
+
+
+$(
+  "newsletterSubscriberSearch"
+)
+  ?.addEventListener(
+    "input",
+    function() {
+
+      renderNewsletterSubscribers();
+
+    }
+  );
+
+
+$(
+  "newsletterSubscribersExport"
+)
+  ?.addEventListener(
+    "click",
+    function() {
+
+      exportNewsletterSubscribersCsv();
+
+    }
+  );
+
+
+document
+  .querySelector(
+    '[data-page="newsletterSubscribersPage"]'
+  )
+  ?.addEventListener(
+    "click",
+    function() {
+
+      loadNewsletterSubscribers();
+
+    }
+  );
+
+  
+
+/* =========================================
+   CONTACT INBOX
+========================================= */
+
+let contactMessagesCache =
+  [];
+
+
+/* =========================================
+   CONTACT DATE HELPER
+========================================= */
+
+function contactMessageDate(
+  message
+) {
+
+  const submittedAt =
+    message?.submittedAt;
+
+
+  if (!submittedAt) {
+
+    return null;
+
+  }
+
+
+  if (
+    typeof submittedAt.toDate ===
+    "function"
+  ) {
+
+    const date =
+      submittedAt.toDate();
+
+
+    return Number.isNaN(
+      date.getTime()
+    )
+      ? null
+      : date;
+
+  }
+
+
+  if (
+    typeof submittedAt.seconds ===
+    "number"
+  ) {
+
+    const date =
+      new Date(
+        submittedAt.seconds *
+        1000
+      );
+
+
+    return Number.isNaN(
+      date.getTime()
+    )
+      ? null
+      : date;
+
+  }
+
+
+  const date =
+    new Date(
+      submittedAt
+    );
+
+
+  return Number.isNaN(
+    date.getTime()
+  )
+    ? null
+    : date;
+
+}
+
+
+/* =========================================
+   CONTACT DATE DISPLAY
+========================================= */
+
+function formatContactMessageDate(
+  date
+) {
+
+  if (
+    !(date instanceof Date) ||
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return "—";
+
+  }
+
+
+  return new Intl.DateTimeFormat(
+    "en-GB",
+    {
+      timeZone:
+        "Asia/Dhaka",
+
+      day:
+        "2-digit",
+
+      month:
+        "2-digit",
+
+      year:
+        "numeric",
+
+      hour:
+        "2-digit",
+
+      minute:
+        "2-digit",
+
+      hour12:
+        true
+    }
+  )
+    .format(
+      date
+    );
+
+}
+
+
+/* =========================================
+   CONTACT STATUS LABEL
+========================================= */
+
+function contactStatusLabel(
+  status
+) {
+
+  const cleanStatus =
+    String(
+      status ||
+      "new"
+    )
+      .toLowerCase();
+
+
+  if (
+    cleanStatus ===
+    "replied"
+  ) {
+
+    return "Replied";
+
+  }
+
+
+  if (
+    cleanStatus ===
+    "read"
+  ) {
+
+    return "Read";
+
+  }
+
+
+  return "New";
+
+}
+
+
+/* =========================================
+   CONTACT STATS
+========================================= */
+
+function updateContactInboxStats() {
+
+  const total =
+    contactMessagesCache.length;
+
+
+  const newCount =
+    contactMessagesCache
+      .filter(
+        function(message) {
+
+          return (
+            String(
+              message.status ||
+              "new"
+            )
+              .toLowerCase() ===
+            "new"
+          );
+
+        }
+      )
+      .length;
+
+
+  const readCount =
+    contactMessagesCache
+      .filter(
+        function(message) {
+
+          return (
+            String(
+              message.status ||
+              ""
+            )
+              .toLowerCase() ===
+            "read"
+          );
+
+        }
+      )
+      .length;
+
+
+  const repliedCount =
+    contactMessagesCache
+      .filter(
+        function(message) {
+
+          return (
+            String(
+              message.status ||
+              ""
+            )
+              .toLowerCase() ===
+            "replied"
+          );
+
+        }
+      )
+      .length;
+
+
+  if (
+    $("contactTotalMessages")
+  ) {
+
+    $("contactTotalMessages")
+      .textContent =
+      total;
+
+  }
+
+
+  if (
+    $("contactNewMessages")
+  ) {
+
+    $("contactNewMessages")
+      .textContent =
+      newCount;
+
+  }
+
+
+  if (
+    $("contactReadMessages")
+  ) {
+
+    $("contactReadMessages")
+      .textContent =
+      readCount;
+
+  }
+
+
+  if (
+    $("contactRepliedMessages")
+  ) {
+
+    $("contactRepliedMessages")
+      .textContent =
+      repliedCount;
+
+  }
+
+}
+
+
+/* =========================================
+   CONTACT INBOX RENDER
+========================================= */
+
+function renderContactInbox() {
+
+  const container =
+    $(
+      "contactInboxTable"
+    );
+
+
+  if (!container) {
+
+    return;
+
+  }
+
+
+  const searchValue =
+    String(
+      $(
+        "contactInboxSearch"
+      )
+        ?.value ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const statusFilter =
+    String(
+      $(
+        "contactInboxFilter"
+      )
+        ?.value ||
+      "all"
+    )
+      .toLowerCase();
+
+
+  const messages =
+    contactMessagesCache
+      .filter(
+        function(message) {
+
+          const status =
+            String(
+              message.status ||
+              "new"
+            )
+              .toLowerCase();
+
+
+          if (
+            statusFilter !==
+              "all" &&
+            status !==
+              statusFilter
+          ) {
+
+            return false;
+
+          }
+
+
+          if (
+            !searchValue
+          ) {
+
+            return true;
+
+          }
+
+
+          const searchable =
+            [
+              message.name,
+              message.email,
+              message.subject,
+              message.message
+            ]
+              .filter(
+                Boolean
+              )
+              .join(
+                " "
+              )
+              .toLowerCase();
+
+
+          return searchable.includes(
+            searchValue
+          );
+
+        }
+      );
+
+
+  if (
+    !messages.length
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="admin-empty-state">
+          ${
+            searchValue ||
+            statusFilter !== "all"
+              ? "No contact message matched your filter."
+              : "No contact messages yet."
+          }
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    messages
+      .map(
+        function(message) {
+
+          const status =
+            String(
+              message.status ||
+              "new"
+            )
+              .toLowerCase();
+
+
+          const safeMessage =
+            escapeHtml(
+              message.message ||
+              ""
+            )
+              .replace(
+                /\n/g,
+                "<br>"
+              );
+
+
+          return `
+            <div class="dashboard-product-row">
+
+              <div>
+
+                <strong>
+                  ${escapeHtml(
+                    message.subject ||
+                    "No Subject"
+                  )}
+                </strong>
+
+                <span>
+                  ${escapeHtml(
+                    message.name ||
+                    "Unknown"
+                  )}
+                  ·
+                  ${escapeHtml(
+                    message.email ||
+                    "No email"
+                  )}
+                </span>
+
+                <p>
+                  ${safeMessage}
+                </p>
+
+              </div>
+
+
+              <span>
+                ${escapeHtml(
+                  formatContactMessageDate(
+                    message.submissionDate
+                  )
+                )}
+              </span>
+
+
+              <select
+                data-contact-message-status="${escapeHtml(
+                  message.id
+                )}"
+                data-current-status="${escapeHtml(
+                  status
+                )}"
+                aria-label="Contact message status"
+              >
+
+                <option
+                  value="new"
+                  ${
+                    status ===
+                    "new"
+                      ? "selected"
+                      : ""
+                  }
+                >
+                  New
+                </option>
+
+                <option
+                  value="read"
+                  ${
+                    status ===
+                    "read"
+                      ? "selected"
+                      : ""
+                  }
+                >
+                  Read
+                </option>
+
+                <option
+                  value="replied"
+                  ${
+                    status ===
+                    "replied"
+                      ? "selected"
+                      : ""
+                  }
+                >
+                  Replied
+                </option>
+
+              </select>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+
+  container
+    .querySelectorAll(
+      "[data-contact-message-status]"
+    )
+    .forEach(
+      function(select) {
+
+        select.addEventListener(
+          "change",
+          async function() {
+
+            const messageId =
+              select.getAttribute(
+                "data-contact-message-status"
+              );
+
+
+            const newStatus =
+              String(
+                select.value ||
+                ""
+              )
+                .toLowerCase();
+
+
+            const previousStatus =
+              String(
+                select.getAttribute(
+                  "data-current-status"
+                ) ||
+                "new"
+              );
+
+
+            if (
+              !messageId ||
+              newStatus ===
+                previousStatus
+            ) {
+
+              return;
+
+            }
+
+
+            try {
+
+              select.disabled =
+                true;
+
+
+              const firebase =
+                await firebaseModule();
+
+
+              if (
+                !firebase ||
+                typeof firebase
+                  .updateContactMessageStatus !==
+                "function"
+              ) {
+
+                throw new Error(
+                  "Contact message update service is unavailable."
+                );
+
+              }
+
+
+              await firebase
+                .updateContactMessageStatus(
+                  messageId,
+                  newStatus
+                );
+
+
+              const message =
+                contactMessagesCache
+                  .find(
+                    function(item) {
+
+                      return (
+                        String(
+                          item.id
+                        ) ===
+                        String(
+                          messageId
+                        )
+                      );
+
+                    }
+                  );
+
+
+              if (
+                message
+              ) {
+
+                message.status =
+                  newStatus;
+
+              }
+
+
+              select.setAttribute(
+                "data-current-status",
+                newStatus
+              );
+
+
+              updateContactInboxStats();
+
+
+              toast(
+                `Message marked as ${contactStatusLabel(
+                  newStatus
+                )}.`
+              );
+
+            }
+
+            catch (error) {
+
+              console.error(
+                "Contact message status change error:",
+                error
+              );
+
+
+              select.value =
+                previousStatus;
+
+
+              toast(
+                "Message status could not be updated."
+              );
+
+            }
+
+            finally {
+
+              select.disabled =
+                false;
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================
+   LOAD CONTACT INBOX
+========================================= */
+
+async function loadContactInbox() {
+
+  const status =
+    $(
+      "contactInboxStatus"
+    );
+
+
+  const refreshButton =
+    $(
+      "contactInboxRefresh"
+    );
+
+
+  if (
+    refreshButton
+  ) {
+
+    refreshButton.disabled =
+      true;
+
+  }
+
+
+  if (
+    status
+  ) {
+
+    status.textContent =
+      "Loading contact messages...";
+
+  }
+
+
+  try {
+
+    const firebase =
+      await firebaseModule();
+
+
+    if (
+      !firebase ||
+      typeof firebase
+        .getContactMessagesFromFirestore !==
+      "function"
+    ) {
+
+      throw new Error(
+        "Contact inbox service is unavailable."
+      );
+
+    }
+
+
+    const result =
+      await firebase
+        .getContactMessagesFromFirestore();
+
+
+    contactMessagesCache =
+      (
+        Array.isArray(
+          result
+        )
+          ? result
+          : []
+      )
+        .map(
+          function(message) {
+
+            return {
+
+              ...message,
+
+              status:
+                String(
+                  message.status ||
+                  "new"
+                )
+                  .toLowerCase(),
+
+              submissionDate:
+                contactMessageDate(
+                  message
+                )
+
+            };
+
+          }
+        )
+        .sort(
+          function(a, b) {
+
+            const aTime =
+              a.submissionDate
+                ?.getTime() ||
+              0;
+
+
+            const bTime =
+              b.submissionDate
+                ?.getTime() ||
+              0;
+
+
+            return (
+              bTime -
+              aTime
+            );
+
+          }
+        );
+
+
+    updateContactInboxStats();
+
+
+    renderContactInbox();
+
+
+    if (
+      status
+    ) {
+
+      const newMessages =
+        contactMessagesCache
+          .filter(
+            function(message) {
+
+              return (
+                message.status ===
+                "new"
+              );
+
+            }
+          )
+          .length;
+
+
+      status.textContent =
+        contactMessagesCache.length
+          ? `${
+              contactMessagesCache.length
+            } message${
+              contactMessagesCache.length ===
+              1
+                ? ""
+                : "s"
+            } · ${
+              newMessages
+            } new.`
+          : "No contact messages have been recorded yet.";
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Contact inbox load error:",
+      error
+    );
+
+
+    contactMessagesCache =
+      [];
+
+
+    updateContactInboxStats();
+
+
+    renderContactInbox();
+
+
+    if (
+      status
+    ) {
+
+      status.textContent =
+        "Contact messages could not be loaded.";
+
+    }
+
+  }
+
+  finally {
+
+    if (
+      refreshButton
+    ) {
+
+      refreshButton.disabled =
+        false;
+
+    }
+
+  }
+
+}
+
+
+/* =========================================
+   CONTACT INBOX EVENTS
+========================================= */
+
+$(
+  "contactInboxRefresh"
+)
+  ?.addEventListener(
+    "click",
+    function() {
+
+      loadContactInbox();
+
+    }
+  );
+
+
+$(
+  "contactInboxSearch"
+)
+  ?.addEventListener(
+    "input",
+    function() {
+
+      renderContactInbox();
+
+    }
+  );
+
+
+$(
+  "contactInboxFilter"
+)
+  ?.addEventListener(
+    "change",
+    function() {
+
+      renderContactInbox();
+
+    }
+  );
+
+
+document
+  .querySelector(
+    '[data-page="contactInboxPage"]'
+  )
+  ?.addEventListener(
+    "click",
+    function() {
+
+      loadContactInbox();
+
+    }
+  );
+
 
 /* =========================================
    LOAD FIREBASE DATA
@@ -7417,7 +10522,43 @@ async function startAdmin() {
   );
 
 
-  await syncFromFirebase();
+   await syncFromFirebase();
+
+
+  if (
+    localStorage.getItem(
+      ACTIVE_PAGE_KEY
+    ) ===
+    "affiliateAnalyticsPage"
+  ) {
+
+    await loadAffiliateAnalytics();
+
+  }
+
+
+  if (
+    localStorage.getItem(
+      ACTIVE_PAGE_KEY
+    ) ===
+    "newsletterSubscribersPage"
+  ) {
+
+    await loadNewsletterSubscribers();
+
+  }
+
+
+  if (
+    localStorage.getItem(
+      ACTIVE_PAGE_KEY
+    ) ===
+    "contactInboxPage"
+  ) {
+
+    await loadContactInbox();
+
+  }
 
 
   renderCategorySelects();

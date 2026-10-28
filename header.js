@@ -1399,7 +1399,7 @@ function setupHeaderSearch() {
     query
   ) {
 
-    const searchTerm =
+     const searchTerm =
       String(
         query || ""
       )
@@ -1412,10 +1412,139 @@ function setupHeaderSearch() {
     ) {
 
       closeSuggestions();
-
       return;
 
     }
+
+
+    const synonymGroups = [
+
+      [
+        "earbuds",
+        "earbud",
+        "tws",
+        "true wireless",
+        "wireless earbuds",
+        "wireless earphones"
+      ],
+
+      [
+        "phone",
+        "phones",
+        "mobile",
+        "mobiles",
+        "smartphone",
+        "smartphones"
+      ],
+
+      [
+        "laptop",
+        "laptops",
+        "notebook",
+        "notebooks"
+      ],
+
+      [
+        "tv",
+        "television",
+        "televisions"
+      ],
+
+      [
+        "fridge",
+        "refrigerator",
+        "refrigerators"
+      ],
+
+      [
+        "ac",
+        "air conditioner",
+        "air conditioners"
+      ],
+
+      [
+        "washing machine",
+        "washing machines",
+        "washer"
+      ],
+
+      [
+        "smartwatch",
+        "smartwatches",
+        "smart watch",
+        "smart watches"
+      ],
+
+      [
+        "tablet",
+        "tablets"
+      ]
+
+    ];
+
+
+    const searchVariants =
+      new Set([
+        searchTerm
+      ]);
+
+
+    synonymGroups
+      .forEach(
+        function(group) {
+
+          group
+            .forEach(
+              function(term) {
+
+                const normalizedTerm =
+                  String(
+                    term
+                  )
+                    .trim()
+                    .toLowerCase();
+
+
+                if (
+                  !searchTerm.includes(
+                    normalizedTerm
+                  )
+                ) {
+
+                  return;
+
+                }
+
+
+                group
+                  .forEach(
+                    function(alternative) {
+
+                      searchVariants.add(
+                        searchTerm.replace(
+                          normalizedTerm,
+                          String(
+                            alternative
+                          )
+                            .trim()
+                            .toLowerCase()
+                        )
+                      );
+
+                    }
+                  );
+
+              }
+            );
+
+        }
+      );
+
+
+    const variants =
+      [
+        ...searchVariants
+      ];
 
 
     const matches =
@@ -1423,41 +1552,48 @@ function setupHeaderSearch() {
         .filter(
           function(product) {
 
-            const name =
-              String(
-                product.name || ""
-              )
+            const searchableText =
+              [
+
+                product.name,
+
+                product.category,
+
+                product.badge,
+
+                product.shortDescription,
+
+                product.summary,
+
+                product.highlights,
+
+                product.intro,
+
+                product.description,
+
+                product.tags,
+
+                product.merchantName
+
+              ]
+                .flat()
+                .filter(
+                  Boolean
+                )
+                .join(
+                  " "
+                )
                 .toLowerCase();
 
 
-            const category =
-              String(
-                product.category || ""
-              )
-                .toLowerCase();
+            return variants.some(
+              function(searchVariant) {
 
+                return searchableText.includes(
+                  searchVariant
+                );
 
-            const shortDescription =
-              String(
-                product.shortDescription ||
-                product.summary ||
-                ""
-              )
-                .toLowerCase();
-
-
-            return (
-              name.includes(
-                searchTerm
-              ) ||
-
-              category.includes(
-                searchTerm
-              ) ||
-
-              shortDescription.includes(
-                searchTerm
-              )
+              }
             );
 
           }
@@ -1531,9 +1667,7 @@ function setupHeaderSearch() {
             return `
               <a
                 class="header-search-result"
-                href="product.html?product=${encodeURIComponent(
-                  productSlug
-                )}"
+                href="product.html?slug=${encodeURIComponent(productSlug)}"
               >
 
                 <div class="header-search-result-image">

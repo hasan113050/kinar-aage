@@ -539,20 +539,26 @@ function createProductCard(
           </a>
 
 
-          <a
-            class="product-buy-link"
-            href="${escapeHtml(
-              product.affiliateUrl ||
-              "#"
-            )}"
-            target="_blank"
-            rel="sponsored nofollow noopener"
-          >
-            ${escapeHtml(
-              product.ctaLabel ||
-              "Buy Now"
-            )}
-          </a>
+        <a
+  class="product-buy-link"
+  href="${escapeHtml(
+    product.affiliateUrl ||
+    "#"
+  )}"
+  target="_blank"
+  rel="sponsored nofollow noopener"
+  data-product-id="${escapeHtml(
+    productId
+  )}"
+  data-product-slug="${escapeHtml(
+    productSlug
+  )}"
+>
+  ${escapeHtml(
+    product.ctaLabel ||
+    "Buy Now"
+  )}
+</a> 
 
 
         </div>
@@ -584,7 +590,73 @@ function normalizeText(
 }
 
 
-async function searchProducts(
+const SEARCH_SYNONYM_GROUPS = [
+
+  [
+    "earbuds",
+    "earbud",
+    "tws",
+    "true wireless",
+    "wireless earbuds",
+    "wireless earphones"
+  ],
+
+  [
+    "phone",
+    "phones",
+    "mobile",
+    "mobiles",
+    "smartphone",
+    "smartphones"
+  ],
+
+  [
+    "laptop",
+    "laptops",
+    "notebook",
+    "notebooks"
+  ],
+
+  [
+    "tv",
+    "television",
+    "televisions"
+  ],
+
+  [
+    "fridge",
+    "refrigerator",
+    "refrigerators"
+  ],
+
+  [
+    "ac",
+    "air conditioner",
+    "air conditioners"
+  ],
+
+  [
+    "washing machine",
+    "washing machines",
+    "washer"
+  ],
+
+  [
+    "smartwatch",
+    "smartwatches",
+    "smart watch",
+    "smart watches"
+  ],
+
+  [
+    "tablet",
+    "tablets"
+  ]
+
+];
+
+
+function getSearchVariants(
   query
 ) {
 
@@ -594,12 +666,94 @@ async function searchProducts(
     );
 
 
+  if (!cleanQuery) {
+
+    return [];
+
+  }
+
+
+  const variants =
+    new Set([
+      cleanQuery
+    ]);
+
+
+  SEARCH_SYNONYM_GROUPS
+    .forEach(
+      function(group) {
+
+        group
+          .forEach(
+            function(term) {
+
+              const normalizedTerm =
+                normalizeText(
+                  term
+                );
+
+
+              if (
+                !cleanQuery.includes(
+                  normalizedTerm
+                )
+              ) {
+
+                return;
+
+              }
+
+
+              group
+                .forEach(
+                  function(alternative) {
+
+                    variants.add(
+                      cleanQuery.replace(
+                        normalizedTerm,
+                        normalizeText(
+                          alternative
+                        )
+                      )
+                    );
+
+                  }
+                );
+
+            }
+          );
+
+      }
+    );
+
+
+  return [
+    ...variants
+  ];
+
+}
+
+
+async function searchProducts(
+  query
+) {
+
+  const searchVariants =
+    getSearchVariants(
+      query
+    );
+
+
   const products =
     await getProducts();
 
 
-  if (!cleanQuery) {
+  if (
+    !searchVariants.length
+  ) {
+
     return products;
+
   }
 
 
@@ -640,11 +794,230 @@ async function searchProducts(
           .toLowerCase();
 
 
-      return searchableText.includes(
-        cleanQuery
+      return searchVariants.some(
+        function(searchTerm) {
+
+          return searchableText.includes(
+            searchTerm
+          );
+
+        }
       );
 
     }
+  );
+
+}
+
+
+/* =========================================
+   SEARCH PAGE SEO
+========================================= */
+
+function applySearchSeo(
+  query
+) {
+
+  const cleanQuery =
+    String(
+      query ||
+      ""
+    )
+      .trim();
+
+
+  const title =
+    cleanQuery
+      ? `${cleanQuery} Search | Kinar Aage`
+      : "Search | Kinar Aage";
+
+
+  const description =
+    cleanQuery
+      ? `Search results for ${cleanQuery} on Kinar Aage. Explore relevant product recommendations and buying information.`
+      : "Search products, recommendations and buying information on Kinar Aage.";
+
+
+  const canonicalUrl =
+    `${window.location.origin}${window.location.pathname}`;
+
+
+  function setMeta(
+    selector,
+    attributes,
+    content
+  ) {
+
+    let element =
+      document.head.querySelector(
+        selector
+      );
+
+
+    if (!element) {
+
+      element =
+        document.createElement(
+          "meta"
+        );
+
+
+      Object.entries(
+        attributes
+      )
+        .forEach(
+          function([
+            attribute,
+            value
+          ]) {
+
+            element.setAttribute(
+              attribute,
+              value
+            );
+
+          }
+        );
+
+
+      document.head.appendChild(
+        element
+      );
+
+    }
+
+
+    element.setAttribute(
+      "content",
+      String(
+        content ||
+        ""
+      )
+    );
+
+  }
+
+
+  document.title =
+    title;
+
+
+  setMeta(
+    'meta[name="description"]',
+    {
+      name:
+        "description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[name="robots"]',
+    {
+      name:
+        "robots"
+    },
+    "noindex, follow"
+  );
+
+
+  let canonical =
+    document.head.querySelector(
+      'link[rel="canonical"]'
+    );
+
+
+  if (!canonical) {
+
+    canonical =
+      document.createElement(
+        "link"
+      );
+
+
+    canonical.rel =
+      "canonical";
+
+
+    document.head.appendChild(
+      canonical
+    );
+
+  }
+
+
+  canonical.href =
+    canonicalUrl;
+
+
+  setMeta(
+    'meta[property="og:title"]',
+    {
+      property:
+        "og:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[property="og:description"]',
+    {
+      property:
+        "og:description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[property="og:type"]',
+    {
+      property:
+        "og:type"
+    },
+    "website"
+  );
+
+
+  setMeta(
+    'meta[property="og:url"]',
+    {
+      property:
+        "og:url"
+    },
+    canonicalUrl
+  );
+
+
+  setMeta(
+    'meta[name="twitter:card"]',
+    {
+      name:
+        "twitter:card"
+    },
+    "summary"
+  );
+
+
+  setMeta(
+    'meta[name="twitter:title"]',
+    {
+      name:
+        "twitter:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[name="twitter:description"]',
+    {
+      name:
+        "twitter:description"
+    },
+    description
   );
 
 }
@@ -690,10 +1063,9 @@ async function renderSearchResults(
   }
 
 
-  document.title =
+   applySearchSeo(
     query
-      ? `${query} Search | Kinar Aage`
-      : "Search | Kinar Aage";
+  );
 
 
   if (
@@ -756,6 +1128,8 @@ async function renderSearchResults(
 
   bindWishlistButtons();
 
+bindAffiliateTracking();
+
 }
 
 
@@ -796,6 +1170,90 @@ function bindWishlistButtons() {
 
 }
 
+
+/* =========================================
+   AFFILIATE CLICK TRACKING
+========================================= */
+
+function bindAffiliateTracking() {
+
+  document
+
+    .querySelectorAll(
+      ".product-buy-link"
+    )
+
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            const affiliateUrl =
+              button.getAttribute(
+                "href"
+              );
+
+
+            if (
+              !affiliateUrl ||
+              affiliateUrl === "#"
+            ) {
+
+              return;
+
+            }
+
+
+            import(
+              "./firebase-db.js"
+            )
+
+              .then(
+                function(
+                  firebaseModule
+                ) {
+
+                  return firebaseModule
+                    .trackAffiliateClick({
+
+                      productId:
+                        button.dataset
+                          .productId ||
+                        "",
+
+                      productSlug:
+                        button.dataset
+                          .productSlug ||
+                        "",
+
+                      source:
+                        "search_page"
+
+                    });
+
+                }
+              )
+
+              .catch(
+                function(error) {
+
+                  console.error(
+                    "Search Buy Now tracking error:",
+                    error
+                  );
+
+                }
+              );
+
+          }
+        );
+
+      }
+    );
+
+}
 
 
 

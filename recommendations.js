@@ -3,7 +3,8 @@
 ========================================= */
 
 import {
-  getProductsFromFirestore
+  getProductsFromFirestore,
+  trackAffiliateClick
 } from "./firebase-db.js";
 
 
@@ -348,22 +349,30 @@ function createProductCard(
         <div class="product-card-actions">
 
 
-         <a
-  href="product.html?product=${slug}"
+    <a
+  href="product.html?slug=${slug}"
   class="product-details-link"
 >
   View Details
 </a>
 
 
-          <a
-            href="${escapeHtml(affiliateUrl)}"
-            target="_blank"
-            rel="sponsored nofollow noopener"
-            class="product-buy-link"
-          >
-            Buy Now
-          </a>
+  <a
+  href="${escapeHtml(affiliateUrl)}"
+  target="_blank"
+  rel="sponsored nofollow noopener"
+  class="product-buy-link"
+  data-product-id="${escapeHtml(
+    productId
+  )}"
+  data-product-slug="${escapeHtml(
+    product.slug ||
+    product.id ||
+    ""
+  )}"
+>
+  Buy Now
+</a>      
 
 
         </div>
@@ -378,6 +387,205 @@ function createProductCard(
 
 }
 
+
+
+/* =========================================
+   RECOMMENDATIONS PAGE SEO
+========================================= */
+
+function applyRecommendationsPageSeo() {
+
+  const title =
+    "Product Recommendations | Kinar Aage";
+
+
+  const description =
+    "Explore useful product recommendations from Kinar Aage, selected to help you compare options and make better buying decisions.";
+
+
+  const canonicalUrl =
+    `${window.location.origin}${window.location.pathname}`;
+
+
+  function setMeta(
+    selector,
+    attributes,
+    content
+  ) {
+
+    let element =
+      document.head.querySelector(
+        selector
+      );
+
+
+    if (!element) {
+
+      element =
+        document.createElement(
+          "meta"
+        );
+
+
+      Object.entries(
+        attributes
+      )
+        .forEach(
+          function([
+            attribute,
+            value
+          ]) {
+
+            element.setAttribute(
+              attribute,
+              value
+            );
+
+          }
+        );
+
+
+      document.head.appendChild(
+        element
+      );
+
+    }
+
+
+    element.setAttribute(
+      "content",
+      String(
+        content ||
+        ""
+      )
+    );
+
+  }
+
+
+  document.title =
+    title;
+
+
+  setMeta(
+    'meta[name="description"]',
+    {
+      name:
+        "description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[name="robots"]',
+    {
+      name:
+        "robots"
+    },
+    "index, follow"
+  );
+
+
+  let canonical =
+    document.head.querySelector(
+      'link[rel="canonical"]'
+    );
+
+
+  if (!canonical) {
+
+    canonical =
+      document.createElement(
+        "link"
+      );
+
+
+    canonical.rel =
+      "canonical";
+
+
+    document.head.appendChild(
+      canonical
+    );
+
+  }
+
+
+  canonical.href =
+    canonicalUrl;
+
+
+  setMeta(
+    'meta[property="og:title"]',
+    {
+      property:
+        "og:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[property="og:description"]',
+    {
+      property:
+        "og:description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[property="og:type"]',
+    {
+      property:
+        "og:type"
+    },
+    "website"
+  );
+
+
+  setMeta(
+    'meta[property="og:url"]',
+    {
+      property:
+        "og:url"
+    },
+    canonicalUrl
+  );
+
+
+  setMeta(
+    'meta[name="twitter:card"]',
+    {
+      name:
+        "twitter:card"
+    },
+    "summary"
+  );
+
+
+  setMeta(
+    'meta[name="twitter:title"]',
+    {
+      name:
+        "twitter:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[name="twitter:description"]',
+    {
+      name:
+        "twitter:description"
+    },
+    description
+  );
+
+}
 
 
 /* =========================================
@@ -501,6 +709,67 @@ async function renderRecommendations() {
         }
       );
 
+    /* =========================================
+   AFFILIATE CLICK TRACKING
+========================================= */
+
+recommendationsProductsGrid
+  .querySelectorAll(
+    ".product-buy-link"
+  )
+  .forEach(
+    function(button) {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          const affiliateUrl =
+            button.getAttribute(
+              "href"
+            );
+
+
+          if (
+            !affiliateUrl ||
+            affiliateUrl === "#"
+          ) {
+            return;
+          }
+
+
+          trackAffiliateClick({
+
+            productId:
+              button.dataset
+                .productId ||
+              "",
+
+            productSlug:
+              button.dataset
+                .productSlug ||
+              "",
+
+            source:
+              "recommendations_page"
+
+          }).catch(
+            function(error) {
+
+              console.error(
+                "Recommendations Buy Now tracking error:",
+                error
+              );
+
+            }
+          );
+
+        }
+      );
+
+    }
+  );  
+
   }
 
   catch (error) {
@@ -530,6 +799,9 @@ async function renderRecommendations() {
 async function startRecommendationsPage() {
 
   try {
+
+    applyRecommendationsPageSeo();
+
 
     if (footerYear) {
 

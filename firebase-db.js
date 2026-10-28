@@ -541,3 +541,543 @@ export async function trackAffiliateClick(
   }
 
 }
+
+
+/* =========================================
+   AFFILIATE CLICK ANALYTICS
+========================================= */
+
+export async function getAffiliateClicksFromFirestore() {
+
+  try {
+
+    const snapshot =
+      await getDocsFromServer(
+        collection(
+          db,
+          "affiliateClicks"
+        )
+      );
+
+
+    return snapshot.docs.map(
+      function(documentSnapshot) {
+
+        return {
+
+          id:
+            documentSnapshot.id,
+
+          ...documentSnapshot.data()
+
+        };
+
+      }
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Affiliate clicks load failed:",
+      error
+    );
+
+
+    throw error;
+
+  }
+
+}
+
+/* =========================================
+   NEWSLETTER SUBSCRIBER
+========================================= */
+
+export async function subscribeToNewsletter(
+  email
+) {
+
+  const normalizedEmail =
+    String(
+      email ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const emailPattern =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+  if (
+    !normalizedEmail ||
+    !emailPattern.test(
+      normalizedEmail
+    ) ||
+    normalizedEmail.length > 320
+  ) {
+
+    throw new Error(
+      "Please enter a valid email address."
+    );
+
+  }
+
+
+  const subscriberDocumentId =
+    encodeURIComponent(
+      normalizedEmail
+    );
+
+
+  const subscriberReference =
+    doc(
+      db,
+      "newsletterSubscribers",
+      subscriberDocumentId
+    );
+
+
+  try {
+
+    await setDoc(
+      subscriberReference,
+      {
+        email:
+          normalizedEmail,
+
+        source:
+          "homepage",
+
+        subscribedAt:
+          serverTimestamp()
+      }
+    );
+
+
+    return {
+
+      success:
+        true,
+
+      alreadySubscribed:
+        false,
+
+      id:
+        subscriberDocumentId,
+
+      email:
+        normalizedEmail
+
+    };
+
+  }
+
+  catch (error) {
+
+    if (
+      error?.code ===
+      "permission-denied"
+    ) {
+
+      return {
+
+        success:
+          true,
+
+        alreadySubscribed:
+          true,
+
+        id:
+          subscriberDocumentId,
+
+        email:
+          normalizedEmail
+
+      };
+
+    }
+
+
+    console.error(
+      "Newsletter subscription failed:",
+      error
+    );
+
+
+    throw error;
+
+  }
+
+}
+
+/* =========================================
+   NEWSLETTER SUBSCRIBERS - ADMIN
+========================================= */
+
+export async function getNewsletterSubscribersFromFirestore() {
+
+  try {
+
+    const snapshot =
+      await getDocsFromServer(
+        collection(
+          db,
+          "newsletterSubscribers"
+        )
+      );
+
+
+    return snapshot.docs.map(
+      function(documentSnapshot) {
+
+        return {
+
+          id:
+            documentSnapshot.id,
+
+          ...documentSnapshot.data()
+
+        };
+
+      }
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Newsletter subscribers load failed:",
+      error
+    );
+
+
+    throw error;
+
+  }
+
+}
+
+/* =========================================
+   CONTACT MESSAGE
+========================================= */
+
+export async function submitContactMessage(
+  {
+    name,
+    email,
+    subject,
+    message
+  }
+) {
+
+  const cleanName =
+    String(
+      name ||
+      ""
+    )
+      .trim();
+
+
+  const cleanEmail =
+    String(
+      email ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const cleanSubject =
+    String(
+      subject ||
+      ""
+    )
+      .trim();
+
+
+  const cleanMessage =
+    String(
+      message ||
+      ""
+    )
+      .trim();
+
+
+  const emailPattern =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+  if (
+    cleanName.length < 2 ||
+    cleanName.length > 100
+  ) {
+
+    throw new Error(
+      "Please enter a valid name."
+    );
+
+  }
+
+
+  if (
+    !emailPattern.test(
+      cleanEmail
+    ) ||
+    cleanEmail.length > 254
+  ) {
+
+    throw new Error(
+      "Please enter a valid email address."
+    );
+
+  }
+
+
+  if (
+    cleanSubject.length < 3 ||
+    cleanSubject.length > 200
+  ) {
+
+    throw new Error(
+      "Please enter a valid subject."
+    );
+
+  }
+
+
+  if (
+    cleanMessage.length < 10 ||
+    cleanMessage.length > 5000
+  ) {
+
+    throw new Error(
+      "Message must be between 10 and 5000 characters."
+    );
+
+  }
+
+
+  try {
+
+    const documentReference =
+      await addDoc(
+        collection(
+          db,
+          "contactMessages"
+        ),
+        {
+          name:
+            cleanName,
+
+          email:
+            cleanEmail,
+
+          subject:
+            cleanSubject,
+
+          message:
+            cleanMessage,
+
+          source:
+            "contact_page",
+
+          status:
+            "new",
+
+          submittedAt:
+            serverTimestamp()
+        }
+      );
+
+
+    return {
+
+      success:
+        true,
+
+      id:
+        documentReference.id
+
+    };
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Contact message submission failed:",
+      error
+    );
+
+
+    throw error;
+
+  }
+
+}
+
+/* =========================================
+   CONTACT MESSAGES - ADMIN
+========================================= */
+
+export async function getContactMessagesFromFirestore() {
+
+  try {
+
+    const snapshot =
+      await getDocsFromServer(
+        collection(
+          db,
+          "contactMessages"
+        )
+      );
+
+
+    return snapshot.docs.map(
+      function(documentSnapshot) {
+
+        return {
+
+          id:
+            documentSnapshot.id,
+
+          ...documentSnapshot.data()
+
+        };
+
+      }
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Contact messages load failed:",
+      error
+    );
+
+
+    throw error;
+
+  }
+
+}
+
+/* =========================================
+   CONTACT MESSAGE STATUS - ADMIN
+========================================= */
+
+export async function updateContactMessageStatus(
+  messageId,
+  status
+) {
+
+  const cleanMessageId =
+    String(
+      messageId ||
+      ""
+    )
+      .trim();
+
+
+  const cleanStatus =
+    String(
+      status ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const allowedStatuses =
+    [
+      "new",
+      "read",
+      "replied"
+    ];
+
+
+  if (
+    !cleanMessageId
+  ) {
+
+    throw new Error(
+      "Contact message ID is required."
+    );
+
+  }
+
+
+  if (
+    !allowedStatuses.includes(
+      cleanStatus
+    )
+  ) {
+
+    throw new Error(
+      "Invalid contact message status."
+    );
+
+  }
+
+
+  try {
+
+    const messageReference =
+      doc(
+        db,
+        "contactMessages",
+        cleanMessageId
+      );
+
+
+    await setDoc(
+      messageReference,
+      {
+        status:
+          cleanStatus,
+
+        updatedAt:
+          serverTimestamp()
+      },
+      {
+        merge:
+          true
+      }
+    );
+
+
+    return {
+
+      success:
+        true,
+
+      id:
+        cleanMessageId,
+
+      status:
+        cleanStatus
+
+    };
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Contact message status update failed:",
+      error
+    );
+
+
+    throw error;
+
+  }
+
+}

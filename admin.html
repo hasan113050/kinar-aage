@@ -148,23 +148,53 @@
 
 
       <button
-        class="admin-nav-item"
-        type="button"
-        data-page="seoPage"
-      >
-        <i data-lucide="search-check"></i>
-        <span>Site SEO</span>
-      </button>
+  class="admin-nav-item"
+  type="button"
+  data-page="seoPage"
+>
+  <i data-lucide="search-check"></i>
+  <span>Site SEO</span>
+</button>
 
 
-      <button
-        class="admin-nav-item"
-        type="button"
-        data-page="settingsPage"
-      >
-        <i data-lucide="settings"></i>
-        <span>Settings</span>
-      </button>
+<button
+  class="admin-nav-item"
+  type="button"
+  data-page="affiliateAnalyticsPage"
+>
+  <i data-lucide="mouse-pointer-click"></i>
+  <span>Affiliate Analytics</span>
+</button>
+
+
+<button
+  class="admin-nav-item"
+  type="button"
+  data-page="newsletterSubscribersPage"
+>
+  <i data-lucide="mail"></i>
+  <span>Newsletter Subscribers</span>
+</button>
+
+
+<button
+  class="admin-nav-item"
+  type="button"
+  data-page="contactInboxPage"
+>
+  <i data-lucide="messages-square"></i>
+  <span>Contact Inbox</span>
+</button>
+
+
+<button
+  class="admin-nav-item"
+  type="button"
+  data-page="settingsPage"
+>
+  <i data-lucide="settings"></i>
+  <span>Settings</span>
+</button>
 
 
     </nav>
@@ -3918,15 +3948,646 @@
       </section>
 
 
+<!-- =========================
+     AFFILIATE ANALYTICS
+========================== -->
 
-      <!-- =========================
-           SETTINGS
-      ========================== -->
+<section
+  class="admin-page"
+  id="affiliateAnalyticsPage"
+>
 
-      <section
-        class="admin-page"
-        id="settingsPage"
+
+  <div class="admin-section-head">
+
+
+    <div>
+
+      <span class="admin-eyebrow">
+        Affiliate Performance
+      </span>
+
+      <h2>Affiliate Analytics</h2>
+
+      <p id="affiliateAnalyticsStatus">
+        Track affiliate link clicks and product performance.
+      </p>
+
+    </div>
+
+
+    <button
+      class="admin-primary-button"
+      type="button"
+      id="affiliateAnalyticsRefresh"
+    >
+      <i data-lucide="refresh-cw"></i>
+      Refresh Data
+    </button>
+
+
+  </div>
+
+
+
+  <div class="admin-stat-grid">
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="mouse-pointer-click"></i>
+    </div>
+
+    <div>
+      <span>Total Clicks</span>
+      <strong id="affiliateTotalClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="calendar-days"></i>
+    </div>
+
+    <div>
+      <span>Today</span>
+      <strong id="affiliateTodayClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="calendar-clock"></i>
+    </div>
+
+    <div>
+      <span>Last 7 Days</span>
+      <strong id="affiliateLast7DaysClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="calendar-range"></i>
+    </div>
+
+    <div>
+      <span>Last 1 Month</span>
+      <strong id="affiliateLast1MonthClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="calendar-range"></i>
+    </div>
+
+    <div>
+      <span>Last 3 Months</span>
+      <strong id="affiliateLast3MonthsClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="calendar-range"></i>
+    </div>
+
+    <div>
+      <span>Last 6 Months</span>
+      <strong id="affiliateLast6MonthsClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="calendar-range"></i>
+    </div>
+
+    <div>
+      <span>Last 12 Months</span>
+      <strong id="affiliateLast12MonthsClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="calendar-range"></i>
+    </div>
+
+    <div>
+      <span>Last 24 Months</span>
+      <strong id="affiliateLast24MonthsClicks">
+        0
+      </strong>
+    </div>
+
+  </article>
+
+
+  <article class="admin-stat-card">
+
+    <div class="admin-stat-icon">
+      <i data-lucide="trophy"></i>
+    </div>
+
+    <div>
+      <span>Top Product</span>
+      <strong id="affiliateTopProduct">
+        —
+      </strong>
+    </div>
+
+  </article>
+
+
+</div>
+
+
+
+  <div class="admin-panel">
+
+
+    <div class="admin-panel-header">
+
+      <div>
+
+        <h3>Traffic Sources</h3>
+
+        <p>
+          See where affiliate link clicks are coming from.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="admin-product-table-wrap"
+      id="affiliateSourceBreakdown"
+    ></div>
+
+
+  </div>
+
+
+
+  <div class="admin-panel">
+
+
+    <div class="admin-panel-header">
+
+      <div>
+
+        <h3>Product Performance</h3>
+
+        <p>
+          Compare affiliate clicks for each product.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="admin-product-table-wrap"
+      id="affiliateProductTable"
+    ></div>
+
+
+  </div>
+
+
+</section>
+
+
+
+</section>
+
+
+
+<!-- =========================
+     NEWSLETTER SUBSCRIBERS
+========================== -->
+
+<section
+  class="admin-page"
+  id="newsletterSubscribersPage"
+>
+
+
+  <div class="admin-section-head">
+
+    <div>
+
+      <span class="admin-eyebrow">
+        Email Audience
+      </span>
+
+      <h2>
+        Newsletter Subscribers
+      </h2>
+
+      <p id="newsletterSubscribersStatus">
+        View and manage newsletter subscriber data.
+      </p>
+
+    </div>
+
+
+    <button
+      class="admin-primary-button"
+      type="button"
+      id="newsletterSubscribersRefresh"
+    >
+      <i data-lucide="refresh-cw"></i>
+      Refresh Data
+    </button>
+
+  </div>
+
+
+
+  <div class="admin-stat-grid">
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="users"></i>
+      </div>
+
+      <div>
+        <span>Total Subscribers</span>
+        <strong id="newsletterTotalSubscribers">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="calendar-days"></i>
+      </div>
+
+      <div>
+        <span>Today</span>
+        <strong id="newsletterTodaySubscribers">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="calendar-clock"></i>
+      </div>
+
+      <div>
+        <span>Last 7 Days</span>
+        <strong id="newsletterLast7DaysSubscribers">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="calendar-range"></i>
+      </div>
+
+      <div>
+        <span>Last 30 Days</span>
+        <strong id="newsletterLast30DaysSubscribers">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+  </div>
+
+
+
+  <div class="admin-toolbar">
+
+    <div class="admin-search-box">
+
+      <i data-lucide="search"></i>
+
+      <input
+        id="newsletterSubscriberSearch"
+        type="search"
+        placeholder="Search subscriber email..."
       >
+
+    </div>
+
+
+    <button
+      class="admin-secondary-button"
+      type="button"
+      id="newsletterSubscribersExport"
+    >
+      <i data-lucide="download"></i>
+      Export CSV
+    </button>
+
+  </div>
+
+
+
+  <div class="admin-panel">
+
+    <div class="admin-panel-header">
+
+      <div>
+
+        <h3>
+          Subscriber List
+        </h3>
+
+        <p>
+          Newsletter email addresses collected from the website.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="admin-product-table-wrap"
+      id="newsletterSubscribersTable"
+    >
+
+      <div class="admin-empty-state">
+        Subscriber data will appear here.
+      </div>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+
+<!-- =========================
+     CONTACT INBOX
+========================== -->
+
+<section
+  class="admin-page"
+  id="contactInboxPage"
+>
+
+
+  <div class="admin-section-head">
+
+    <div>
+
+      <span class="admin-eyebrow">
+        Customer Messages
+      </span>
+
+      <h2>
+        Contact Inbox
+      </h2>
+
+      <p id="contactInboxStatus">
+        View and manage messages submitted through the contact page.
+      </p>
+
+    </div>
+
+
+    <button
+      class="admin-primary-button"
+      type="button"
+      id="contactInboxRefresh"
+    >
+      <i data-lucide="refresh-cw"></i>
+      Refresh Data
+    </button>
+
+  </div>
+
+
+
+  <div class="admin-stat-grid">
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="inbox"></i>
+      </div>
+
+      <div>
+        <span>Total Messages</span>
+
+        <strong id="contactTotalMessages">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="mail-plus"></i>
+      </div>
+
+      <div>
+        <span>New</span>
+
+        <strong id="contactNewMessages">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="mail-open"></i>
+      </div>
+
+      <div>
+        <span>Read</span>
+
+        <strong id="contactReadMessages">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+    <article class="admin-stat-card">
+
+      <div class="admin-stat-icon">
+        <i data-lucide="reply"></i>
+      </div>
+
+      <div>
+        <span>Replied</span>
+
+        <strong id="contactRepliedMessages">
+          0
+        </strong>
+      </div>
+
+    </article>
+
+
+  </div>
+
+
+
+  <div class="admin-toolbar">
+
+
+    <div class="admin-search-box">
+
+      <i data-lucide="search"></i>
+
+      <input
+        id="contactInboxSearch"
+        type="search"
+        placeholder="Search name, email, subject or message..."
+      >
+
+    </div>
+
+
+    <select
+      id="contactInboxFilter"
+      aria-label="Filter contact messages"
+    >
+
+      <option value="all">
+        All Messages
+      </option>
+
+      <option value="new">
+        New
+      </option>
+
+      <option value="read">
+        Read
+      </option>
+
+      <option value="replied">
+        Replied
+      </option>
+
+    </select>
+
+
+  </div>
+
+
+
+  <div class="admin-panel">
+
+    <div class="admin-panel-header">
+
+      <div>
+
+        <h3>
+          Messages
+        </h3>
+
+        <p>
+          Messages submitted from the Kinar Aage contact page.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="admin-product-table-wrap"
+      id="contactInboxTable"
+    >
+
+      <div class="admin-empty-state">
+        Contact messages will appear here.
+      </div>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+
+<!-- =========================
+     SETTINGS
+========================== -->
+
+<section
+  class="admin-page"
+  id="settingsPage"
+>
 
 
         <div class="admin-section-head">

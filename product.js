@@ -908,7 +908,7 @@ function applyProductSeo(
   product
 ) {
 
-  document.title =
+  const title =
     product.metaTitle ||
     product.seoTitle ||
     `${product.name} | Kinar Aage`;
@@ -921,43 +921,154 @@ function applyProductSeo(
     "";
 
 
-  let metaDescription =
-    document.querySelector(
-      'meta[name="description"]'
+  const ogTitle =
+    product.ogTitle ||
+    title;
+
+
+  const ogDescription =
+    product.ogDescription ||
+    description;
+
+
+  const ogImage =
+    product.ogImage ||
+    product.image ||
+    "";
+
+
+  const currentUrl =
+    new URL(
+      window.location.href
     );
 
 
-  if (
-    metaDescription
+  currentUrl.hash =
+    "";
+
+
+  const canonicalUrl =
+    product.canonical ||
+    currentUrl.toString();
+
+
+  const keywords =
+    Array.isArray(
+      product.tags
+    )
+      ? product.tags.join(
+          ", "
+        )
+      : String(
+          product.tags ||
+          ""
+        );
+
+
+  function setMetaContent(
+    selector,
+    attributes,
+    content
   ) {
 
-    metaDescription.setAttribute(
+    if (
+      !content
+    ) {
+
+      return;
+
+    }
+
+
+    let element =
+      document.head
+        .querySelector(
+          selector
+        );
+
+
+    if (
+      !element
+    ) {
+
+      element =
+        document.createElement(
+          "meta"
+        );
+
+
+      Object.entries(
+        attributes
+      )
+        .forEach(
+          function(
+            [
+              attribute,
+              value
+            ]
+          ) {
+
+            element.setAttribute(
+              attribute,
+              value
+            );
+
+          }
+        );
+
+
+      document.head.appendChild(
+        element
+      );
+
+    }
+
+
+    element.setAttribute(
       "content",
-      description
+      String(
+        content
+      )
     );
 
   }
 
 
-  if (
-    product.canonical
+  function setCanonicalUrl(
+    url
   ) {
 
+    if (
+      !url
+    ) {
+
+      return;
+
+    }
+
+
     let canonical =
-      document.querySelector(
-        'link[rel="canonical"]'
-      );
+      document.head
+        .querySelector(
+          'link[rel="canonical"]'
+        );
 
 
-    if (!canonical) {
+    if (
+      !canonical
+    ) {
 
       canonical =
         document.createElement(
           "link"
         );
 
-      canonical.rel =
-        "canonical";
+
+      canonical.setAttribute(
+        "rel",
+        "canonical"
+      );
+
 
       document.head.appendChild(
         canonical
@@ -966,13 +1077,398 @@ function applyProductSeo(
     }
 
 
-    canonical.href =
-      product.canonical;
+    canonical.setAttribute(
+      "href",
+      String(
+        url
+      )
+    );
 
   }
 
+
+  document.title =
+    title;
+
+
+  setMetaContent(
+    'meta[name="description"]',
+    {
+      name:
+        "description"
+    },
+    description
+  );
+
+
+  setMetaContent(
+    'meta[name="keywords"]',
+    {
+      name:
+        "keywords"
+    },
+    keywords
+  );
+
+
+  setCanonicalUrl(
+    canonicalUrl
+  );
+
+
+  setMetaContent(
+    'meta[property="og:title"]',
+    {
+      property:
+        "og:title"
+    },
+    ogTitle
+  );
+
+
+  setMetaContent(
+    'meta[property="og:description"]',
+    {
+      property:
+        "og:description"
+    },
+    ogDescription
+  );
+
+
+  setMetaContent(
+    'meta[property="og:type"]',
+    {
+      property:
+        "og:type"
+    },
+    "product"
+  );
+
+
+  setMetaContent(
+    'meta[property="og:url"]',
+    {
+      property:
+        "og:url"
+    },
+    canonicalUrl
+  );
+
+
+  setMetaContent(
+    'meta[property="og:image"]',
+    {
+      property:
+        "og:image"
+    },
+    ogImage
+  );
+
+
+  setMetaContent(
+    'meta[property="og:image:alt"]',
+    {
+      property:
+        "og:image:alt"
+    },
+    product.name ||
+    "Product image"
+  );
+
+
+  setMetaContent(
+    'meta[name="twitter:card"]',
+    {
+      name:
+        "twitter:card"
+    },
+    ogImage
+      ? "summary_large_image"
+      : "summary"
+  );
+
+
+  setMetaContent(
+    'meta[name="twitter:title"]',
+    {
+      name:
+        "twitter:title"
+    },
+    ogTitle
+  );
+
+
+  setMetaContent(
+    'meta[name="twitter:description"]',
+    {
+      name:
+        "twitter:description"
+    },
+    ogDescription
+  );
+
+
+  setMetaContent(
+    'meta[name="twitter:image"]',
+    {
+      name:
+        "twitter:image"
+    },
+    ogImage
+  );
+
+
+  setMetaContent(
+    'meta[name="twitter:image:alt"]',
+    {
+      name:
+        "twitter:image:alt"
+    },
+    product.name ||
+    "Product image"
+  );
+
 }
 
+/* =========================================
+   PRODUCT STRUCTURED DATA
+========================================= */
+
+function applyProductStructuredData(
+  product
+) {
+
+  if (
+    !product
+  ) {
+
+    return;
+
+  }
+
+
+  const existingSchema =
+    document.getElementById(
+      "productStructuredData"
+    );
+
+
+  if (
+    existingSchema
+  ) {
+
+    existingSchema.remove();
+
+  }
+
+
+  const currentUrl =
+    new URL(
+      window.location.href
+    );
+
+
+  currentUrl.hash =
+    "";
+
+
+  const productUrl =
+    product.canonical ||
+    currentUrl.toString();
+
+
+  const description =
+    product.metaDescription ||
+    product.shortDescription ||
+    product.summary ||
+    product.intro ||
+    product.description ||
+    "";
+
+
+  const images =
+    [
+      product.image,
+
+      ...(
+        Array.isArray(
+          product.gallery
+        )
+          ? product.gallery
+          : []
+      )
+    ]
+      .map(
+        function(image) {
+
+          return String(
+            image ||
+            ""
+          ).trim();
+
+        }
+      )
+      .filter(
+        Boolean
+      );
+
+
+  const uniqueImages =
+    [
+      ...new Set(
+        images
+      )
+    ];
+
+
+  const schema = {
+
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "Product",
+
+    name:
+      String(
+        product.name ||
+        ""
+      ),
+
+    url:
+      productUrl
+
+  };
+
+
+  if (
+    description
+  ) {
+
+    schema.description =
+      description;
+
+  }
+
+
+  if (
+    uniqueImages.length
+  ) {
+
+    schema.image =
+      uniqueImages;
+
+  }
+
+
+  if (
+    product.category
+  ) {
+
+    schema.category =
+      String(
+        product.category
+      );
+
+  }
+
+
+  const productId =
+    String(
+      product.id ||
+      product.slug ||
+      ""
+    ).trim();
+
+
+  if (
+    productId
+  ) {
+
+    schema.sku =
+      productId;
+
+  }
+
+
+  if (
+    Array.isArray(
+      product.highlights
+    ) &&
+    product.highlights.length
+  ) {
+
+    schema.additionalProperty =
+      product.highlights
+        .map(
+          function(
+            highlight
+          ) {
+
+            const cleanHighlight =
+              String(
+                highlight ||
+                ""
+              ).trim();
+
+
+            if (
+              !cleanHighlight
+            ) {
+
+              return null;
+
+            }
+
+
+            return {
+
+              "@type":
+                "PropertyValue",
+
+              name:
+                "Highlight",
+
+              value:
+                cleanHighlight
+
+            };
+
+          }
+        )
+        .filter(
+          Boolean
+        );
+
+  }
+
+
+  const script =
+    document.createElement(
+      "script"
+    );
+
+
+  script.id =
+    "productStructuredData";
+
+
+  script.type =
+    "application/ld+json";
+
+
+  script.textContent =
+    JSON.stringify(
+      schema
+    );
+
+
+  document.head.appendChild(
+    script
+  );
+
+}
 
 /* =========================================
    LOAD MAIN PRODUCT
@@ -1359,14 +1855,19 @@ async function loadProduct() {
     );
 
 
-  applyProductSeo(
+   applyProductSeo(
     product
   );
 
 
- await renderRelatedProducts(
-  product
-);
+  applyProductStructuredData(
+    product
+  );
+
+
+  await renderRelatedProducts(
+    product
+  );
 
 }
 

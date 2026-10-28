@@ -714,21 +714,27 @@ function createProductCard(
             View Details
           </a>
 
-
-          <a
-            class="product-buy-link"
-            href="${escapeHtml(
-              product.affiliateUrl ||
-              "#"
-            )}"
-            target="_blank"
-            rel="sponsored nofollow noopener"
-          >
-            ${escapeHtml(
-              product.ctaLabel ||
-              "Buy Now"
-            )}
-          </a>
+<a
+  class="product-buy-link"
+  href="${escapeHtml(
+    product.affiliateUrl ||
+    "#"
+  )}"
+  target="_blank"
+  rel="sponsored nofollow noopener"
+  data-product-id="${escapeHtml(
+    productId
+  )}"
+  data-product-slug="${escapeHtml(
+    productSlug
+  )}"
+>
+  ${escapeHtml(
+    product.ctaLabel ||
+    "Buy Now"
+  )}
+</a>
+       
 
         </div>
 
@@ -736,6 +742,238 @@ function createProductCard(
 
     </article>
   `;
+
+}
+
+/* =========================================
+   CATEGORY SEO
+========================================= */
+
+function applyCategorySeo({
+  title,
+  description,
+  image = "",
+  indexable = true
+}) {
+
+  function setMeta(
+    selector,
+    attributes,
+    content
+  ) {
+
+    let element =
+      document.head.querySelector(
+        selector
+      );
+
+
+    if (!element) {
+
+      element =
+        document.createElement(
+          "meta"
+        );
+
+
+      Object.entries(
+        attributes
+      )
+        .forEach(
+          function([
+            attribute,
+            value
+          ]) {
+
+            element.setAttribute(
+              attribute,
+              value
+            );
+
+          }
+        );
+
+
+      document.head.appendChild(
+        element
+      );
+
+    }
+
+
+    element.setAttribute(
+      "content",
+      String(
+        content || ""
+      )
+    );
+
+  }
+
+
+  const currentUrl =
+    new URL(
+      window.location.href
+    );
+
+
+  currentUrl.hash =
+    "";
+
+
+  document.title =
+    title;
+
+
+  setMeta(
+    'meta[name="description"]',
+    {
+      name:
+        "description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[name="robots"]',
+    {
+      name:
+        "robots"
+    },
+    indexable
+      ? "index, follow"
+      : "noindex, follow"
+  );
+
+
+  let canonical =
+    document.head.querySelector(
+      'link[rel="canonical"]'
+    );
+
+
+  if (!canonical) {
+
+    canonical =
+      document.createElement(
+        "link"
+      );
+
+
+    canonical.rel =
+      "canonical";
+
+
+    document.head.appendChild(
+      canonical
+    );
+
+  }
+
+
+  canonical.href =
+    currentUrl.toString();
+
+
+  setMeta(
+    'meta[property="og:title"]',
+    {
+      property:
+        "og:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[property="og:description"]',
+    {
+      property:
+        "og:description"
+    },
+    description
+  );
+
+
+  setMeta(
+    'meta[property="og:type"]',
+    {
+      property:
+        "og:type"
+    },
+    "website"
+  );
+
+
+  setMeta(
+    'meta[property="og:url"]',
+    {
+      property:
+        "og:url"
+    },
+    currentUrl.toString()
+  );
+
+
+  if (image) {
+
+    setMeta(
+      'meta[property="og:image"]',
+      {
+        property:
+          "og:image"
+      },
+      image
+    );
+
+  }
+
+
+  setMeta(
+    'meta[name="twitter:card"]',
+    {
+      name:
+        "twitter:card"
+    },
+    image
+      ? "summary_large_image"
+      : "summary"
+  );
+
+
+  setMeta(
+    'meta[name="twitter:title"]',
+    {
+      name:
+        "twitter:title"
+    },
+    title
+  );
+
+
+  setMeta(
+    'meta[name="twitter:description"]',
+    {
+      name:
+        "twitter:description"
+    },
+    description
+  );
+
+
+  if (image) {
+
+    setMeta(
+      'meta[name="twitter:image"]',
+      {
+        name:
+          "twitter:image"
+      },
+      image
+    );
+
+  }
 
 }
 
@@ -774,6 +1012,18 @@ async function renderCategoryPage() {
         "Explore recommendations and useful product insights.";
 
     }
+
+        applyCategorySeo({
+      title:
+        "All Products | Kinar Aage",
+
+      description:
+        "Explore recommendations and useful product insights.",
+
+      indexable:
+        true
+    });
+
 
     await renderCategoryProducts(
       ""
@@ -828,8 +1078,16 @@ async function renderCategoryPage() {
 
     }
 
-    document.title =
-      `${requestedCategory} | Kinar Aage`;
+        applyCategorySeo({
+      title:
+        `${requestedCategory} | Kinar Aage`,
+
+      description:
+        "This category is currently unavailable.",
+
+      indexable:
+        false
+    });
 
     return;
 
@@ -881,8 +1139,20 @@ async function renderCategoryPage() {
 
     }
 
-    document.title =
-      `${currentCategory.name} | Kinar Aage`;
+       applyCategorySeo({
+      title:
+        `${currentCategory.name} | Kinar Aage`,
+
+      description:
+        "This category is currently unavailable.",
+
+      image:
+        currentCategory.image ||
+        "",
+
+      indexable:
+        false
+    });
 
     return;
 
@@ -972,8 +1242,22 @@ async function renderCategoryPage() {
 
   }
 
-  document.title =
-    `${currentCategory.name} | Kinar Aage`;
+    applyCategorySeo({
+    title:
+      `${currentCategory.name} | Kinar Aage`,
+
+    description:
+      currentCategory.description ||
+      "Explore recommendations and useful product insights.",
+
+    image:
+      currentCategory.image ||
+      "",
+
+    indexable:
+      true
+  });
+
 
   await renderCategoryProducts(
     currentCategory.name
@@ -1082,6 +1366,86 @@ async function renderCategoryProducts(
 
       }
     );
+
+    /* =========================================
+   AFFILIATE CLICK TRACKING
+========================================= */
+
+categoryProductsGrid
+
+  .querySelectorAll(
+    ".product-buy-link"
+  )
+
+  .forEach(
+    function(button) {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          const affiliateUrl =
+            button.getAttribute(
+              "href"
+            );
+
+
+          if (
+            !affiliateUrl ||
+            affiliateUrl === "#"
+          ) {
+
+            return;
+
+          }
+
+
+          import(
+            "./firebase-db.js"
+          )
+
+            .then(
+              function(
+                firebaseModule
+              ) {
+
+                return firebaseModule
+                  .trackAffiliateClick({
+
+                    productId:
+                      button.dataset
+                        .productId ||
+                      "",
+
+                    productSlug:
+                      button.dataset
+                        .productSlug ||
+                      "",
+
+                    source:
+                      "category_page"
+
+                  });
+
+              }
+            )
+
+            .catch(
+              function(error) {
+
+                console.error(
+                  "Category Buy Now tracking error:",
+                  error
+                );
+
+              }
+            );
+
+        }
+      );
+
+    }
+  );
 
 }
 

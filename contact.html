@@ -10,18 +10,60 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>
-    Contact | Kinar Aage
+    <title>
+    Contact Kinar Aage | Questions, Feedback & Collaboration
   </title>
 
   <meta
     name="description"
-    content="Contact Kinar Aage for questions, feedback and collaboration."
+    content="Contact Kinar Aage for questions, product feedback, partnerships, collaboration opportunities or general enquiries."
   >
 
   <meta
     name="robots"
     content="index, follow"
+  >
+
+  <link
+    id="contactCanonical"
+    rel="canonical"
+    href="contact.html"
+  >
+
+  <meta
+    property="og:title"
+    content="Contact Kinar Aage | Questions, Feedback & Collaboration"
+  >
+
+  <meta
+    property="og:description"
+    content="Contact Kinar Aage for questions, product feedback, partnerships, collaboration opportunities or general enquiries."
+  >
+
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    id="contactOgUrl"
+    property="og:url"
+    content=""
+  >
+
+  <meta
+    name="twitter:card"
+    content="summary"
+  >
+
+  <meta
+    name="twitter:title"
+    content="Contact Kinar Aage | Questions, Feedback & Collaboration"
+  >
+
+  <meta
+    name="twitter:description"
+    content="Contact Kinar Aage for questions, product feedback, partnerships, collaboration opportunities or general enquiries."
   >
 
   <link
@@ -263,9 +305,12 @@
               </button>
 
 
-              <p class="contact-form-note">
-                Contact form submission will be connected in a later step.
-              </p>
+          <p
+  id="contactFormNote"
+  class="contact-form-note"
+>
+  We’ll get back to you as soon as possible.
+</p>   
 
 
             </form>
@@ -402,9 +447,7 @@
             Information
           </strong>
 
-          <a href="#">
-            Affiliate Disclosure
-          </a>
+        
 
           <a href="#">
             Privacy Policy
@@ -463,22 +506,357 @@
 
     }
 
+        const contactPageUrl =
+      `${window.location.origin}${window.location.pathname}`;
 
-    const contactForm =
+
+    const contactCanonical =
       document.getElementById(
-        "contactForm"
+        "contactCanonical"
       );
 
 
-    contactForm
-      ?.addEventListener(
-        "submit",
-        function(event) {
+    const contactOgUrl =
+      document.getElementById(
+        "contactOgUrl"
+      );
 
-          event.preventDefault();
+
+    if (contactCanonical) {
+
+      contactCanonical.href =
+        contactPageUrl;
+
+    }
+
+
+    if (contactOgUrl) {
+
+      contactOgUrl.setAttribute(
+        "content",
+        contactPageUrl
+      );
+
+    }
+
+
+  const contactForm =
+  document.getElementById(
+    "contactForm"
+  );
+
+
+const contactName =
+  document.getElementById(
+    "contactName"
+  );
+
+
+const contactEmail =
+  document.getElementById(
+    "contactEmail"
+  );
+
+
+const contactSubject =
+  document.getElementById(
+    "contactSubject"
+  );
+
+
+const contactMessage =
+  document.getElementById(
+    "contactMessage"
+  );
+
+
+const contactFormNote =
+  document.getElementById(
+    "contactFormNote"
+  );
+
+
+const contactSubmitButton =
+  contactForm
+    ?.querySelector(
+      'button[type="submit"]'
+    );
+
+
+function showContactToast(
+  message
+) {
+
+  const toast =
+    document.getElementById(
+      "siteToast"
+    );
+
+
+  if (!toast) {
+
+    return;
+
+  }
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    showContactToast.timer
+  );
+
+
+  showContactToast.timer =
+    setTimeout(
+      function() {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2500
+    );
+
+}
+
+
+contactForm
+  ?.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const name =
+        contactName
+          ?.value
+          .trim() ||
+        "";
+
+
+      const email =
+        contactEmail
+          ?.value
+          .trim() ||
+        "";
+
+
+      const subject =
+        contactSubject
+          ?.value
+          .trim() ||
+        "";
+
+
+      const message =
+        contactMessage
+          ?.value
+          .trim() ||
+        "";
+
+
+      const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+      if (
+        name.length < 2
+      ) {
+
+        showContactToast(
+          "Please enter your name."
+        );
+
+        contactName
+          ?.focus();
+
+        return;
+
+      }
+
+
+      if (
+        !emailPattern.test(
+          email
+        )
+      ) {
+
+        showContactToast(
+          "Please enter a valid email address."
+        );
+
+        contactEmail
+          ?.focus();
+
+        return;
+
+      }
+
+
+      if (
+        subject.length < 3
+      ) {
+
+        showContactToast(
+          "Please enter a subject."
+        );
+
+        contactSubject
+          ?.focus();
+
+        return;
+
+      }
+
+
+      if (
+        message.length < 10
+      ) {
+
+        showContactToast(
+          "Please write at least 10 characters."
+        );
+
+        contactMessage
+          ?.focus();
+
+        return;
+
+      }
+
+
+      const originalButtonText =
+        contactSubmitButton
+          ?.textContent
+          ?.trim() ||
+        "Send Message";
+
+
+      try {
+
+        if (
+          contactSubmitButton
+        ) {
+
+          contactSubmitButton.disabled =
+            true;
+
+          contactSubmitButton.textContent =
+            "Sending...";
 
         }
-      );
+
+
+        if (
+          contactFormNote
+        ) {
+
+          contactFormNote.textContent =
+            "Sending your message...";
+
+        }
+
+
+        const firebase =
+          await import(
+            "./firebase-db.js"
+          );
+
+
+        if (
+          typeof firebase
+            .submitContactMessage !==
+          "function"
+        ) {
+
+          throw new Error(
+            "Contact service is unavailable."
+          );
+
+        }
+
+
+        await firebase
+          .submitContactMessage({
+            name,
+            email,
+            subject,
+            message
+          });
+
+
+        contactForm.reset();
+
+
+        if (
+          contactFormNote
+        ) {
+
+          contactFormNote.textContent =
+            "Thanks! Your message has been sent successfully.";
+
+        }
+
+
+        showContactToast(
+          "Message sent successfully."
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Contact form submission error:",
+          error
+        );
+
+
+        if (
+          contactFormNote
+        ) {
+
+          contactFormNote.textContent =
+            "Your message could not be sent. Please try again.";
+
+        }
+
+
+        showContactToast(
+          error?.message ||
+          "Message sending failed."
+        );
+
+      }
+
+      finally {
+
+        if (
+          contactSubmitButton
+        ) {
+
+          contactSubmitButton.disabled =
+            false;
+
+          contactSubmitButton.textContent =
+            originalButtonText;
+
+        }
+
+      }
+
+    }
+  );
 
   </script>
 

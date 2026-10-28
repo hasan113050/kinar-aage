@@ -409,7 +409,7 @@ const homepageNewsletterDescription =
 
 const homepageNewsletterInput =
   document.getElementById(
-    "homepageNewsletterInput"
+    "homepageNewsletterEmail"
   );
 
 const homepageNewsletterButton =
@@ -1814,14 +1814,14 @@ function createProductCard(
 
         <div class="product-card-actions">
 
-          <a
-            class="product-details-link"
-            href="product.html?product=${encodeURIComponent(
-              productSlug
-            )}"
-          >
-            Details
-          </a>
+        <a
+  class="product-details-link"
+  href="product.html?slug=${encodeURIComponent(
+    productSlug
+  )}"
+>
+  Details
+</a>
 
 
           <a
@@ -4116,7 +4116,7 @@ const homepageNewsletterForm =
 homepageNewsletterForm
   ?.addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
       event.preventDefault();
 
@@ -4135,17 +4135,125 @@ homepageNewsletterForm
           "Please enter your email address."
         );
 
+        homepageNewsletterInput
+          ?.focus();
+
         return;
 
       }
 
 
-      showSiteToast(
-        "Thanks! Newsletter signup will be connected soon."
-      );
+      const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
-      homepageNewsletterForm.reset();
+      if (
+        !emailPattern.test(
+          email
+        )
+      ) {
+
+        showSiteToast(
+          "Please enter a valid email address."
+        );
+
+        homepageNewsletterInput
+          ?.focus();
+
+        return;
+
+      }
+
+
+   const submitButton =
+  homepageNewsletterButton;
+
+
+const originalNewsletterButtonText =
+  submitButton
+    ?.textContent
+    ?.trim() ||
+  "Subscribe";
+
+
+try {
+
+  if (
+    submitButton
+  ) {
+
+    submitButton.disabled =
+      true;
+
+    submitButton.textContent =
+      "Subscribing...";
+  }
+
+
+        const firebaseModule =
+          await import(
+            "./firebase-db.js"
+          );
+
+
+        if (
+          typeof firebaseModule
+            .subscribeToNewsletter !==
+            "function"
+        ) {
+
+          throw new Error(
+            "Newsletter service is unavailable."
+          );
+
+        }
+
+
+        await firebaseModule
+          .subscribeToNewsletter(
+            email
+          );
+
+
+        showSiteToast(
+          "Thanks! You’re subscribed."
+        );
+
+
+        homepageNewsletterForm
+          .reset();
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Newsletter signup error:",
+          error
+        );
+
+
+        showSiteToast(
+          "Subscription failed. Please try again."
+        );
+
+      }
+
+     finally {
+
+  if (
+    submitButton
+  ) {
+
+    submitButton.disabled =
+      false;
+
+    submitButton.textContent =
+      originalNewsletterButtonText;
+
+  }
+
+}
 
     }
   );

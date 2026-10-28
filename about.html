@@ -10,18 +10,60 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>
-    About | Kinar Aage
+   <title>
+    About Kinar Aage | Research Before You Buy
   </title>
 
   <meta
     name="description"
-    content="Learn more about Kinar Aage and how we help shoppers make better product decisions."
+    content="Learn how Kinar Aage helps shoppers understand products through practical information, useful comparisons and carefully selected recommendations."
   >
 
   <meta
     name="robots"
     content="index, follow"
+  >
+
+  <link
+    id="aboutCanonical"
+    rel="canonical"
+    href="about.html"
+  >
+
+  <meta
+    property="og:title"
+    content="About Kinar Aage | Research Before You Buy"
+  >
+
+  <meta
+    property="og:description"
+    content="Learn how Kinar Aage helps shoppers understand products through practical information, useful comparisons and carefully selected recommendations."
+  >
+
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    id="aboutOgUrl"
+    property="og:url"
+    content=""
+  >
+
+  <meta
+    name="twitter:card"
+    content="summary"
+  >
+
+  <meta
+    name="twitter:title"
+    content="About Kinar Aage | Research Before You Buy"
+  >
+
+  <meta
+    name="twitter:description"
+    content="Learn how Kinar Aage helps shoppers understand products through practical information, useful comparisons and carefully selected recommendations."
   >
 
   <link
@@ -388,9 +430,7 @@
             Information
           </strong>
 
-          <a href="#">
-            Affiliate Disclosure
-          </a>
+  
 
           <a href="#">
             Privacy Policy
@@ -444,6 +484,39 @@
     if (footerYear) {
       footerYear.textContent =
         new Date().getFullYear();
+    }
+
+        const aboutPageUrl =
+      `${window.location.origin}${window.location.pathname}`;
+
+
+    const aboutCanonical =
+      document.getElementById(
+        "aboutCanonical"
+      );
+
+
+    const aboutOgUrl =
+      document.getElementById(
+        "aboutOgUrl"
+      );
+
+
+    if (aboutCanonical) {
+
+      aboutCanonical.href =
+        aboutPageUrl;
+
+    }
+
+
+    if (aboutOgUrl) {
+
+      aboutOgUrl.setAttribute(
+        "content",
+        aboutPageUrl
+      );
+
     }
   </script>
 
